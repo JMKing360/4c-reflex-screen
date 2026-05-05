@@ -3,256 +3,279 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The 4C Reflex Screen · KOORA · House of Mastery</title>
-<meta name="description" content="A quick assessment that shows you which automatic patterns are running your life — and the three moves to interrupt them.">
+<title>The 4C Reflex Screen · House of Mastery</title>
+<meta name="description" content="A short assessment that shows you which of the four reflexes is running your decisions — and the three moves that interrupt it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg:       #F9F8F6;
-  --white:    #ffffff;
-  --ink:      #111111;
-  --body:     #2E2E2E;
-  --mid:      #5A5A5A;
-  --dim:      #888888;
-  --border:   #E2E2E2;
-  --gold:     #C9973A;
-  --navy:     #0D0D0D;
-  --red:      #C0392B;
-  --amber:    #D4860A;
-  --green:    #2E7D32;
-  --display:  'Source Serif 4', Georgia, serif;
-  --sans:     'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --radius:   6px;
-  --max:      680px;
+  --cream:   #FAF9F6;
+  --white:   #FFFFFF;
+  --ink:     #111111;
+  --body:    #222222;
+  --mid:     #444444;
+  --border:  rgba(17,17,17,0.12);
+  --gold:    #C9973A;
+  --gold-bg: rgba(201,151,58,0.10);
+  --navy:    #0D1F3C;
+  --navy-dk: #081429;
+  --green:   #1B5E20;
+  --amber:   #B45309;
+  --red:     #991B1B;
+  --green-bg:#F0FBF4;
+  --amber-bg:#FFFBEB;
+  --red-bg:  #FEF2F2;
+  --serif:   'Source Serif 4', Georgia, serif;
+  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --r:       6px;
+  --max:     680px;
 }
-
 html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-body { background: var(--bg); color: var(--body); font-family: var(--sans); font-size: 16px; line-height: 1.7; min-height: 100vh; }
+body { background: var(--cream); color: var(--body); font-family: var(--sans); font-size: 16px; line-height: 1.72; min-height: 100vh; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 22px; }
 
-.wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+/* ── HEADER ─────────────────────────────────────────── */
+.site-header { background: var(--navy); border-bottom: 2px solid var(--gold); }
+.header-inner { max-width: var(--max); margin: 0 auto; padding: 20px 22px 18px; display: flex; align-items: center; justify-content: space-between; }
+.header-brand { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
+.header-tag { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: rgba(255,255,255,0.40); }
 
-/* HEADER */
-.site-header { background: var(--navy); padding: 22px 20px; text-align: center; }
-.site-header .brand { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 4px; }
-.site-header .sub { font-family: var(--sans); font-size: 11px; font-weight: 400; letter-spacing: 0.06em; color: rgba(255,255,255,0.36); }
-.gold-rule { height: 2px; background: var(--gold); }
+/* ── PROGRESS ───────────────────────────────────────── */
+.progress-wrap { height: 3px; background: rgba(17,17,17,0.08); }
+.progress-bar  { height: 3px; background: var(--gold); width: 0%; transition: width 0.5s ease; }
 
-/* PROGRESS */
-.progress-wrap { background: var(--border); height: 3px; width: 100%; }
-.progress-bar { height: 3px; background: var(--gold); width: 0%; transition: width 0.4s ease; }
-
-/* SCREENS */
+/* ── SCREENS ────────────────────────────────────────── */
 .screen { display: none; }
 .screen.active { display: block; }
 
-/* INTRO */
-#screen-intro { padding: 64px 0 80px; }
-.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: block; }
-#screen-intro h1 { font-family: var(--display); font-size: clamp(30px, 5vw, 42px); font-weight: 700; color: var(--ink); line-height: 1.18; margin-bottom: 24px; }
-.lead { font-size: 17px; font-weight: 400; color: var(--body); line-height: 1.72; margin-bottom: 20px; }
+/* ── INTRO ──────────────────────────────────────────── */
+#screen-intro { padding: 68px 0 84px; }
+.eyebrow { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 18px; }
+#screen-intro h1 { font-family: var(--serif); font-size: clamp(30px, 5.5vw, 44px); font-weight: 700; color: var(--ink); line-height: 1.16; margin-bottom: 26px; }
+.lead { font-family: var(--sans); font-size: 17px; font-weight: 500; color: var(--body); line-height: 1.74; margin-bottom: 20px; }
 .lead strong { font-weight: 700; color: var(--ink); }
+.gold-rule { height: 1px; background: var(--gold); opacity: 0.35; margin: 36px 0; }
 
-.instruction-box { background: var(--white); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: var(--radius); padding: 22px 24px; margin: 32px 0 40px; }
-.instruction-box p { font-size: 15px; color: var(--body); line-height: 1.68; margin-bottom: 10px; }
+.instruction-box { background: var(--white); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: var(--r); padding: 24px 26px; margin: 32px 0 40px; }
+.instruction-box p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--body); line-height: 1.70; margin-bottom: 10px; }
 .instruction-box p:last-child { margin-bottom: 0; }
 .instruction-box strong { font-weight: 700; color: var(--ink); }
 
-/* QUESTIONS */
-#screen-questions { padding: 48px 0 80px; }
-.section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-.section-divider { height: 1px; background: var(--gold); margin-bottom: 32px; }
+.name-wrap { margin-bottom: 40px; }
+.name-wrap label { display: block; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink); margin-bottom: 10px; }
+.name-wrap input { width: 100%; padding: 14px 16px; font-family: var(--sans); font-size: 16px; font-weight: 500; color: var(--ink); background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r); outline: none; transition: border-color 0.2s; }
+.name-wrap input:focus { border-color: var(--gold); }
+.name-wrap input::placeholder { color: rgba(17,17,17,0.30); }
+
+/* ── BUTTONS ────────────────────────────────────────── */
+.btn-primary { display: inline-block; background: var(--navy); color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; padding: 16px 36px; border-radius: 4px; border: none; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.15s; }
+.btn-primary:hover { background: var(--navy-dk); transform: translateY(-1px); }
+.btn-secondary { display: inline-block; background: transparent; color: var(--ink); font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; padding: 13px 28px; border-radius: 4px; border: 1.5px solid var(--border); cursor: pointer; text-decoration: none; margin-top: 14px; transition: border-color 0.2s; }
+.btn-secondary:hover { border-color: var(--ink); }
+
+/* ── QUESTIONS ──────────────────────────────────────── */
+#screen-questions { padding: 52px 0 88px; }
+.section-label { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 8px; }
+.section-divider { height: 1px; background: var(--gold); opacity: 0.40; margin-bottom: 32px; }
 .section-divider-light { height: 1px; background: var(--border); margin-bottom: 28px; }
 
-.question-group { margin-bottom: 48px; }
-.question-group-title { font-family: var(--display); font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-.question-group-sub { font-size: 14px; color: var(--mid); margin-bottom: 24px; line-height: 1.5; }
+.question-group { margin-bottom: 52px; }
+.question-group-title { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.question-group-sub { font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--mid); margin-bottom: 24px; line-height: 1.55; }
 
-.question-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 12px; transition: border-color 0.2s; }
+.question-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 22px 24px; margin-bottom: 12px; transition: border-color 0.2s; }
 .question-item.answered { border-color: var(--gold); }
-.question-text { font-size: 15px; font-style: italic; color: var(--ink); line-height: 1.62; margin-bottom: 16px; font-family: var(--display); font-weight: 400; }
+.question-item.error { border-color: var(--red) !important; }
+.question-text { font-family: var(--serif); font-size: 16px; font-weight: 400; font-style: italic; color: var(--ink); line-height: 1.62; margin-bottom: 18px; }
 
 .options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.option-btn { background: var(--bg); border: 1.5px solid var(--border); border-radius: 4px; padding: 10px 6px; font-family: var(--sans); font-size: 12px; font-weight: 600; color: var(--mid); cursor: pointer; text-align: center; line-height: 1.3; transition: all 0.18s; -webkit-tap-highlight-color: transparent; }
-.option-btn:hover { border-color: var(--gold); color: var(--ink); background: var(--white); }
+.option-btn { background: var(--cream); border: 1.5px solid var(--border); border-radius: 4px; padding: 11px 6px; font-family: var(--sans); font-size: 12px; font-weight: 700; color: var(--body); cursor: pointer; text-align: center; line-height: 1.3; transition: all 0.18s; -webkit-tap-highlight-color: transparent; }
+.option-btn:hover { border-color: var(--gold); background: var(--white); color: var(--ink); }
 .option-btn.selected { background: var(--navy); border-color: var(--navy); color: var(--gold); }
 
-.scale-legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 32px; padding: 16px 0; border-bottom: 1px solid var(--border); }
-.legend-item { text-align: center; font-size: 11px; font-weight: 600; color: var(--mid); line-height: 1.4; }
-.legend-item span { display: block; font-size: 10px; font-weight: 400; color: var(--dim); margin-top: 2px; }
+.submit-area { margin-top: 44px; text-align: center; }
+.unanswered-warning { font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--red); margin-bottom: 16px; display: none; }
 
-.submit-area { margin-top: 40px; text-align: center; }
-.unanswered-warning { font-size: 14px; color: var(--red); margin-bottom: 16px; display: none; }
-
-/* RESULTS */
-#screen-results { padding: 48px 0 80px; }
+/* ── RESULTS ────────────────────────────────────────── */
+#screen-results { padding: 52px 0 88px; }
 .results-intro { margin-bottom: 48px; }
-.results-intro h2 { font-family: var(--display); font-size: clamp(26px, 4vw, 36px); font-weight: 700; color: var(--ink); line-height: 1.22; margin-bottom: 16px; }
-.results-intro p { font-size: 16px; color: var(--body); line-height: 1.72; }
+.results-intro h2 { font-family: var(--serif); font-size: clamp(26px, 4.5vw, 36px); font-weight: 700; color: var(--ink); line-height: 1.22; margin-bottom: 16px; }
+.results-intro p { font-family: var(--sans); font-size: 16px; font-weight: 500; color: var(--body); line-height: 1.72; }
 
 /* Score bars */
-.score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-.score-row-label { font-size: 13px; font-weight: 700; color: var(--ink); width: 110px; flex-shrink: 0; }
-.score-bar-wrap { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
-.score-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
-.score-bar-fill.quiet  { background: #4CAF50; }
+.score-section { margin-bottom: 48px; }
+.score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.score-row-label { font-family: var(--sans); font-size: 13px; font-weight: 700; color: var(--ink); width: 120px; flex-shrink: 0; }
+.score-bar-wrap { flex: 1; height: 8px; background: rgba(17,17,17,0.08); border-radius: 4px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 4px; transition: width 0.9s ease; }
+.score-bar-fill.quiet  { background: var(--green); }
 .score-bar-fill.active { background: var(--amber); }
 .score-bar-fill.loud   { background: var(--red); }
-.score-row-value { font-size: 13px; font-weight: 700; width: 60px; flex-shrink: 0; text-align: right; }
-.score-row-value.quiet  { color: #2E7D32; }
+.score-row-value { font-family: var(--sans); font-size: 12px; font-weight: 700; width: 100px; flex-shrink: 0; text-align: right; }
+.score-row-value.quiet  { color: var(--green); }
 .score-row-value.active { color: var(--amber); }
 .score-row-value.loud   { color: var(--red); }
 
+/* Action row */
+.action-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 44px; }
+.btn-action { display: inline-flex; align-items: center; gap: 8px; background: var(--white); color: var(--ink); font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 13px 20px; border-radius: 4px; border: 1.5px solid var(--border); cursor: pointer; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+.btn-action:hover { border-color: var(--navy); background: var(--cream); }
+.btn-action svg { width: 15px; height: 15px; flex-shrink: 0; }
+
 /* Reflex cards */
-.reflex-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 28px; overflow: hidden; }
-.reflex-card-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
-.reflex-status-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-.reflex-status-dot.quiet  { background: #4CAF50; }
+.reflex-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 24px; overflow: hidden; }
+.reflex-card.loud   { border-left: 4px solid var(--red); }
+.reflex-card.active { border-left: 4px solid var(--amber); }
+.reflex-card.quiet  { border-left: 4px solid var(--green); }
+.reflex-card-header { display: flex; align-items: center; gap: 12px; padding: 20px 24px 16px; border-bottom: 1px solid rgba(17,17,17,0.06); }
+.reflex-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.reflex-status-dot.quiet  { background: var(--green); }
 .reflex-status-dot.active { background: var(--amber); }
 .reflex-status-dot.loud   { background: var(--red); }
-.reflex-card-header h3 { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--ink); flex: 1; }
-.reflex-card-header .status-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; }
-.status-tag.quiet  { background: rgba(76,175,80,0.12); color: #2E7D32; }
-.status-tag.active { background: rgba(212,134,10,0.12); color: var(--amber); }
-.status-tag.loud   { background: rgba(192,57,43,0.10); color: var(--red); }
-
-.reflex-card-body { padding: 24px; }
-.reflex-what-it-is { margin-bottom: 20px; }
-.reflex-what-it-is .label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
-.reflex-what-it-is p { font-size: 15px; color: var(--body); line-height: 1.70; }
-.reflex-what-it-is p + p { margin-top: 10px; }
-
-.reflex-underneath { background: var(--bg); border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; padding: 14px 18px; margin-bottom: 24px; }
-.reflex-underneath .label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-.reflex-underneath p { font-size: 14px; color: var(--body); line-height: 1.68; }
-
-.strategies-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); margin-bottom: 14px; }
+.reflex-card-header h3 { font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--ink); flex: 1; }
+.status-tag { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; flex-shrink: 0; }
+.status-tag.quiet  { background: var(--green-bg); color: var(--green); }
+.status-tag.active { background: var(--amber-bg); color: var(--amber); }
+.status-tag.loud   { background: var(--red-bg);   color: var(--red); }
+.reflex-card-body { padding: 22px 24px; }
+.reflex-card-body .card-label { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 8px; }
+.reflex-card-body p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--body); line-height: 1.70; margin-bottom: 10px; }
+.reflex-card-body p:last-child { margin-bottom: 0; }
+.reflex-underneath { background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; padding: 16px 18px; margin: 18px 0 24px; }
+.reflex-underneath .card-label { color: var(--gold); }
+.reflex-underneath p { font-size: 14px; margin-bottom: 0; }
+.strategies-label { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--navy); display: block; margin-bottom: 16px; }
 .strategy-item { display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start; }
-.strategy-num { width: 28px; height: 28px; background: var(--navy); color: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
-.strategy-text { flex: 1; }
-.strategy-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
-.strategy-text p { font-size: 14px; color: var(--body); line-height: 1.66; }
+.strategy-num { width: 26px; height: 26px; background: var(--navy); color: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.strategy-text strong { font-family: var(--sans); font-size: 14px; font-weight: 700; color: var(--ink); display: block; margin-bottom: 4px; }
+.strategy-text p { font-size: 14px; font-weight: 500; color: var(--body); line-height: 1.66; margin-bottom: 0; }
+.quiet-note { font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--mid); line-height: 1.68; }
 
-.reflex-card.quiet .reflex-card-body { padding: 18px 24px; }
-.reflex-card.quiet .quiet-note { font-size: 14px; color: var(--mid); line-height: 1.68; }
-
-/* NOW WHAT section */
-.now-what-section { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
-.now-what-header { background: var(--navy); padding: 22px 24px; }
-.now-what-header .eyebrow-white { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; display: block; }
-.now-what-header h3 { font-family: var(--display); font-size: 22px; font-weight: 700; color: #ffffff; line-height: 1.28; }
-.now-what-header p { font-size: 14px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.60; }
-.now-what-body { padding: 28px 24px; }
-
-.qa-item { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+/* Now What */
+.now-what-section { background: var(--navy); border-radius: var(--r); overflow: hidden; margin: 48px 0; }
+.now-what-header { padding: 34px 30px 26px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.now-what-header .eyebrow-w { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 14px; }
+.now-what-header h3 { font-family: var(--serif); font-size: 24px; font-weight: 700; color: #fff; line-height: 1.28; margin-bottom: 12px; }
+.now-what-header p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.65); line-height: 1.68; margin-bottom: 0; }
+.now-what-body { padding: 28px 30px 32px; }
+.qa-item { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid rgba(255,255,255,0.08); }
 .qa-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-.qa-question { font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 12px; line-height: 1.40; }
-.qa-question::before { content: "Q: "; color: var(--gold); }
-.qa-answer { font-size: 15px; color: var(--body); line-height: 1.72; }
-.qa-answer p + p { margin-top: 10px; }
-.qa-answer strong { font-weight: 700; color: var(--ink); }
+.qa-question { font-family: var(--serif); font-size: 17px; font-weight: 700; color: #fff; line-height: 1.40; margin-bottom: 12px; }
+.qa-answer { font-family: var(--sans); font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.78); line-height: 1.72; }
+.qa-answer p { margin-bottom: 10px; color: rgba(255,255,255,0.78); }
+.qa-answer p:last-child { margin-bottom: 0; }
+.qa-answer strong { color: #fff; font-weight: 700; }
 
 /* Allegiance Matrix */
 .matrix-section { margin: 48px 0; }
-.matrix-section h3 { font-family: var(--display); font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-.matrix-section .matrix-sub { font-size: 14px; color: var(--mid); margin-bottom: 24px; }
+.matrix-sub { font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--mid); margin-bottom: 20px; line-height: 1.60; }
 .matrix-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.matrix-table { width: 100%; min-width: 500px; border-collapse: collapse; font-size: 13px; }
-.matrix-table th { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
-.matrix-table th:first-child { color: var(--ink); }
-.matrix-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--body); line-height: 1.5; }
-.matrix-table tr:last-child td { border-bottom: none; }
+.matrix-table { width: 100%; min-width: 480px; border-collapse: collapse; font-family: var(--sans); font-size: 13px; }
+.matrix-table th { background: var(--navy); color: #fff; font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 12px 14px; text-align: left; border: 1px solid rgba(255,255,255,0.08); }
+.matrix-table td { padding: 12px 14px; border: 1px solid var(--border); font-weight: 500; color: var(--body); vertical-align: top; line-height: 1.50; }
 .matrix-table td:first-child { font-weight: 700; color: var(--ink); white-space: nowrap; }
-.matrix-table tr.highlight-row td { background: rgba(201,151,58,0.06); }
+.matrix-table tr:nth-child(even) td { background: var(--white); }
+.matrix-table tr.highlight-row td { background: var(--gold-bg); border-color: rgba(201,151,58,0.30); }
+.matrix-table tr.highlight-row td:first-child { color: var(--navy); }
 
 /* Commitment */
-.commitment-section { background: var(--navy); border-radius: var(--radius); padding: 36px 32px; margin: 48px 0; text-align: center; }
-.commitment-section .eyebrow-gold { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
-.commitment-section h3 { font-family: var(--display); font-size: 22px; font-weight: 700; color: #ffffff; line-height: 1.30; margin-bottom: 16px; }
-.commitment-section p { font-size: 15px; color: rgba(255,255,255,0.60); line-height: 1.68; margin-bottom: 24px; }
-.commitment-template { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 18px 22px; font-family: var(--display); font-size: 16px; font-style: italic; color: rgba(255,255,255,0.82); line-height: 1.60; text-align: left; margin-bottom: 24px; }
+.commitment-section { background: var(--navy); border-radius: var(--r); padding: 40px 30px; margin: 48px 0; text-align: center; }
+.eyebrow-gold { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 16px; }
+.commitment-section h3 { font-family: var(--serif); font-size: 24px; font-weight: 700; color: #fff; line-height: 1.30; margin-bottom: 16px; }
+.commitment-section p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.70); line-height: 1.68; margin-bottom: 24px; }
+.commitment-template { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 20px 24px; font-family: var(--serif); font-size: 17px; font-style: italic; color: rgba(255,255,255,0.88); line-height: 1.60; text-align: left; margin-bottom: 20px; }
+
+/* Email results */
+.email-section { background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold); border-radius: var(--r); padding: 34px 30px; margin: 48px 0; }
+.email-section h3 { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+.email-section p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--body); line-height: 1.65; margin-bottom: 22px; }
+.email-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.email-row input { flex: 1; min-width: 200px; padding: 13px 16px; font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--ink); background: var(--cream); border: 1.5px solid var(--border); border-radius: 4px; outline: none; transition: border-color 0.2s; }
+.email-row input:focus { border-color: var(--gold); }
+.email-row input::placeholder { color: rgba(17,17,17,0.35); }
+.email-send-btn { background: var(--navy); color: #fff; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; padding: 13px 22px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+.email-send-btn:hover { background: var(--navy-dk); }
+.email-status { font-family: var(--sans); font-size: 14px; font-weight: 600; margin-top: 12px; display: none; }
+.email-status.ok  { color: var(--green); }
+.email-status.err { color: var(--red); }
 
 /* CTA */
-.cta-section { text-align: center; padding: 48px 0 32px; border-top: 1px solid var(--border); margin-top: 48px; }
-.cta-section h3 { font-family: var(--display); font-size: clamp(20px, 3.5vw, 26px); font-weight: 700; color: var(--ink); line-height: 1.28; margin-bottom: 14px; }
-.cta-section p { font-size: 15px; color: var(--mid); line-height: 1.68; margin-bottom: 28px; max-width: 480px; margin-left: auto; margin-right: auto; }
+.cta-section { text-align: center; padding: 56px 0 16px; border-top: 1px solid var(--border); margin-top: 48px; }
+.cta-section h3 { font-family: var(--serif); font-size: clamp(24px, 4vw, 32px); font-weight: 700; color: var(--ink); line-height: 1.26; margin-bottom: 16px; }
+.cta-section p { font-family: var(--sans); font-size: 16px; font-weight: 500; color: var(--body); line-height: 1.68; max-width: 480px; margin: 0 auto 32px; }
 
-/* BUTTONS */
-.btn-primary { display: inline-block; background: var(--navy); color: var(--gold); font-family: var(--sans); font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 16px 36px; border-radius: 4px; border: none; cursor: pointer; text-decoration: none; transition: opacity 0.18s; }
-.btn-primary:hover { opacity: 0.88; }
-.btn-secondary { display: inline-block; background: transparent; color: var(--ink); font-family: var(--sans); font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 16px 36px; border-radius: 4px; border: 1.5px solid var(--border); cursor: pointer; text-decoration: none; transition: border-color 0.18s; margin-top: 12px; }
-.btn-secondary:hover { border-color: var(--ink); }
+/* Footer */
+.site-footer { background: var(--navy); border-top: 2px solid var(--gold); padding: 28px 22px; text-align: center; }
+.site-footer p { font-family: var(--sans); font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.50); line-height: 1.72; margin: 0; }
+.site-footer strong { color: rgba(255,255,255,0.82); font-weight: 700; }
 
-/* FOOTER */
-.site-footer { background: var(--navy); padding: 28px 20px; text-align: center; }
-.site-footer p { font-size: 12px; color: rgba(255,255,255,0.30); font-family: var(--sans); line-height: 1.6; }
-.site-footer strong { color: rgba(255,255,255,0.55); font-weight: 600; }
+/* Hidden canvas */
+#waCanvas { display: none; }
 
-/* MOBILE */
-@media (max-width: 560px) {
+/* Mobile */
+@media (max-width: 580px) {
+  #screen-intro, #screen-questions, #screen-results { padding-top: 44px; }
   .options { grid-template-columns: repeat(2, 1fr); }
-  .scale-legend { grid-template-columns: repeat(2, 1fr); gap: 6px; }
   .score-row-label { width: 90px; font-size: 12px; }
-  .commitment-section { padding: 28px 20px; }
-  .reflex-card-header { flex-wrap: wrap; gap: 8px; }
+  .score-row-value { width: 80px; font-size: 11px; }
+  .now-what-header { padding: 26px 20px 20px; }
+  .now-what-body { padding: 22px 20px 26px; }
+  .commitment-section, .email-section { padding: 28px 20px; }
+  .reflex-card-header { padding: 16px 18px 14px; }
+  .reflex-card-body { padding: 18px 18px; }
+  .action-row { flex-direction: column; }
+  .header-tag { display: none; }
   .matrix-table { font-size: 12px; }
   .matrix-table th, .matrix-table td { padding: 10px 10px; }
-  .now-what-body { padding: 20px 18px; }
 }
 </style>
 </head>
-
 <body>
 
 <header class="site-header">
-  <span class="brand">House of Mastery</span>
-  <span class="sub">KOORA · The Finisher Protocol</span>
+  <div class="header-inner">
+    <a class="header-brand" href="https://www.houseofmastery.co">House of Mastery</a>
+    <span class="header-tag">4C Reflex Screen</span>
+  </div>
 </header>
-<div class="gold-rule"></div>
 <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
 
-<!-- ═══ SCREEN 1: INTRO ═══ -->
+<!-- ═══ INTRO ═══ -->
 <div id="screen-intro" class="screen active">
   <div class="wrap">
     <span class="eyebrow">The 4C Reflex Screen</span>
-    <h1>You are not broken.<br>You have reflexes.</h1>
-    <p class="lead">Every person develops automatic patterns. They were useful once — they kept you safe, helped you manage hard situations, helped you survive. The problem is not that you have them. The problem is that they are still running, and most of the time you do not know it.</p>
-    <p class="lead">This screen shows you <strong>which of the four reflexes is loudest in you right now</strong> — and gives you three specific moves to interrupt it this week. It also answers the questions most people have once they see the pattern: where to start, how to start, and how to keep going.</p>
-
+    <h1>Four reflexes.<br>One is running you right now.</h1>
+    <p class="lead">Complaining. Criticizing. Comparing. Competing. Every person carries all four. One of them is louder than the others — and it is shaping your decisions, your relationships, and your unfinished work without your permission.</p>
+    <p class="lead">This screen takes under ten minutes. It shows you which reflex is most active, where it is showing up, and the three moves that interrupt it.</p>
+    <div class="gold-rule"></div>
     <div class="instruction-box">
-      <p><strong>20 statements. About 6 minutes.</strong></p>
-      <p>Read each statement. Mark what is actually true — not what you wish were true, not what you think you should answer. The more honest you are, the more useful this becomes.</p>
-      <p>The scale: <strong>Not me · Sometimes me · Often me · This is me.</strong></p>
+      <p><strong>20 statements. Four options each.</strong></p>
+      <p>Read each statement. Choose the option that is most true for you right now — not who you want to be. The more honest you are, the more useful the result.</p>
+      <p>There are no good or bad answers. There is only what is true.</p>
     </div>
-
-    <div style="text-align:center;">
-      <button class="btn-primary" onclick="startAssessment()">Begin the Screen</button>
+    <div class="name-wrap">
+      <label for="participantName">Your first name</label>
+      <input type="text" id="participantName" placeholder="Enter your first name" autocomplete="given-name">
     </div>
+    <button class="btn-primary" onclick="startAssessment()">Begin the Screen</button>
   </div>
 </div>
 
-<!-- ═══ SCREEN 2: QUESTIONS ═══ -->
+<!-- ═══ QUESTIONS ═══ -->
 <div id="screen-questions" class="screen">
   <div class="wrap">
 
-    <div class="scale-legend">
-      <div class="legend-item">Not me<span>This is not what I see</span></div>
-      <div class="legend-item">Sometimes me<span>I see it occasionally</span></div>
-      <div class="legend-item">Often me<span>I see it clearly</span></div>
-      <div class="legend-item">This is me<span>This is my pattern</span></div>
-    </div>
-
-    <!-- GROUP 1: COMPLAINING -->
     <div class="question-group">
-      <div class="section-label">Complaining</div>
+      <span class="section-label">Complaining</span>
       <div class="section-divider"></div>
-
+      <div class="question-group-title">The Complaining Reflex</div>
+      <p class="question-group-sub">How your mind handles what is wrong.</p>
       <div class="question-item" id="q1-wrap">
-        <p class="question-text">My mind goes to what is wrong before what is working.</p>
+        <p class="question-text">I talk about what is wrong more than I act on what I can change.</p>
         <div class="options">
           <button class="option-btn" onclick="selectOption(1,1)">Not me</button>
           <button class="option-btn" onclick="selectOption(1,2)">Sometimes me</button>
@@ -260,9 +283,8 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(1,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q2-wrap">
-        <p class="question-text">I name problems I am not actually working to fix.</p>
+        <p class="question-text">When something goes wrong, my first move is to name the problem — not solve it.</p>
         <div class="options">
           <button class="option-btn" onclick="selectOption(2,1)">Not me</button>
           <button class="option-btn" onclick="selectOption(2,2)">Sometimes me</button>
@@ -270,9 +292,8 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(2,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q3-wrap">
-        <p class="question-text">I rehearse grievances when I am alone with my thoughts.</p>
+        <p class="question-text">I feel better after venting — but nothing actually changes.</p>
         <div class="options">
           <button class="option-btn" onclick="selectOption(3,1)">Not me</button>
           <button class="option-btn" onclick="selectOption(3,2)">Sometimes me</button>
@@ -280,9 +301,8 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(3,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q4-wrap">
-        <p class="question-text">I describe my life more than I move it.</p>
+        <p class="question-text">I can list everything in my way. I have a harder time listing what I will do about it.</p>
         <div class="options">
           <button class="option-btn" onclick="selectOption(4,1)">Not me</button>
           <button class="option-btn" onclick="selectOption(4,2)">Sometimes me</button>
@@ -292,13 +312,13 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
       </div>
     </div>
 
-    <!-- GROUP 2: CRITICIZING -->
     <div class="question-group">
-      <div class="section-label">Criticizing</div>
+      <span class="section-label">Criticizing</span>
       <div class="section-divider"></div>
-
+      <div class="question-group-title">The Criticizing Reflex</div>
+      <p class="question-group-sub">How your mind handles your own performance.</p>
       <div class="question-item" id="q5-wrap">
-        <p class="question-text">The harshest voice in my head often has the final say.</p>
+        <p class="question-text">My inner voice is harder on me than I would be on anyone I care about.</p>
         <div class="options">
           <button class="option-btn" onclick="selectOption(5,1)">Not me</button>
           <button class="option-btn" onclick="selectOption(5,2)">Sometimes me</button>
@@ -306,7 +326,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(5,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q6-wrap">
         <p class="question-text">I speak to myself in ways I would not speak to someone I respect.</p>
         <div class="options">
@@ -316,7 +335,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(6,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q7-wrap">
         <p class="question-text">I rehearse my mistakes longer than I learn from them.</p>
         <div class="options">
@@ -326,7 +344,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(7,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q8-wrap">
         <p class="question-text">I see my flaws faster than I see what is working.</p>
         <div class="options">
@@ -338,11 +355,11 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
       </div>
     </div>
 
-    <!-- GROUP 3: COMPARING -->
     <div class="question-group">
-      <div class="section-label">Comparing</div>
+      <span class="section-label">Comparing</span>
       <div class="section-divider"></div>
-
+      <div class="question-group-title">The Comparing Reflex</div>
+      <p class="question-group-sub">How your mind handles other people's progress.</p>
       <div class="question-item" id="q9-wrap">
         <p class="question-text">I measure my life against someone else's pace.</p>
         <div class="options">
@@ -352,7 +369,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(9,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q10-wrap">
         <p class="question-text">I scroll, then feel smaller than before I started.</p>
         <div class="options">
@@ -362,7 +378,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(10,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q11-wrap">
         <p class="question-text">I downgrade my own progress when I see someone else's.</p>
         <div class="options">
@@ -372,7 +387,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(11,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q12-wrap">
         <p class="question-text">I lose track of what I want when I see what they have.</p>
         <div class="options">
@@ -384,11 +398,11 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
       </div>
     </div>
 
-    <!-- GROUP 4: COMPETING -->
     <div class="question-group">
-      <div class="section-label">Competing</div>
+      <span class="section-label">Competing</span>
       <div class="section-divider"></div>
-
+      <div class="question-group-title">The Competing Reflex</div>
+      <p class="question-group-sub">How your mind handles your own worth.</p>
       <div class="question-item" id="q13-wrap">
         <p class="question-text">I track who is ahead of me in my field.</p>
         <div class="options">
@@ -398,7 +412,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(13,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q14-wrap">
         <p class="question-text">My sense of worth is tied to whether I am winning.</p>
         <div class="options">
@@ -408,7 +421,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(14,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q15-wrap">
         <p class="question-text">I do things mostly to be seen doing them.</p>
         <div class="options">
@@ -418,9 +430,8 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(15,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q16-wrap">
-        <p class="question-text">I postpone what matters to me for what others will applaud.</p>
+        <p class="question-text">I feel unsettled when someone in my circle succeeds at something I have not yet done.</p>
         <div class="options">
           <button class="option-btn" onclick="selectOption(16,1)">Not me</button>
           <button class="option-btn" onclick="selectOption(16,2)">Sometimes me</button>
@@ -430,14 +441,13 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
       </div>
     </div>
 
-    <!-- GROUP 5: STARTING & RHYTHM -->
     <div class="question-group">
-      <div class="section-label">Starting &amp; Rhythm</div>
+      <span class="section-label">Starting &amp; Rhythm</span>
       <div class="section-divider"></div>
-      <p class="question-group-sub">These four questions are about what happens after you decide to change.</p>
-
+      <div class="question-group-title">Starting and Rhythm</div>
+      <p class="question-group-sub">How you begin and how you sustain.</p>
       <div class="question-item" id="q17-wrap">
-        <p class="question-text">I know what I need to do. I just cannot seem to start.</p>
+        <p class="question-text">I know what I need to do. Starting is the part that stalls me.</p>
         <div class="options">
           <button class="option-btn" onclick="selectOption(17,1)">Not me</button>
           <button class="option-btn" onclick="selectOption(17,2)">Sometimes me</button>
@@ -445,9 +455,8 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(17,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q18-wrap">
-        <p class="question-text">I start well, then lose the rhythm after a few days.</p>
+        <p class="question-text">I start well. I lose the rhythm after a few days.</p>
         <div class="options">
           <button class="option-btn" onclick="selectOption(18,1)">Not me</button>
           <button class="option-btn" onclick="selectOption(18,2)">Sometimes me</button>
@@ -455,7 +464,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(18,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q19-wrap">
         <p class="question-text">I do not have a clear way to measure whether I am actually growing.</p>
         <div class="options">
@@ -465,7 +473,6 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
           <button class="option-btn" onclick="selectOption(19,4)">This is me</button>
         </div>
       </div>
-
       <div class="question-item" id="q20-wrap">
         <p class="question-text">I have no one who will notice — and say something — if I stop.</p>
         <div class="options">
@@ -481,80 +488,96 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
       <p class="unanswered-warning" id="unansweredWarning">Please answer all 20 statements before continuing.</p>
       <button class="btn-primary" onclick="submitAssessment()">See My Results</button>
     </div>
-
   </div>
 </div>
 
-<!-- ═══ SCREEN 3: RESULTS ═══ -->
+<!-- ═══ RESULTS ═══ -->
 <div id="screen-results" class="screen">
   <div class="wrap">
-
     <div class="results-intro">
       <span class="eyebrow">Your Result</span>
       <h2 id="results-headline">Here is what is running you.</h2>
-      <p id="results-subhead" style="margin-top:12px;">A named pattern can be addressed. An unnamed one can only be endured. Below is what your answers show — and the moves that interrupt it.</p>
+      <p id="results-subhead">A named pattern can be addressed. An unnamed one can only be endured. Below is what your answers show — and the moves that interrupt it.</p>
     </div>
 
-    <!-- Score bars -->
-    <div class="section-label">Your Pattern Profile</div>
-    <div class="section-divider"></div>
-    <div id="scoreGrid" style="margin-bottom:48px;"></div>
+    <div class="score-section">
+      <span class="section-label">Your Pattern Profile</span>
+      <div class="section-divider"></div>
+      <div id="scoreGrid"></div>
+    </div>
 
-    <!-- Reflex cards -->
-    <div class="section-label" style="margin-top:40px;">What Each Reflex Is</div>
+    <div class="action-row">
+      <button class="btn-action" onclick="downloadPDF()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Download PDF Report
+      </button>
+      <button class="btn-action" onclick="downloadWhatsApp()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+        Save WhatsApp Image
+      </button>
+    </div>
+
+    <span class="section-label">What Each Reflex Is Doing</span>
     <div class="section-divider-light"></div>
     <div id="reflexCards"></div>
 
-    <!-- NOW WHAT -->
     <div id="nowWhatSection"></div>
 
-    <!-- Allegiance Matrix -->
     <div class="matrix-section">
-      <div class="section-label">The Allegiance Matrix</div>
+      <span class="section-label">The Allegiance Matrix</span>
       <div class="section-divider-light"></div>
       <p class="matrix-sub">Where each reflex breaks the four covenants. Your highlighted row is your primary reflex.</p>
       <div class="matrix-table-wrap">
         <table class="matrix-table" id="matrixTable">
           <thead>
             <tr>
-              <th></th>
-              <th>Attention<br><span style="font-weight:400;font-size:10px;text-transform:none;letter-spacing:0;">Where does your mind go unguided?</span></th>
-              <th>Allegiance<br><span style="font-weight:400;font-size:10px;text-transform:none;letter-spacing:0;">Whose voice has the final say?</span></th>
-              <th>Integrity<br><span style="font-weight:400;font-size:10px;text-transform:none;letter-spacing:0;">Do your words match what you do?</span></th>
-              <th>Return<br><span style="font-weight:400;font-size:10px;text-transform:none;letter-spacing:0;">When you leave, do you come back?</span></th>
+              <th>Reflex</th>
+              <th>Attention</th>
+              <th>Allegiance</th>
+              <th>Integrity</th>
+              <th>Return</th>
             </tr>
           </thead>
           <tbody>
-            <tr id="matrix-complaining"><td>Complaining</td><td>Mind drifts to what is wrong</td><td>Grievance speaks with final authority</td><td>You name problems you will not fix</td><td>You stay inside the grievance</td></tr>
-            <tr id="matrix-criticizing"><td>Criticizing</td><td>Mind hunts flaws faster than it sees</td><td>Harshest inner voice has final say</td><td>You condemn what you keep doing</td><td>You stay inside the verdict</td></tr>
-            <tr id="matrix-comparing"><td>Comparing</td><td>Mind goes to other people's lives</td><td>Imagined audience has the final say</td><td>You measure in someone else's currency</td><td>You leave for their life and stay</td></tr>
-            <tr id="matrix-competing"><td>Competing</td><td>Mind tracks who is ahead</td><td>Scoreboard has the final say</td><td>You perform what you should live</td><td>You return only after you lose</td></tr>
+            <tr id="matrix-complaining"><td>Complaining</td><td>Mind drifts to what is wrong</td><td>Grievance has final authority</td><td>You name problems you will not fix</td><td>You stay inside the grievance</td></tr>
+            <tr id="matrix-criticizing"><td>Criticizing</td><td>Mind hunts flaws first</td><td>Harshest inner voice has final say</td><td>You condemn what you keep doing</td><td>You stay inside the verdict</td></tr>
+            <tr id="matrix-comparing"><td>Comparing</td><td>Mind goes to other people's lives</td><td>Imagined audience has final say</td><td>You measure in someone else's currency</td><td>You leave for their life and stay</td></tr>
+            <tr id="matrix-competing"><td>Competing</td><td>Mind tracks who is ahead</td><td>Scoreboard has final say</td><td>You perform what you should live</td><td>You return only after you lose</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Commitment -->
     <div class="commitment-section">
       <span class="eyebrow-gold">Your Commitment This Week</span>
       <h3>The covenant is not perfection.<br>The covenant is return.</h3>
       <p>On Friday's cohort call, say this sentence out loud. The third blank is the hardest. Make it specific — one behavior, doable before noon tomorrow.</p>
       <div class="commitment-template">"This week, __________ ran me. What broke first was my __________. Tomorrow I will __________."</div>
-      <p style="font-size:14px;color:rgba(255,255,255,0.45);">You are permitted to fall. You are not permitted to stop returning.</p>
+      <p style="font-size:14px;color:rgba(255,255,255,0.50);">You are permitted to fall. You are not permitted to stop returning.</p>
     </div>
 
-    <!-- CTA -->
+    <div class="email-section">
+      <h3>Send these results to your email</h3>
+      <p>Enter your email address and we will send you a full copy of your results. A copy also goes to your coach.</p>
+      <div class="email-row">
+        <input type="email" id="resultEmail" placeholder="Your email address">
+        <button class="email-send-btn" onclick="sendResultsEmail()">Send Results</button>
+      </div>
+      <div class="email-status" id="emailStatus"></div>
+    </div>
+
     <div class="cta-section">
       <span class="eyebrow">Next Step</span>
       <h3>You have seen the pattern.<br>Now interrupt it.</h3>
-      <p>KOORA: The Finisher Protocol is one Saturday where you move past the symptoms and identify the single move that changes the pattern. Not motivation. A system.</p>
-      <a href="https://www.hom2026.com" class="btn-primary" target="_blank" rel="noopener">Reserve Your Place</a>
+      <p>KOORA: The Finisher Protocol is a 180-day return path for the person who has started enough times. Not motivation. A system. A covenant.</p>
+      <a href="https://www.hom2026.com" class="btn-primary" target="_blank" rel="noopener">Reserve Your Place in KOORA</a>
       <br>
       <button class="btn-secondary" onclick="retakeAssessment()">Take It Again</button>
     </div>
-
   </div>
 </div>
+
+<canvas id="waCanvas" width="1080" height="1080"></canvas>
 
 <footer class="site-footer">
   <p><strong>KOORA · The Finisher Protocol · House of Mastery</strong><br>
@@ -562,12 +585,12 @@ body { background: var(--bg); color: var(--body); font-family: var(--sans); font
 </footer>
 
 <script>
+emailjs.init('FEEOw8NA0cwBM4Vum');
 var answers = {};
-
+var REFLEX_ORDER = ['complaining','criticizing','comparing','competing'];
 var REFLEX_DATA = {
   complaining: {
-    name: "The Complaining Reflex",
-    questions: [1,2,3,4],
+    name: "The Complaining Reflex", questions: [1,2,3,4],
     whatItIs: "Your mind goes to what is wrong before what is working. You name problems. You describe barriers. You can list everything that is in your way.",
     whatItActuallyIs: "Complaining feels like action. It is not. It is the rehearsal of powerlessness — a pattern that confuses being heard with being healed.",
     underneath: "Fatigue. You are tired of carrying what has not changed. The complaint is a signal, not a strategy.",
@@ -578,8 +601,7 @@ var REFLEX_DATA = {
     ]
   },
   criticizing: {
-    name: "The Criticizing Reflex",
-    questions: [5,6,7,8],
+    name: "The Criticizing Reflex", questions: [5,6,7,8],
     whatItIs: "The voice in your head that says \"not good enough,\" \"you should have known better.\" It speaks with final authority. You do not question it. You obey it.",
     whatItActuallyIs: "The critic believes that cruelty creates change. It does not. It creates shame. And shame does not finish things — it abandons them.",
     underneath: "A protector. The critic started as a habit that learned being harsh on yourself was safer than being surprised by failure. It is trying to keep you safe. It is doing it badly.",
@@ -590,8 +612,7 @@ var REFLEX_DATA = {
     ]
   },
   comparing: {
-    name: "The Comparing Reflex",
-    questions: [9,10,11,12],
+    name: "The Comparing Reflex", questions: [9,10,11,12],
     whatItIs: "You measure your life against someone else's feed, someone else's pace, someone else's highlight reel. You feel behind. You feel smaller. You feel like you are losing a race you never agreed to enter.",
     whatItActuallyIs: "Comparison is not envy. It is the surrender of your own ground. You cannot stand on your own foundation if you are always looking at theirs.",
     underneath: "A forgotten self. You stopped asking what you actually want. The reflex filled the silence.",
@@ -602,8 +623,7 @@ var REFLEX_DATA = {
     ]
   },
   competing: {
-    name: "The Competing Reflex",
-    questions: [13,14,15,16],
+    name: "The Competing Reflex", questions: [13,14,15,16],
     whatItIs: "You track who is ahead. You measure your worth by whether you are winning. You perform what you should be living — you do things to be seen doing them.",
     whatItActuallyIs: "Competition is useful on a court. It is destructive when it becomes the lens for your entire life. The scoreboard is not your soul.",
     underneath: "The fear that you have no inherent value. If you are not winning, you are nothing. The reflex is trying to prove that you matter. You cannot prove mattering. You can only live it.",
@@ -614,33 +634,14 @@ var REFLEX_DATA = {
     ]
   }
 };
-
-var REFLEX_ORDER = ['complaining','criticizing','comparing','competing'];
-
-// NOW WHAT content — answers to the 5 participant questions
 var NOW_WHAT = {
   intro: "These are the questions almost everyone has once they see their pattern. They are good questions. Here are direct answers.",
   items: [
-    {
-      q: "I know I need to change. Where do I start?",
-      a: "<p>Start with the one reflex that scored highest. Not all four. One. The loudest one is the one that is costing you the most right now. Everything else is secondary.</p><p>Your first move is not a plan. It is a single behavior you can do tomorrow before noon. Name it. Write it down. Do it. That is where you start.</p>"
-    },
-    {
-      q: "How do I actually start — not just decide to?",
-      a: "<p><strong>Decide on the smallest possible version.</strong> Not the full change. The smallest version of it that you could do in under five minutes. If you want to build a writing habit, the start is one sentence. If you want to stop complaining, the start is one 60-second rule, once. If you want to stop competing, the start is one private act today.</p><p>The reason people do not start is that they are waiting until they feel ready. You will not feel ready. Start before you feel ready. Readiness follows action — it does not precede it.</p>"
-    },
-    {
-      q: "How do I maintain rhythm — even with the little things?",
-      a: "<p><strong>Rhythm is not motivation. Rhythm is structure.</strong> Motivation disappears. Structure stays.</p><p>Pick a time of day — not a goal, a time. \"Every morning at 6:30 I do this one thing.\" Attach the new behavior to something you already do. Brush your teeth, then do the one thing. Sit down for lunch, then do the one thing. The behavior borrows the rhythm of the existing habit.</p><p>When you miss a day, the rule is: never miss twice. One miss is an interruption. Two misses is a new pattern. Return the next day. That is the whole system.</p>"
-    },
-    {
-      q: "How do I evaluate my growth and progress?",
-      a: "<p><strong>Track behavior, not feelings.</strong> \"Did I do the thing?\" is a question you can answer. \"Am I growing?\" is a question that will always feel uncertain.</p><p>At the end of each week, ask three questions: What did I finish? What did I interrupt? What did I return to after I stopped? Those three answers tell you more about your actual progress than any feeling of confidence or doubt ever will.</p><p>Growth is not a feeling. It is a record. Keep a short one.</p>"
-    },
-    {
-      q: "How do I become accountable — and to whom?",
-      a: "<p><strong>Accountability is not someone checking on you. It is someone who will tell you the truth.</strong> Most people do not have that. They have people who are polite, or people who are harsh. Neither is useful.</p><p>You need one person who will ask: \"Did you do what you said?\" and wait for the real answer. Not someone who will let you off the hook. Not someone who will shame you. Someone who will hold the standard and still be in your corner.</p><p>In KOORA, that is the cohort. On Friday calls, you say what ran you and what you will do next. That is the accountability structure. Use it. Show up. Say the real thing.</p>"
-    }
+    { q: "I know I need to change. Where do I start?", a: "<p>Start with the one reflex that scored highest. Not all four. One. The loudest one is the one that is costing you the most right now. Everything else is secondary.</p><p>Your first move is not a plan. It is a single behavior you can do tomorrow before noon. Name it. Write it down. Do it. That is where you start.</p>" },
+    { q: "How do I actually start — not just decide to?", a: "<p><strong>Decide on the smallest possible version.</strong> Not the full change. The smallest version of it that you could do in under five minutes. If you want to build a writing habit, the start is one sentence. If you want to stop complaining, the start is one 60-second rule, once.</p><p>You will not feel ready. Start before you feel ready. Readiness follows action — it does not precede it.</p>" },
+    { q: "How do I maintain rhythm — even with the little things?", a: "<p><strong>Rhythm is not motivation. Rhythm is structure.</strong> Motivation disappears. Structure stays.</p><p>Pick a time of day — not a goal, a time. Attach the new behavior to something you already do. Brush your teeth, then do the one thing. When you miss a day, the rule is: never miss twice. One miss is an interruption. Two misses is a new pattern. Return the next day. That is the whole system.</p>" },
+    { q: "How do I evaluate my growth and progress?", a: "<p><strong>Track behavior, not feelings.</strong> \"Did I do the thing?\" is a question you can answer. \"Am I growing?\" is a question that will always feel uncertain.</p><p>At the end of each week, ask three questions: What did I finish? What did I interrupt? What did I return to after I stopped? Those three answers tell you more about your actual progress than any feeling ever will.</p>" },
+    { q: "How do I become accountable — and to whom?", a: "<p><strong>Accountability is not someone checking on you. It is someone who will tell you the truth.</strong> You need one person who will ask: \"Did you do what you said?\" and wait for the real answer. Not someone who will let you off the hook. Not someone who will shame you. Someone who will hold the standard and still be in your corner.</p><p>In KOORA, that is the cohort. On Friday calls, you say what ran you and what you will do next. That is the accountability structure. Use it.</p>" }
   ]
 };
 
@@ -652,56 +653,34 @@ function showScreen(id) {
   if (id === 'screen-questions') bar.style.width = '50%';
   if (id === 'screen-results')   bar.style.width = '100%';
 }
-
 function startAssessment() { showScreen('screen-questions'); }
-
 function retakeAssessment() {
   answers = {};
   document.querySelectorAll('.option-btn').forEach(function(b){ b.classList.remove('selected'); });
-  document.querySelectorAll('.question-item').forEach(function(i){ i.classList.remove('answered'); i.style.borderColor = ''; });
+  document.querySelectorAll('.question-item').forEach(function(i){ i.classList.remove('answered','error'); i.style.borderColor = ''; });
   document.getElementById('unansweredWarning').style.display = 'none';
-  showScreen('screen-questions');
+  showScreen('screen-intro');
 }
-
 function selectOption(qNum, score) {
   answers[qNum] = score;
   var wrap = document.getElementById('q' + qNum + '-wrap');
   wrap.querySelectorAll('.option-btn').forEach(function(btn, idx){ btn.classList.toggle('selected', idx + 1 === score); });
   wrap.classList.add('answered');
+  wrap.classList.remove('error');
   wrap.style.borderColor = '';
 }
-
-function getReflexScore(reflex) {
-  var qs = REFLEX_DATA[reflex].questions;
-  var total = 0;
-  qs.forEach(function(q){ total += (answers[q] || 0); });
-  return total;
-}
-
-function getReadinessScore() {
-  var total = 0;
-  [17,18,19,20].forEach(function(q){ total += (answers[q] || 0); });
-  return total;
-}
-
-function getReflexLevel(score) {
-  if (score <= 7)  return 'quiet';
-  if (score <= 11) return 'active';
-  return 'loud';
-}
-
-function getLevelLabel(level) {
-  if (level === 'quiet')  return 'Quiet';
-  if (level === 'active') return 'Active';
-  return 'Loud';
-}
+function getReflexScore(reflex) { return REFLEX_DATA[reflex].questions.reduce(function(s,q){ return s + (answers[q]||0); }, 0); }
+function getReadinessScore() { return [17,18,19,20].reduce(function(s,q){ return s + (answers[q]||0); }, 0); }
+function getReflexLevel(score) { return score <= 7 ? 'quiet' : score <= 11 ? 'active' : 'loud'; }
+function getLevelLabel(level) { return level === 'quiet' ? 'Quiet' : level === 'active' ? 'Active' : 'Loud'; }
+function getLevelColor(level) { return level === 'quiet' ? '#1B5E20' : level === 'active' ? '#B45309' : '#991B1B'; }
 
 function submitAssessment() {
   var missing = [];
   for (var i = 1; i <= 20; i++) { if (!answers[i]) missing.push(i); }
   if (missing.length > 0) {
     document.getElementById('unansweredWarning').style.display = 'block';
-    missing.forEach(function(q){ document.getElementById('q' + q + '-wrap').style.borderColor = '#C0392B'; });
+    missing.forEach(function(q){ var w = document.getElementById('q'+q+'-wrap'); w.classList.add('error'); });
     return;
   }
   document.getElementById('unansweredWarning').style.display = 'none';
@@ -710,68 +689,241 @@ function submitAssessment() {
 }
 
 function buildResults() {
-  var scores = {};
-  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
+  var scores = {}; REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
   var readiness = getReadinessScore();
-
   var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
   var primaryLevel = getReflexLevel(scores[primary]);
-
   var headlines = { loud: 'Here is what is running you.', active: 'Here is what is active in you.', quiet: 'Here is your pattern profile.' };
-  document.getElementById('results-headline').textContent = headlines[primaryLevel] || 'Here is your result.';
+  document.getElementById('results-headline').textContent = headlines[primaryLevel];
 
   // Score bars
-  var grid = document.getElementById('scoreGrid');
-  grid.innerHTML = '';
+  var grid = document.getElementById('scoreGrid'); grid.innerHTML = '';
   REFLEX_ORDER.forEach(function(r){
-    var s = scores[r];
-    var lvl = getReflexLevel(s);
-    var pct = Math.round((s / 16) * 100);
-    var label = r.charAt(0).toUpperCase() + r.slice(1);
-    grid.innerHTML += '<div class="score-row"><div class="score-row-label">' + label + '</div><div class="score-bar-wrap"><div class="score-bar-fill ' + lvl + '" style="width:' + pct + '%"></div></div><div class="score-row-value ' + lvl + '">' + s + '/16 · ' + getLevelLabel(lvl) + '</div></div>';
+    var s = scores[r], lvl = getReflexLevel(s), pct = Math.round((s/16)*100);
+    grid.innerHTML += '<div class="score-row"><div class="score-row-label">'+r.charAt(0).toUpperCase()+r.slice(1)+'</div><div class="score-bar-wrap"><div class="score-bar-fill '+lvl+'" style="width:'+pct+'%"></div></div><div class="score-row-value '+lvl+'">'+s+'/16 &middot; '+getLevelLabel(lvl)+'</div></div>';
   });
-
-  // Readiness bar
-  var rLvl = readiness <= 8 ? 'quiet' : readiness <= 12 ? 'active' : 'loud';
-  var rPct = Math.round((readiness / 16) * 100);
-  var rLabel = readiness <= 8 ? 'Strong foundation' : readiness <= 12 ? 'Some gaps' : 'Needs attention';
-  grid.innerHTML += '<div class="score-row" style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border);"><div class="score-row-label">Starting &amp; Rhythm</div><div class="score-bar-wrap"><div class="score-bar-fill ' + rLvl + '" style="width:' + rPct + '%"></div></div><div class="score-row-value ' + rLvl + '">' + readiness + '/16 · ' + rLabel + '</div></div>';
+  var rLvl = readiness<=8?'quiet':readiness<=12?'active':'loud', rPct = Math.round((readiness/16)*100);
+  var rLabel = readiness<=8?'Strong':readiness<=12?'Some gaps':'Needs attention';
+  grid.innerHTML += '<div class="score-row" style="margin-top:8px;padding-top:14px;border-top:1px solid rgba(17,17,17,0.08);"><div class="score-row-label">Starting &amp; Rhythm</div><div class="score-bar-wrap"><div class="score-bar-fill '+rLvl+'" style="width:'+rPct+'%"></div></div><div class="score-row-value '+rLvl+'">'+readiness+'/16 &middot; '+rLabel+'</div></div>';
 
   // Reflex cards
-  var cardsEl = document.getElementById('reflexCards');
-  cardsEl.innerHTML = '';
-  var sorted = REFLEX_ORDER.slice().sort(function(a,b){ return scores[b] - scores[a]; });
-
-  sorted.forEach(function(r){
-    var d = REFLEX_DATA[r];
-    var s = scores[r];
-    var lvl = getReflexLevel(s);
-
+  var cardsEl = document.getElementById('reflexCards'); cardsEl.innerHTML = '';
+  REFLEX_ORDER.slice().sort(function(a,b){ return scores[b]-scores[a]; }).forEach(function(r){
+    var d = REFLEX_DATA[r], s = scores[r], lvl = getReflexLevel(s);
     if (lvl === 'quiet') {
-      cardsEl.innerHTML += '<div class="reflex-card quiet"><div class="reflex-card-header"><div class="reflex-status-dot quiet"></div><h3>' + d.name + '</h3><span class="status-tag quiet">Quiet</span></div><div class="reflex-card-body"><p class="quiet-note">Score: ' + s + '/16. This reflex is not running you right now. Keep an eye on it — reflexes shift under pressure.</p></div></div>';
+      cardsEl.innerHTML += '<div class="reflex-card quiet"><div class="reflex-card-header"><div class="reflex-status-dot quiet"></div><h3>'+d.name+'</h3><span class="status-tag quiet">Quiet</span></div><div class="reflex-card-body"><p class="quiet-note">Score: '+s+'/16. This reflex is not running you right now. Keep an eye on it — reflexes shift under pressure.</p></div></div>';
     } else {
-      var strategiesHtml = '';
-      d.strategies.forEach(function(st, i){
-        strategiesHtml += '<div class="strategy-item"><div class="strategy-num">' + (i+1) + '</div><div class="strategy-text"><strong>' + st.title + '</strong><p>' + st.body + '</p></div></div>';
-      });
-      cardsEl.innerHTML += '<div class="reflex-card ' + lvl + '"><div class="reflex-card-header"><div class="reflex-status-dot ' + lvl + '"></div><h3>' + d.name + '</h3><span class="status-tag ' + lvl + '">' + getLevelLabel(lvl) + ' · ' + s + '/16</span></div><div class="reflex-card-body"><div class="reflex-what-it-is"><div class="label">What it looks like</div><p>' + d.whatItIs + '</p><p style="margin-top:10px;">' + d.whatItActuallyIs + '</p></div><div class="reflex-underneath"><div class="label">What hides underneath</div><p>' + d.underneath + '</p></div><div class="strategies-label">Your Top 3 Strategies</div>' + strategiesHtml + '</div></div>';
+      var stHtml = ''; d.strategies.forEach(function(st,i){ stHtml += '<div class="strategy-item"><div class="strategy-num">'+(i+1)+'</div><div class="strategy-text"><strong>'+st.title+'</strong><p>'+st.body+'</p></div></div>'; });
+      cardsEl.innerHTML += '<div class="reflex-card '+lvl+'"><div class="reflex-card-header"><div class="reflex-status-dot '+lvl+'"></div><h3>'+d.name+'</h3><span class="status-tag '+lvl+'">'+getLevelLabel(lvl)+' &middot; '+s+'/16</span></div><div class="reflex-card-body"><span class="card-label">What it looks like</span><p>'+d.whatItIs+'</p><p>'+d.whatItActuallyIs+'</p><div class="reflex-underneath"><span class="card-label">What hides underneath</span><p>'+d.underneath+'</p></div><span class="strategies-label">Your Top 3 Strategies</span>'+stHtml+'</div></div>';
     }
   });
 
-  // NOW WHAT section
-  var nw = document.getElementById('nowWhatSection');
-  var qaHtml = '';
-  NOW_WHAT.items.forEach(function(item){
-    qaHtml += '<div class="qa-item"><div class="qa-question">' + item.q + '</div><div class="qa-answer">' + item.a + '</div></div>';
-  });
-  nw.innerHTML = '<div class="now-what-section"><div class="now-what-header"><span class="eyebrow-white">Now What?</span><h3>Five questions every person asks after they see the pattern.</h3><p>' + NOW_WHAT.intro + '</p></div><div class="now-what-body">' + qaHtml + '</div></div>';
+  // Now What
+  var nw = document.getElementById('nowWhatSection'); var qaHtml = '';
+  NOW_WHAT.items.forEach(function(item){ qaHtml += '<div class="qa-item"><div class="qa-question">'+item.q+'</div><div class="qa-answer">'+item.a+'</div></div>'; });
+  nw.innerHTML = '<div class="now-what-section"><div class="now-what-header"><span class="eyebrow-w">Now What?</span><h3>Five questions every person asks after they see the pattern.</h3><p>'+NOW_WHAT.intro+'</p></div><div class="now-what-body">'+qaHtml+'</div></div>';
 
-  // Highlight matrix row
-  REFLEX_ORDER.forEach(function(r){ var row = document.getElementById('matrix-' + r); if (row) row.classList.remove('highlight-row'); });
-  var primaryRow = document.getElementById('matrix-' + primary);
-  if (primaryRow) primaryRow.classList.add('highlight-row');
+  // Matrix highlight
+  REFLEX_ORDER.forEach(function(r){ var row = document.getElementById('matrix-'+r); if(row) row.classList.remove('highlight-row'); });
+  var pr = document.getElementById('matrix-'+primary); if(pr) pr.classList.add('highlight-row');
+}
+
+// ── PDF ──────────────────────────────────────────────
+function downloadPDF() {
+  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
+  var scores = {}; REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
+  var readiness = getReadinessScore();
+  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a]>=scores[b]?a:b; });
+  var { jsPDF } = window.jspdf;
+  var doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  var W=210, M=20, y=0;
+  var lc = { quiet:[27,94,32], active:[180,83,9], loud:[153,27,27] };
+
+  // Header
+  doc.setFillColor(13,31,60); doc.rect(0,0,W,26,'F');
+  doc.setFillColor(201,151,58); doc.rect(0,0,W,2.5,'F');
+  doc.setTextColor(201,151,58); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('HOUSE OF MASTERY · THE 4C REFLEX SCREEN', M, 12);
+  doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text('Confidential · '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}), M, 21);
+  y = 40;
+
+  doc.setTextColor(17,17,17); doc.setFontSize(22); doc.setFont('helvetica','bold');
+  doc.text('Your 4C Reflex Report', M, y); y += 9;
+  doc.setFontSize(12); doc.setFont('helvetica','normal'); doc.setTextColor(60,60,60);
+  doc.text('Prepared for: '+name, M, y); y += 14;
+  doc.setDrawColor(201,151,58); doc.setLineWidth(0.5); doc.line(M,y,W-M,y); y += 12;
+
+  doc.setTextColor(201,151,58); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('YOUR PATTERN PROFILE', M, y); y += 8;
+
+  var allD = REFLEX_ORDER.map(function(r){ return {label:r.charAt(0).toUpperCase()+r.slice(1), score:scores[r], max:16, level:getReflexLevel(scores[r])}; });
+  allD.push({label:'Starting & Rhythm', score:readiness, max:16, level:readiness<=8?'quiet':readiness<=12?'active':'loud'});
+  var bW = W-M*2-58;
+  allD.forEach(function(d){
+    var fW = Math.round((d.score/d.max)*bW); var c = lc[d.level];
+    doc.setTextColor(17,17,17); doc.setFontSize(10); doc.setFont('helvetica','bold');
+    doc.text(d.label, M, y);
+    doc.setFillColor(220,220,220); doc.roundedRect(M+58,y-5,bW,6,1,1,'F');
+    if(fW>0){ doc.setFillColor(c[0],c[1],c[2]); doc.roundedRect(M+58,y-5,fW,6,1,1,'F'); }
+    doc.setTextColor(c[0],c[1],c[2]); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text(d.score+'/'+d.max+' · '+getLevelLabel(d.level), M+58+bW+3, y);
+    y += 11;
+  });
+  y += 4;
+  doc.setDrawColor(201,151,58); doc.line(M,y,W-M,y); y += 12;
+
+  var pd = REFLEX_DATA[primary];
+  doc.setTextColor(201,151,58); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('PRIMARY REFLEX', M, y); y += 8;
+  doc.setTextColor(17,17,17); doc.setFontSize(14); doc.setFont('helvetica','bold');
+  doc.text(pd.name, M, y); y += 8;
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(40,40,40);
+  var desc = doc.splitTextToSize(pd.whatItIs+' '+pd.whatItActuallyIs, W-M*2);
+  doc.text(desc, M, y); y += desc.length*5+6;
+
+  var undL = doc.splitTextToSize(pd.underneath, W-M*2-8);
+  doc.setFillColor(250,249,246); doc.setDrawColor(201,151,58); doc.setLineWidth(0.3);
+  doc.roundedRect(M,y-4,W-M*2,undL.length*5+12,2,2,'FD');
+  doc.setTextColor(17,17,17); doc.setFontSize(9); doc.setFont('helvetica','bold');
+  doc.text('What hides underneath', M+4, y+2); y += 7;
+  doc.setFont('helvetica','normal'); doc.setFontSize(10);
+  doc.text(undL, M+4, y); y += undL.length*5+12;
+
+  doc.setTextColor(13,31,60); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('YOUR TOP 3 STRATEGIES', M, y); y += 8;
+  pd.strategies.forEach(function(st,i){
+    if(y>260){ doc.addPage(); y=20; }
+    doc.setTextColor(201,151,58); doc.setFontSize(10); doc.setFont('helvetica','bold');
+    doc.text((i+1)+'. '+st.title, M, y); y += 6;
+    doc.setTextColor(40,40,40); doc.setFont('helvetica','normal');
+    var stL = doc.splitTextToSize(st.body, W-M*2-8);
+    doc.text(stL, M+4, y); y += stL.length*5+8;
+  });
+
+  doc.setFillColor(13,31,60); doc.rect(0,282,W,15,'F');
+  doc.setFillColor(201,151,58); doc.rect(0,282,W,2,'F');
+  doc.setTextColor(201,151,58); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.text('KOORA · THE FINISHER PROTOCOL · HOUSE OF MASTERY', M, 291);
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','normal');
+  doc.text('www.hom2026.com', W-M-28, 291);
+  doc.save('4C-Reflex-Report-'+name.replace(/\s+/g,'-')+'.pdf');
+}
+
+// ── WHATSAPP IMAGE ───────────────────────────────────
+function downloadWhatsApp() {
+  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
+  var scores = {}; REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
+  var readiness = getReadinessScore();
+  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a]>=scores[b]?a:b; });
+  var primaryLevel = getReflexLevel(scores[primary]);
+
+  var canvas = document.getElementById('waCanvas');
+  var ctx = canvas.getContext('2d');
+  var W=1080, H=1080;
+  canvas.width=W; canvas.height=H;
+
+  // Background
+  ctx.fillStyle='#FAF9F6'; ctx.fillRect(0,0,W,H);
+  // Top bar
+  ctx.fillStyle='#0D1F3C'; ctx.fillRect(0,0,W,118);
+  // Gold top rule
+  ctx.fillStyle='#C9973A'; ctx.fillRect(0,0,W,5);
+  // Brand
+  ctx.fillStyle='#C9973A'; ctx.font='bold 26px sans-serif';
+  ctx.fillText('HOUSE OF MASTERY', 60, 62);
+  ctx.fillStyle='rgba(255,255,255,0.40)'; ctx.font='500 20px sans-serif';
+  ctx.fillText('THE 4C REFLEX SCREEN', 60, 96);
+
+  // Name heading
+  ctx.fillStyle='#111111'; ctx.font='bold 48px serif';
+  ctx.fillText('Results for '+name, 60, 192);
+
+  // Gold rule
+  ctx.fillStyle='#C9973A'; ctx.globalAlpha=0.35; ctx.fillRect(60,212,W-120,1.5); ctx.globalAlpha=1;
+
+  // Pattern profile label
+  ctx.fillStyle='#C9973A'; ctx.font='bold 20px sans-serif';
+  ctx.fillText('YOUR PATTERN PROFILE', 60, 256);
+
+  var barY=286, barH=22, barMaxW=W-120-260;
+  var lColors = { quiet:'#1B5E20', active:'#B45309', loud:'#991B1B' };
+  var lLabels = { quiet:'QUIET', active:'ACTIVE', loud:'LOUD' };
+  var allD = REFLEX_ORDER.map(function(r){ return {label:r.charAt(0).toUpperCase()+r.slice(1), score:scores[r], max:16, level:getReflexLevel(scores[r])}; });
+  allD.push({label:'Starting & Rhythm', score:readiness, max:16, level:readiness<=8?'quiet':readiness<=12?'active':'loud'});
+
+  allD.forEach(function(d){
+    ctx.fillStyle='#111111'; ctx.font='bold 26px sans-serif';
+    ctx.fillText(d.label, 60, barY+17);
+    ctx.fillStyle='rgba(17,17,17,0.10)';
+    ctx.beginPath(); ctx.roundRect(280,barY,barMaxW,barH,3); ctx.fill();
+    var fW = Math.round((d.score/d.max)*barMaxW);
+    ctx.fillStyle=lColors[d.level];
+    ctx.beginPath(); ctx.roundRect(280,barY,Math.max(fW,6),barH,3); ctx.fill();
+    ctx.fillStyle=lColors[d.level]; ctx.font='bold 22px sans-serif';
+    ctx.fillText(d.score+'/16  '+lLabels[d.level], 280+barMaxW+14, barY+17);
+    barY+=56;
+  });
+
+  // Gold rule
+  ctx.fillStyle='#C9973A'; ctx.globalAlpha=0.35; ctx.fillRect(60,barY+8,W-120,1.5); ctx.globalAlpha=1;
+  barY+=32;
+
+  // Primary reflex
+  ctx.fillStyle='#C9973A'; ctx.font='bold 20px sans-serif';
+  ctx.fillText('PRIMARY REFLEX', 60, barY); barY+=40;
+  ctx.fillStyle='#0D1F3C'; ctx.font='bold 40px serif';
+  ctx.fillText(REFLEX_DATA[primary].name, 60, barY); barY+=34;
+  ctx.fillStyle='#333333'; ctx.font='500 24px sans-serif';
+  var words = REFLEX_DATA[primary].whatItIs.split(' '), line='', lines=[];
+  words.forEach(function(w){ var t=line+(line?' ':'')+w; if(ctx.measureText(t).width>W-120){lines.push(line);line=w;}else{line=t;} });
+  if(line) lines.push(line);
+  lines.slice(0,3).forEach(function(l){ ctx.fillText(l,60,barY); barY+=34; });
+
+  // Footer
+  ctx.fillStyle='#0D1F3C'; ctx.fillRect(0,H-88,W,88);
+  ctx.fillStyle='#C9973A'; ctx.fillRect(0,H-90,W,2);
+  ctx.fillStyle='#C9973A'; ctx.font='bold 22px sans-serif';
+  ctx.fillText('KOORA · THE FINISHER PROTOCOL · HOUSE OF MASTERY', 60, H-50);
+  ctx.fillStyle='rgba(255,255,255,0.50)'; ctx.font='500 18px sans-serif';
+  ctx.fillText('www.hom2026.com', 60, H-22);
+
+  var link = document.createElement('a');
+  link.download='4C-Reflex-'+name.replace(/\s+/g,'-')+'.png';
+  link.href=canvas.toDataURL('image/png');
+  link.click();
+}
+
+// ── EMAIL ────────────────────────────────────────────
+function sendResultsEmail() {
+  var email = document.getElementById('resultEmail').value.trim();
+  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
+  var statusEl = document.getElementById('emailStatus');
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    statusEl.textContent='Please enter a valid email address.';
+    statusEl.className='email-status err'; statusEl.style.display='block'; return;
+  }
+  var scores = {}; REFLEX_ORDER.forEach(function(r){ scores[r]=getReflexScore(r); });
+  var readiness = getReadinessScore();
+  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a]>=scores[b]?a:b; });
+  var primaryLevel = getReflexLevel(scores[primary]);
+  var profile = REFLEX_ORDER.map(function(r){ return r.charAt(0).toUpperCase()+r.slice(1)+': '+scores[r]+'/16 — '+getLevelLabel(getReflexLevel(scores[r])); }).join('\n')
+    + '\nStarting & Rhythm: '+readiness+'/16 — '+(readiness<=8?'Strong':readiness<=12?'Some gaps':'Needs attention');
+  var strategies = REFLEX_DATA[primary].strategies.map(function(s,i){ return (i+1)+'. '+s.title+' '+s.body; }).join('\n\n');
+
+  statusEl.textContent='Sending...'; statusEl.className='email-status'; statusEl.style.display='block';
+  emailjs.send('service_76loif8','template_3j2uhtd',{
+    to_name: name, to_email: email, cc_email: 'mogiremd@gmail.com',
+    primary_reflex: REFLEX_DATA[primary].name, primary_level: getLevelLabel(primaryLevel),
+    profile_summary: profile, what_it_is: REFLEX_DATA[primary].whatItIs,
+    underneath: REFLEX_DATA[primary].underneath, top_strategies: strategies,
+    koora_link: 'https://www.hom2026.com'
+  }).then(function(){
+    statusEl.textContent='Sent. Check your inbox.'; statusEl.className='email-status ok';
+  }).catch(function(){
+    statusEl.textContent='Could not send. Please try again or screenshot your results.'; statusEl.className='email-status err';
+  });
 }
 </script>
-
 </body>
 </html>
