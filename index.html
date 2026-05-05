@@ -797,12 +797,10 @@ body {
 ══════════════════════════════════════════════════ -->
 <div id="screen-intro" class="screen active">
   <div class="wrap">
-    <span class="eyebrow">The Emotional Sovereignty Screen</span>
     <h1 class="intro-h1">You know what you need to do.<br>Starting is the part that stalls you.</h1>
     <p class="intro-body">You feel behind. You feel the gap between who you are and who you said you would be. You are exhausted from carrying it. That is not a character flaw. It is a reflex. And it has a name.</p>
     <p class="intro-body">There are four reflexes. One of them is louder than the others right now, and it is the one shaping your decisions, your relationships, and the work that keeps not getting finished. This screen takes under twelve minutes. It shows you which one, what it is costing you, and the three moves that interrupt it starting today.</p>
-    <div class="intro-rule"></div>
-    <p class="intro-instruction"><strong>30 statements. Four options each.</strong> Read each statement and choose the option that is most true for you right now, not who you want to be. The more honest you are, the more useful the result.</p>
+    <p class="intro-instruction">Read each statement. Choose the option that is most true for you right now, not who you want to be.</p>
     <div class="name-block">
       <label class="name-label" for="participantName">Your first name</label>
       <input class="name-input" type="text" id="participantName" placeholder="Enter your first name" autocomplete="given-name">
@@ -835,11 +833,9 @@ body {
 ══════════════════════════════════════════════════ -->
 <div id="screen-results" class="screen">
   <div class="wrap">
-    <span class="results-eyebrow">Your Result</span>
     <h1 class="results-h1" id="resultsHeadline">Here is what is running you.</h1>
     <p class="results-sub" id="resultsSub"></p>
 
-    <span class="score-label">Your Pattern Profile</span>
     <div class="score-table" id="scoreTable"></div>
 
     <div class="reflex-cards" id="reflexCards"></div>
@@ -865,7 +861,6 @@ body {
     </div>
 
     <div class="koora-block">
-      <span class="koora-eyebrow">KOORA: The Finisher Protocol</span>
       <h3 class="koora-h3">Become a Finisher.<br>Finish what you started.</h3>
       <p class="koora-p">KOORA is a 180-day return path for the person who has started enough times. It is not motivation. It is a system and a covenant. The work runs in structured 30-day cycles with a daily operating system, weekly deep dives, and a cohort of people who have decided to stop performing and start returning.</p>
       <p class="koora-p" style="margin-bottom:28px;">The covenant is not perfection. The covenant is return. You are permitted to fall. You are not permitted to stop returning.</p>
@@ -1191,7 +1186,7 @@ function buildResults() {
     qaHtml += '<div class="qa-item"><div class="qa-q">' + item.q + '</div><div class="qa-a">' + item.a + '</div></div>';
   });
   nwEl.innerHTML = '<div class="now-what-block">' +
-    '<span class="nw-eyebrow">Now What?</span>' +
+    ''+
     '<h3 class="nw-h3">Five questions every person asks after they see the pattern.</h3>' +
     '<p class="nw-intro">' + NOW_WHAT.intro + '</p>' + qaHtml +
     '</div>';
