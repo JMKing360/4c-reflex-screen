@@ -840,7 +840,7 @@ emailjs.init('FEEOw8NA0cwBM4Vum');
 
 var answers = {};
 var currentQ = 1;
-var TOTAL = 20;
+var TOTAL = 30;
 
 var QUESTIONS = [
   { n:1,  domain:'The Complaining Reflex',  text:'I talk about what is wrong more than I act on what I can change.' },
@@ -851,18 +851,28 @@ var QUESTIONS = [
   { n:6,  domain:'The Criticizing Reflex',  text:'I speak to myself in ways I would not speak to someone I respect.' },
   { n:7,  domain:'The Criticizing Reflex',  text:'I rehearse my mistakes longer than I learn from them.' },
   { n:8,  domain:'The Criticizing Reflex',  text:'I see my flaws faster than I see what is working.' },
-  { n:9,  domain:'The Comparing Reflex',    text:'I measure my life against someone else\'s pace.' },
+  { n:9,  domain:'The Comparing Reflex',    text:"I measure my life against someone else's pace." },
   { n:10, domain:'The Comparing Reflex',    text:'I scroll through social media and feel smaller than before I started.' },
-  { n:11, domain:'The Comparing Reflex',    text:'I downgrade my own progress when I see someone else\'s.' },
+  { n:11, domain:'The Comparing Reflex',    text:"I downgrade my own progress when I see someone else's." },
   { n:12, domain:'The Comparing Reflex',    text:'I lose track of what I want when I see what they have.' },
   { n:13, domain:'The Competing Reflex',    text:'I track who is ahead of me in my field.' },
   { n:14, domain:'The Competing Reflex',    text:'My sense of worth is tied to whether I am winning.' },
   { n:15, domain:'The Competing Reflex',    text:'I do things mostly to be seen doing them.' },
   { n:16, domain:'The Competing Reflex',    text:'I feel unsettled when someone in my circle succeeds at something I have not yet done.' },
-  { n:17, domain:'Starting and Rhythm',     text:'I know what I need to do. Starting is the part that stalls me.' },
-  { n:18, domain:'Starting and Rhythm',     text:'I do well for a few days, then I stop, and starting again takes longer than it should.' },
-  { n:19, domain:'Starting and Rhythm',     text:'I have a clear sense of what progress looks like, but I rarely measure it.' },
-  { n:20, domain:'Starting and Rhythm',     text:'I know who I want to be accountable to. I have not made that arrangement yet.' }
+  { n:17, domain:'The Cost of the Reflexes', text:'I feel a lingering sense of anger that I cannot easily trace to a single event.' },
+  { n:18, domain:'The Cost of the Reflexes', text:'I carry regret about things I started but never finished.' },
+  { n:19, domain:'The Cost of the Reflexes', text:'I feel guilty when I rest, as if I should always be producing.' },
+  { n:20, domain:'The Cost of the Reflexes', text:'I experience shame when I fall short of the standard I set for myself.' },
+  { n:21, domain:'The Cost of the Reflexes', text:'My relationships suffer because I am often distracted by my own internal pressure.' },
+  { n:22, domain:'The Cost of the Reflexes', text:'I feel disconnected from the people closest to me, even when we are in the same room.' },
+  { n:23, domain:'The Cost of the Reflexes', text:'I resent others who seem to move forward with less effort than I exert.' },
+  { n:24, domain:'The Cost of the Reflexes', text:'I avoid starting new things because the fear of not finishing is too heavy.' },
+  { n:25, domain:'The Cost of the Reflexes', text:'I feel like I am constantly performing a version of myself rather than simply being.' },
+  { n:26, domain:'The Cost of the Reflexes', text:'I am exhausted by the constant need to prove my worth.' },
+  { n:27, domain:'Starting and Rhythm',     text:'I know what I need to do. Starting is the part that stalls me.' },
+  { n:28, domain:'Starting and Rhythm',     text:'I do well for a few days, then I stop, and starting again takes longer than it should.' },
+  { n:29, domain:'Starting and Rhythm',     text:'I have a clear sense of what progress looks like, but I rarely measure it.' },
+  { n:30, domain:'Starting and Rhythm',     text:'I know who I want to be accountable to. I have not made that arrangement yet.' }
 ];
 
 var OPTIONS = [
