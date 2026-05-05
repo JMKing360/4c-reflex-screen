@@ -264,8 +264,8 @@ body {
   margin-bottom: 48px;
 }
 .options-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 48px;
 }
@@ -285,7 +285,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 .opt-btn:hover {
-  border-color: var(--gold);
+  border-color: var(--navy);
   color: var(--ink);
 }
 .opt-btn.selected {
@@ -554,7 +554,8 @@ body {
 
 /* ── NOW WHAT ───────────────────────────────────────── */
 .now-what-block {
-  background: var(--navy);
+  background: var(--white);
+  border: 1px solid var(--rule);
   border-radius: 10px;
   padding: 40px;
   margin-bottom: 52px;
@@ -573,7 +574,7 @@ body {
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--ink);
   line-height: 1.28;
   margin-bottom: 10px;
 }
@@ -581,19 +582,19 @@ body {
   font-family: var(--sans);
   font-size: 14px;
   font-weight: 500;
-  color: rgba(255,255,255,0.65);
+  color: var(--mid);
   line-height: 1.68;
   margin-bottom: 28px;
 }
 .qa-item {
   padding: 20px 0;
-  border-top: 1px solid rgba(255,255,255,0.10);
+  border-top: 1px solid var(--rule);
 }
 .qa-q {
   font-family: var(--serif);
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--ink);
   line-height: 1.38;
   margin-bottom: 10px;
 }
@@ -601,12 +602,12 @@ body {
   font-family: var(--sans);
   font-size: 14px;
   font-weight: 500;
-  color: rgba(255,255,255,0.78);
+  color: var(--body);
   line-height: 1.72;
 }
 .qa-a p { margin-bottom: 8px; }
 .qa-a p:last-child { margin-bottom: 0; }
-.qa-a strong { color: #ffffff; font-weight: 700; }
+.qa-a strong { color: var(--ink); font-weight: 700; }
 
 /* ── EMAIL SECTION ──────────────────────────────────── */
 .email-block {
@@ -728,7 +729,7 @@ body {
   #screen-intro { padding: 60px 0 72px; }
   #screen-questions { padding: 52px 0 72px; }
   #screen-results { padding: 60px 0 72px; }
-  .options-grid { grid-template-columns: 1fr; }
+  .options-grid { flex-direction: column; }
   .score-row { grid-template-columns: 90px 1fr 80px; gap: 10px; }
   .now-what-block { padding: 28px 22px; }
   .koora-block { padding: 32px 22px; }
