@@ -964,7 +964,7 @@ function retakeAssessment() {
 /* ── QUESTION RENDERING ─────────────────────────────── */
 function renderQuestion(n) {
   var q = QUESTIONS[n - 1];
-  document.getElementById('qCount').textContent = 'Question ' + n + ' of ' + TOTAL;
+  document.getElementById('qCount').textContent = 'Statement ' + n + ' of ' + TOTAL;
   document.getElementById('qDomain').textContent = q.domain;
   document.getElementById('qText').textContent = q.text;
   document.getElementById('qError').style.display = 'none';
