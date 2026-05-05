@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The 4C Reflex Screen · House of Mastery</title>
-<meta name="description" content="A short assessment that shows you which of the four reflexes is running your decisions, and the three moves that interrupt it.">
+<title>The Emotional Sovereignty Screen · House of Mastery</title>
+<meta name="description" content="A 30-question assessment that shows you which of the four reflexes is running your decisions, what it is costing you, and the three moves that interrupt it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,6 +26,7 @@ html { font-size: 16px; -webkit-text-size-adjust: 100%; -webkit-font-smoothing: 
   --mid:    #666666;
   --dim:    #999999;
   --rule:   #E2E2E2;
+  --cream:  #FAF9F6;
   --white:  #ffffff;
   --green:  #166534;
   --amber:  #92400E;
@@ -34,7 +35,7 @@ html { font-size: 16px; -webkit-text-size-adjust: 100%; -webkit-font-smoothing: 
 
 body {
   font-family: var(--sans);
-  background: var(--white);
+  background: var(--cream);
   color: var(--body);
   min-height: 100vh;
 }
@@ -54,7 +55,7 @@ body {
 .nav {
   position: sticky;
   top: 0;
-  background: var(--white);
+  background: var(--cream);
   border-bottom: 1px solid var(--rule);
   z-index: 100;
   padding: 18px 40px;
@@ -378,7 +379,7 @@ body {
 }
 .score-row {
   display: grid;
-  grid-template-columns: 130px 1fr 96px;
+  grid-template-columns: 130px 1fr 110px;
   align-items: center;
   gap: 14px;
   padding: 13px 0;
@@ -407,7 +408,7 @@ body {
 .score-bar-fill.loud   { background: #DC2626; }
 .score-row-val {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-align: right;
 }
@@ -424,6 +425,7 @@ body {
   border-radius: 8px;
   margin-bottom: 16px;
   overflow: hidden;
+  background: var(--white);
 }
 .reflex-card.loud   { border-top: 3px solid #DC2626; }
 .reflex-card.active { border-top: 3px solid #D97706; }
@@ -492,7 +494,7 @@ body {
 }
 .card-text:last-child { margin-bottom: 0; }
 .underneath-block {
-  background: #FAFAFA;
+  background: #F7F6F2;
   border-left: 3px solid var(--gold);
   padding: 16px 18px;
   border-radius: 0 5px 5px 0;
@@ -505,6 +507,24 @@ body {
   color: var(--body);
   line-height: 1.68;
   font-style: italic;
+}
+.cost-block {
+  background: #FEF2F2;
+  border-left: 3px solid #DC2626;
+  padding: 16px 18px;
+  border-radius: 0 5px 5px 0;
+  margin: 16px 0 20px;
+}
+.cost-block p {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.68;
+}
+.cost-block p strong {
+  color: var(--red);
+  font-weight: 700;
 }
 .strategies {
   margin-top: 4px;
@@ -543,6 +563,24 @@ body {
   font-weight: 500;
   color: var(--body);
   line-height: 1.68;
+}
+.layered-block {
+  background: #F0F4FF;
+  border-left: 3px solid var(--navy);
+  padding: 16px 18px;
+  border-radius: 0 5px 5px 0;
+  margin-top: 16px;
+}
+.layered-block p {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.68;
+}
+.layered-block p strong {
+  color: var(--navy);
+  font-weight: 700;
 }
 .quiet-note {
   font-family: var(--sans);
@@ -611,6 +649,7 @@ body {
 
 /* ── EMAIL SECTION ──────────────────────────────────── */
 .email-block {
+  background: var(--white);
   border: 1px solid var(--rule);
   border-radius: 8px;
   padding: 30px;
@@ -713,6 +752,7 @@ body {
   border-top: 1px solid var(--rule);
   padding: 28px 40px;
   text-align: center;
+  background: var(--cream);
 }
 .site-footer p {
   font-family: var(--sans);
@@ -730,7 +770,9 @@ body {
   #screen-questions { padding: 52px 0 72px; }
   #screen-results { padding: 60px 0 72px; }
   .options-grid { flex-direction: column; }
-  .score-row { grid-template-columns: 90px 1fr 80px; gap: 10px; }
+  .score-row { grid-template-columns: 80px 1fr 90px; gap: 8px; }
+  .score-row-name { font-size: 11px; }
+  .score-row-val { font-size: 10px; }
   .now-what-block { padding: 28px 22px; }
   .koora-block { padding: 32px 22px; }
   .email-block { padding: 22px 18px; }
@@ -747,7 +789,7 @@ body {
 
 <nav class="nav">
   <a href="https://www.houseofmastery.co" class="nav-brand">House of Mastery</a>
-  <span class="nav-tag">4C Reflex Screen</span>
+  <span class="nav-tag">Emotional Sovereignty Screen</span>
 </nav>
 
 <!-- ══════════════════════════════════════════════════
@@ -755,12 +797,12 @@ body {
 ══════════════════════════════════════════════════ -->
 <div id="screen-intro" class="screen active">
   <div class="wrap">
-    <span class="eyebrow">The 4C Reflex Screen</span>
+    <span class="eyebrow">The Emotional Sovereignty Screen</span>
     <h1 class="intro-h1">Four reflexes.<br>One is running you right now.</h1>
     <p class="intro-body">Complaining. Criticizing. Comparing. Competing. Every person carries all four. One of them is louder than the others, and it is shaping your decisions, your relationships, and your unfinished work without your permission.</p>
-    <p class="intro-body">This screen takes under ten minutes. It shows you which reflex is most active, where it is showing up in your life, and the three moves that interrupt it.</p>
+    <p class="intro-body">This screen takes under twelve minutes. It shows you which reflex is most active, what it is costing you, and the three moves that interrupt it.</p>
     <div class="intro-rule"></div>
-    <p class="intro-instruction"><strong>20 statements. Four options each.</strong> Read each statement and choose the option that is most true for you right now, not who you want to be. The more honest you are, the more useful the result.</p>
+    <p class="intro-instruction"><strong>30 statements. Four options each.</strong> Read each statement and choose the option that is most true for you right now, not who you want to be. The more honest you are, the more useful the result.</p>
     <div class="name-block">
       <label class="name-label" for="participantName">Your first name</label>
       <input class="name-input" type="text" id="participantName" placeholder="Enter your first name" autocomplete="given-name">
@@ -775,7 +817,7 @@ body {
 <div id="screen-questions" class="screen">
   <div class="wrap">
     <div class="q-meta">
-      <span class="q-count" id="qCount">Question 1 of 20</span>
+      <span class="q-count" id="qCount">Statement 1 of 30</span>
       <span class="q-domain" id="qDomain">The Complaining Reflex</span>
     </div>
     <p class="q-text" id="qText"></p>
@@ -843,36 +885,36 @@ var currentQ = 1;
 var TOTAL = 30;
 
 var QUESTIONS = [
-  { n:1,  domain:'The Complaining Reflex',  text:'I talk about what is wrong more than I act on what I can change.' },
-  { n:2,  domain:'The Complaining Reflex',  text:'When something goes wrong, my first move is to name the problem, not solve it.' },
-  { n:3,  domain:'The Complaining Reflex',  text:'I feel better after venting, but nothing actually changes.' },
-  { n:4,  domain:'The Complaining Reflex',  text:'I can list everything in my way. I have a harder time listing what I will do about it.' },
-  { n:5,  domain:'The Criticizing Reflex',  text:'My inner voice is harder on me than I would be on anyone I care about.' },
-  { n:6,  domain:'The Criticizing Reflex',  text:'I speak to myself in ways I would not speak to someone I respect.' },
-  { n:7,  domain:'The Criticizing Reflex',  text:'I rehearse my mistakes longer than I learn from them.' },
-  { n:8,  domain:'The Criticizing Reflex',  text:'I see my flaws faster than I see what is working.' },
-  { n:9,  domain:'The Comparing Reflex',    text:"I measure my life against someone else's pace." },
-  { n:10, domain:'The Comparing Reflex',    text:'I scroll through social media and feel smaller than before I started.' },
-  { n:11, domain:'The Comparing Reflex',    text:"I downgrade my own progress when I see someone else's." },
-  { n:12, domain:'The Comparing Reflex',    text:'I lose track of what I want when I see what they have.' },
-  { n:13, domain:'The Competing Reflex',    text:'I track who is ahead of me in my field.' },
-  { n:14, domain:'The Competing Reflex',    text:'My sense of worth is tied to whether I am winning.' },
-  { n:15, domain:'The Competing Reflex',    text:'I do things mostly to be seen doing them.' },
-  { n:16, domain:'The Competing Reflex',    text:'I feel unsettled when someone in my circle succeeds at something I have not yet done.' },
-  { n:17, domain:'The Cost of the Reflexes', text:'I feel a lingering sense of anger that I cannot easily trace to a single event.' },
-  { n:18, domain:'The Cost of the Reflexes', text:'I carry regret about things I started but never finished.' },
-  { n:19, domain:'The Cost of the Reflexes', text:'I feel guilty when I rest, as if I should always be producing.' },
-  { n:20, domain:'The Cost of the Reflexes', text:'I experience shame when I fall short of the standard I set for myself.' },
-  { n:21, domain:'The Cost of the Reflexes', text:'My relationships suffer because I am often distracted by my own internal pressure.' },
-  { n:22, domain:'The Cost of the Reflexes', text:'I feel disconnected from the people closest to me, even when we are in the same room.' },
-  { n:23, domain:'The Cost of the Reflexes', text:'I resent others who seem to move forward with less effort than I exert.' },
-  { n:24, domain:'The Cost of the Reflexes', text:'I avoid starting new things because the fear of not finishing is too heavy.' },
-  { n:25, domain:'The Cost of the Reflexes', text:'I feel like I am constantly performing a version of myself rather than simply being.' },
-  { n:26, domain:'The Cost of the Reflexes', text:'I am exhausted by the constant need to prove my worth.' },
-  { n:27, domain:'Starting and Rhythm',     text:'I know what I need to do. Starting is the part that stalls me.' },
-  { n:28, domain:'Starting and Rhythm',     text:'I do well for a few days, then I stop, and starting again takes longer than it should.' },
-  { n:29, domain:'Starting and Rhythm',     text:'I have a clear sense of what progress looks like, but I rarely measure it.' },
-  { n:30, domain:'Starting and Rhythm',     text:'I know who I want to be accountable to. I have not made that arrangement yet.' }
+  { n:1,  domain:'The Complaining Reflex',   text:'I can easily list the reasons why something will not work before I think of how it could.' },
+  { n:2,  domain:'The Criticizing Reflex',   text:'My inner voice is harder on me than I would be on anyone I care about.' },
+  { n:3,  domain:'The Comparing Reflex',     text:'I measure my life against someone else\'s pace.' },
+  { n:4,  domain:'The Competing Reflex',     text:'I track who is ahead of me in my field.' },
+  { n:5,  domain:'The Cost of the Reflexes', text:'I feel a lingering sense of anger that I cannot easily trace to a single event.' },
+  { n:6,  domain:'Starting and Rhythm',      text:'I know what I need to do. Starting is the part that stalls me.' },
+  { n:7,  domain:'The Complaining Reflex',   text:'When faced with a barrier, my first instinct is to explain why it is unfair.' },
+  { n:8,  domain:'The Criticizing Reflex',   text:'I speak to myself in ways I would not speak to someone I respect.' },
+  { n:9,  domain:'The Comparing Reflex',     text:'I scroll through social media and feel smaller than before I started.' },
+  { n:10, domain:'The Competing Reflex',     text:'My sense of worth is tied to whether I am winning.' },
+  { n:11, domain:'The Cost of the Reflexes', text:'I carry regret about things I started but never finished.' },
+  { n:12, domain:'Starting and Rhythm',      text:'I do well for a few days, then I stop, and starting again takes longer than it should.' },
+  { n:13, domain:'The Complaining Reflex',   text:'I spend more time discussing the problem than executing the solution.' },
+  { n:14, domain:'The Criticizing Reflex',   text:'I rehearse my mistakes longer than I learn from them.' },
+  { n:15, domain:'The Comparing Reflex',     text:'I downgrade my own progress when I see someone else\'s.' },
+  { n:16, domain:'The Competing Reflex',     text:'I do things mostly to be seen doing them.' },
+  { n:17, domain:'The Cost of the Reflexes', text:'I feel guilty when I rest, as if I should always be producing.' },
+  { n:18, domain:'Starting and Rhythm',      text:'I have a clear sense of what progress looks like, but I rarely measure it.' },
+  { n:19, domain:'The Complaining Reflex',   text:'I feel a sense of relief when I find a valid excuse for why I cannot proceed.' },
+  { n:20, domain:'The Criticizing Reflex',   text:'I see my flaws faster than I see what is working.' },
+  { n:21, domain:'The Comparing Reflex',     text:'I lose track of what I want when I see what they have.' },
+  { n:22, domain:'The Competing Reflex',     text:'I feel unsettled when someone in my circle succeeds at something I have not yet done.' },
+  { n:23, domain:'The Cost of the Reflexes', text:'I experience shame when I fall short of the standard I set for myself.' },
+  { n:24, domain:'Starting and Rhythm',      text:'I know who I want to be accountable to. I have not made that arrangement yet.' },
+  { n:25, domain:'The Cost of the Reflexes', text:'My relationships suffer because I am often distracted by my own internal pressure.' },
+  { n:26, domain:'The Cost of the Reflexes', text:'I feel disconnected from the people closest to me, even when we are in the same room.' },
+  { n:27, domain:'The Cost of the Reflexes', text:'I resent others who seem to move forward with less effort than I exert.' },
+  { n:28, domain:'The Cost of the Reflexes', text:'I avoid starting new things because the fear of not finishing is too heavy.' },
+  { n:29, domain:'The Cost of the Reflexes', text:'I feel like I am constantly performing a version of myself rather than simply being.' },
+  { n:30, domain:'The Cost of the Reflexes', text:'I am exhausted by the constant need to prove my worth.' }
 ];
 
 var OPTIONS = [
@@ -886,48 +928,60 @@ var REFLEX_ORDER = ['complaining','criticizing','comparing','competing'];
 
 var REFLEX_DATA = {
   complaining: {
-    name: 'The Complaining Reflex', questions: [1,2,3,4],
+    name: 'The Complaining Reflex',
+    questions: [1,7,13,19],
     whatItIs: 'Your mind goes to what is wrong before it goes to what is working. You name problems with precision. You describe barriers clearly. You can list everything in your way.',
     whatItActuallyIs: 'Complaining feels like honesty. It is not. It is the rehearsal of powerlessness. Every time you name the problem without moving toward a solution, you train your mind to see obstacles as permanent.',
     underneath: 'A belief that the circumstances are the reason. The reflex protects you from the discomfort of owning the next move.',
+    cost: 'The cost is your emotional sovereignty. You surrender your agency to external factors, leading to a lingering, untraceable anger and a life defined by what you could not do rather than what you built.',
     strategies: [
       { title: 'The two-minute rule on naming problems.', body: 'You are permitted to name what is wrong. You are not permitted to stay there for more than two minutes. After two minutes, the rule is: one thing you can do. Not the whole solution. One thing.' },
       { title: 'The ratio check.', body: 'At the end of each day, ask yourself how many minutes you spent naming problems versus taking action on them. You do not need a perfect ratio. You need an honest one. The awareness alone changes the pattern.' },
       { title: 'Replace the complaint with a request or a decision.', body: 'Every complaint contains a hidden request or a hidden decision. "This is not working" becomes "I am going to change this one thing." Practice making the translation out loud.' }
-    ]
+    ],
+    layered: 'To manage the other reflexes alongside this one: For Criticizing, speak to yourself like a respected colleague. For Comparing, define your own finish line before you look at anyone else\'s. For Competing, do one private act daily that you would never post.'
   },
   criticizing: {
-    name: 'The Criticizing Reflex', questions: [5,6,7,8],
-    whatItIs: 'The voice in your head speaks with final authority. It says "not good enough," "you should have known better," "look at what you did." It arrives before the evidence is in.',
-    whatItActuallyIs: 'The critic believes that cruelty creates change. It does not. It creates shame, and shame does not finish things. Shame makes you smaller. Finishing requires you to be larger than the task.',
-    underneath: 'A standard you absorbed from somewhere else, applied to yourself with a severity you would never apply to someone you love.',
+    name: 'The Criticizing Reflex',
+    questions: [2,8,14,20],
+    whatItIs: 'You are harder on yourself than you would ever be on a friend. You rehearse your mistakes. You see the flaw before you see the progress. You believe that if you stop criticizing yourself, you will lose your edge.',
+    whatItActuallyIs: 'Self-criticism is not a standard of excellence. It is a preemptive strike. You are attacking yourself before the world can. It does not make you better. It makes you exhausted.',
+    underneath: 'The fear of being exposed as inadequate. The reflex tries to control the narrative by being the harshest judge in the room.',
+    cost: 'The cost is your emotional sovereignty. You live under the tyranny of an internal dictator, resulting in chronic guilt, shame, and an inability to rest or celebrate your own wins.',
     strategies: [
-      { title: 'The friend test.', body: 'When the critical voice speaks, ask: "Would I say this to a friend who made the same mistake?" If the answer is no, you are not being honest with yourself. You are being cruel. Restate the observation in the way you would speak to that friend.' },
-      { title: 'The 60-second rule on self-criticism.', body: 'You are permitted to notice a mistake. You are not permitted to rehearse it for more than 60 seconds. After that, ask two questions: What do I learn from this? What do I do next? Then move.' },
-      { title: 'Separate the act from the person.', body: '"I made a poor decision" is a fact. "I am a failure" is a verdict. The critic collapses the two. Your job is to keep them separate. You are not your worst moment. You are what you do after it.' }
-    ]
+      { title: 'The colleague standard.', body: 'When the inner voice starts, ask: "Would I speak this way to a colleague I respect?" If the answer is no, you must rephrase the thought. You do not have to be overly positive. You just have to be respectful.' },
+      { title: 'Separate the data from the drama.', body: 'When you make a mistake, extract the data (what happened) and discard the drama (what it means about your worth). "I missed the deadline" is data. "I am undisciplined" is drama. Keep the data. Drop the drama.' },
+      { title: 'The 24-hour statute of limitations.', body: 'You have 24 hours to review a mistake and extract the lesson. After 24 hours, the file is closed. You are no longer permitted to rehearse it.' }
+    ],
+    layered: 'To manage the other reflexes alongside this one: For Complaining, apply the two-minute rule before you name a problem. For Comparing, define your own finish line. For Competing, do one private act daily that belongs to you alone.'
   },
   comparing: {
-    name: 'The Comparing Reflex', questions: [9,10,11,12],
-    whatItIs: 'You measure your life against someone else\'s feed, someone else\'s pace, someone else\'s highlight reel. You feel behind. You feel smaller. You feel like you are losing a race you never agreed to enter.',
-    whatItActuallyIs: 'Comparison is not envy. It is the surrender of your own ground. You cannot stand on your own foundation if you are always looking at theirs. The comparing reflex does not make you work harder. It makes you feel less.',
-    underneath: 'A forgotten self. You stopped asking what you actually want. The reflex filled the silence with someone else\'s answer.',
+    name: 'The Comparing Reflex',
+    questions: [3,9,15,21],
+    whatItIs: 'You measure your life against someone else\'s pace. You look at what they have built and feel behind. You downgrade your own progress because it does not look like theirs.',
+    whatItActuallyIs: 'Comparison is the theft of context. You are comparing your internal reality to their curated exterior. It forces you to run a race you never signed up for, on a track you did not choose.',
+    underneath: 'The fear that you are falling behind. The reflex looks outward for a metric because it lacks an internal anchor.',
+    cost: 'The cost is your emotional sovereignty. You lose track of your own desires, leading to deep regret and a disconnection from your actual life and the people in it.',
     strategies: [
-      { title: 'The "compared to what?" question.', body: 'When you catch yourself comparing, ask: "Compared to what standard that I actually chose?" Most comparisons are automatic, not chosen. You will rarely have a clear answer. That is the point. The question interrupts the reflex.' },
-      { title: 'The one true thing.', body: 'Ask yourself: "What is one true thing about my own path right now?" Not better or worse than anyone else. Just true. "I showed up. I tried. I am still here." Stand on that ground before you look anywhere else.' },
-      { title: 'The feed audit.', body: 'For seven days, do not check the feed of anyone you compare yourself to. Replace that time with one small act that belongs to you alone, something you would do even if no one ever saw it.' }
-    ]
+      { title: 'Define your own finish line.', body: 'You cannot win a race if you do not know where the finish line is. Write down what a finished, successful year looks like for you, using your own metrics. When you feel the pull to compare, read your own definition.' },
+      { title: 'The curation filter.', body: 'When you look at someone else\'s success, remind yourself: "I am seeing the highlight reel, not the bloopers." You are comparing your behind-the-scenes to their opening night. Stop.' },
+      { title: 'Mute the noise.', body: 'Identify the three people or accounts that trigger the comparing reflex most consistently. Mute them for 30 days. You do not have to unfollow. Just remove them from your daily feed. Notice how your focus shifts.' }
+    ],
+    layered: 'To manage the other reflexes alongside this one: For Complaining, apply the two-minute rule to problems. For Criticizing, speak to yourself like a respected colleague. For Competing, do one private act daily that no one else will see.'
   },
   competing: {
-    name: 'The Competing Reflex', questions: [13,14,15,16],
+    name: 'The Competing Reflex',
+    questions: [4,10,16,22],
     whatItIs: 'You track who is ahead. You measure your worth by whether you are winning. You perform what you should be living. You do things to be seen doing them, and the doing feels hollow.',
     whatItActuallyIs: 'Competition is useful on a court. It is destructive when it becomes the lens for your entire life. The scoreboard is not your soul. When you compete for your own worth, you can never win enough.',
     underneath: 'The fear that you have no inherent value. If you are not winning, you are nothing. The reflex is trying to prove that you matter. You cannot prove mattering. You can only live it.',
+    cost: 'The cost is your emotional sovereignty. You become a performer in your own life, exhausted by the need to prove your worth, resulting in shallow relationships and a hollow sense of achievement.',
     strategies: [
       { title: 'The private act test.', body: 'When you feel the pull to compete, ask: "If no one ever knew I did this, would I still want to do it?" If the answer is no, you are competing. If yes, you are choosing. Choose more of what you would do in private.' },
       { title: 'One private act per day.', body: 'Do one thing today that you want for its own sake, with no audience. Do not post it. Do not tell anyone. Let it be yours. This act unearths the self underneath the competitor.' },
       { title: 'Finish over win.', body: 'At the end of each day, ask: "Did I finish anything today, no matter how small?" Not "did I win." Just: did I close what I opened? That is the only score that matters in the long run.' }
-    ]
+    ],
+    layered: 'To manage the other reflexes alongside this one: For Complaining, apply the two-minute rule to problems. For Criticizing, speak to yourself like a respected colleague. For Comparing, define your own finish line before you look at anyone else\'s.'
   }
 };
 
@@ -1031,11 +1085,17 @@ function prevQuestion() {
 function getReflexScore(r) {
   return REFLEX_DATA[r].questions.reduce(function(s,q){ return s + (answers[q]||0); }, 0);
 }
-function getReadinessScore() {
-  return [17,18,19,20].reduce(function(s,q){ return s + (answers[q]||0); }, 0);
+/* Cost of Reflexes: questions 5,11,17,23,25,26,27,28,29,30 — max 40 */
+function getCostScore() {
+  return [5,11,17,23,25,26,27,28,29,30].reduce(function(s,q){ return s + (answers[q]||0); }, 0);
 }
-function getLevel(score) {
-  return score <= 7 ? 'quiet' : score <= 11 ? 'active' : 'loud';
+/* Starting and Rhythm: questions 6,12,18,24 — max 16 */
+function getRhythmScore() {
+  return [6,12,18,24].reduce(function(s,q){ return s + (answers[q]||0); }, 0);
+}
+function getLevel(score, max) {
+  var pct = score / (max || 16);
+  return pct <= 0.44 ? 'quiet' : pct <= 0.69 ? 'active' : 'loud';
 }
 function getLevelLabel(level) {
   return level === 'quiet' ? 'Quiet' : level === 'active' ? 'Active' : 'Loud';
@@ -1046,9 +1106,10 @@ function buildResults() {
   var name = (document.getElementById('participantName').value.trim()) || 'Participant';
   var scores = {};
   REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
-  var readiness = getReadinessScore();
+  var costScore = getCostScore();
+  var rhythmScore = getRhythmScore();
   var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
-  var primaryLevel = getLevel(scores[primary]);
+  var primaryLevel = getLevel(scores[primary], 16);
 
   var headlines = {
     loud:   'Here is what is running you.',
@@ -1062,27 +1123,37 @@ function buildResults() {
   var table = document.getElementById('scoreTable');
   table.innerHTML = '';
   REFLEX_ORDER.forEach(function(r) {
-    var s = scores[r], lvl = getLevel(s), pct = Math.round((s/16)*100);
+    var s = scores[r], lvl = getLevel(s, 16), pct = Math.round((s/16)*100);
     table.innerHTML += '<div class="score-row">' +
       '<div class="score-row-name">' + r.charAt(0).toUpperCase() + r.slice(1) + '</div>' +
       '<div class="score-bar-track"><div class="score-bar-fill ' + lvl + '" style="width:' + pct + '%"></div></div>' +
       '<div class="score-row-val ' + lvl + '">' + s + '/16 &middot; ' + getLevelLabel(lvl) + '</div>' +
       '</div>';
   });
-  var rLvl = readiness <= 8 ? 'quiet' : readiness <= 12 ? 'active' : 'loud';
-  var rLabel = readiness <= 8 ? 'Strong' : readiness <= 12 ? 'Some gaps' : 'Needs attention';
-  var rPct = Math.round((readiness/16)*100);
+  // Cost of Reflexes row (max 40)
+  var cLvl = getLevel(costScore, 40);
+  var cLabel = cLvl === 'quiet' ? 'Low cost' : cLvl === 'active' ? 'Moderate cost' : 'High cost';
+  var cPct = Math.round((costScore/40)*100);
   table.innerHTML += '<div class="score-row" style="border-top:2px solid var(--rule);margin-top:4px;">' +
+    '<div class="score-row-name">Cost of Pattern</div>' +
+    '<div class="score-bar-track"><div class="score-bar-fill ' + cLvl + '" style="width:' + cPct + '%"></div></div>' +
+    '<div class="score-row-val ' + cLvl + '">' + costScore + '/40 &middot; ' + cLabel + '</div>' +
+    '</div>';
+  // Starting and Rhythm row (max 16)
+  var rLvl = getLevel(rhythmScore, 16);
+  var rLabel = rLvl === 'quiet' ? 'Strong' : rLvl === 'active' ? 'Some gaps' : 'Needs attention';
+  var rPct = Math.round((rhythmScore/16)*100);
+  table.innerHTML += '<div class="score-row">' +
     '<div class="score-row-name">Starting &amp; Rhythm</div>' +
     '<div class="score-bar-track"><div class="score-bar-fill ' + rLvl + '" style="width:' + rPct + '%"></div></div>' +
-    '<div class="score-row-val ' + rLvl + '">' + readiness + '/16 &middot; ' + rLabel + '</div>' +
+    '<div class="score-row-val ' + rLvl + '">' + rhythmScore + '/16 &middot; ' + rLabel + '</div>' +
     '</div>';
 
   // Reflex cards
   var cards = document.getElementById('reflexCards');
   cards.innerHTML = '';
   REFLEX_ORDER.slice().sort(function(a,b){ return scores[b]-scores[a]; }).forEach(function(r) {
-    var d = REFLEX_DATA[r], s = scores[r], lvl = getLevel(s);
+    var d = REFLEX_DATA[r], s = scores[r], lvl = getLevel(s, 16);
     if (lvl === 'quiet') {
       cards.innerHTML += '<div class="reflex-card quiet">' +
         '<div class="reflex-card-head"><div class="r-dot quiet"></div><h3>' + d.name + '</h3><span class="r-tag quiet">Quiet</span></div>' +
@@ -1104,8 +1175,10 @@ function buildResults() {
         '<p class="card-text">' + d.whatItIs + '</p>' +
         '<p class="card-text">' + d.whatItActuallyIs + '</p>' +
         '<div class="underneath-block"><p>' + d.underneath + '</p></div>' +
+        '<div class="cost-block"><p><strong>The Cost:</strong> ' + d.cost + '</p></div>' +
         '<span class="card-label">Your top 3 strategies</span>' +
         stHtml +
+        '<div class="layered-block"><p><strong>Layered Strategies:</strong> ' + d.layered + '</p></div>' +
         '</div></div>';
     }
   });
@@ -1136,15 +1209,18 @@ function sendEmail() {
   }
   var scores = {};
   REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
-  var readiness = getReadinessScore();
+  var costScore = getCostScore();
+  var rhythmScore = getRhythmScore();
   var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
   var pd = REFLEX_DATA[primary];
-  var pl = getLevel(scores[primary]);
+  var pl = getLevel(scores[primary], 16);
 
   var trafficSummary = REFLEX_ORDER.map(function(r) {
-    var lvl = getLevel(scores[r]);
+    var lvl = getLevel(scores[r], 16);
     return r.charAt(0).toUpperCase() + r.slice(1) + ': ' + scores[r] + '/16 (' + getLevelLabel(lvl) + ')';
-  }).join('<br>') + '<br>Starting and Rhythm: ' + readiness + '/16';
+  }).join('<br>') +
+    '<br>Cost of Pattern: ' + costScore + '/40' +
+    '<br>Starting and Rhythm: ' + rhythmScore + '/16';
 
   var stratHtml = pd.strategies.map(function(st, i) {
     return '<strong>' + (i+1) + '. ' + st.title + '</strong><br>' + st.body;
@@ -1161,8 +1237,10 @@ function sendEmail() {
     primary_reflex:  pd.name,
     primary_level:   getLevelLabel(pl) + ' (' + scores[primary] + '/16)',
     archetype_desc:  pd.whatItIs + '<br><br>' + pd.whatItActuallyIs,
+    cost_statement:  pd.cost,
     traffic_summary: trafficSummary,
     strategies_html: stratHtml,
+    layered_html:    pd.layered,
     summit_url:      'https://www.hom2026.com'
   }).then(function() {
     statusEl.textContent = 'Your results have been sent to ' + email + '.';
@@ -1178,7 +1256,8 @@ function downloadPDF() {
   var name = (document.getElementById('participantName').value.trim()) || 'Participant';
   var scores = {};
   REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
-  var readiness = getReadinessScore();
+  var costScore = getCostScore();
+  var rhythmScore = getRhythmScore();
   var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
   var { jsPDF } = window.jspdf;
   var doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
@@ -1189,7 +1268,7 @@ function downloadPDF() {
   doc.setFillColor(13,31,60); doc.rect(0,0,W,28,'F');
   doc.setFillColor(201,151,58); doc.rect(0,0,W,2.5,'F');
   doc.setTextColor(201,151,58); doc.setFontSize(8); doc.setFont('helvetica','bold');
-  doc.text('HOUSE OF MASTERY  \u00B7  THE 4C REFLEX SCREEN', M, 13);
+  doc.text('HOUSE OF MASTERY  \u00B7  THE EMOTIONAL SOVEREIGNTY SCREEN', M, 13);
   doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','normal');
   doc.text('Confidential  \u00B7  ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}), M, 22);
   y = 44;
@@ -1197,14 +1276,14 @@ function downloadPDF() {
   doc.setTextColor(17,17,17); doc.setFontSize(22); doc.setFont('helvetica','bold');
   doc.text('Result for ' + name, M, y); y += 12;
   doc.setFontSize(11); doc.setFont('helvetica','normal'); doc.setTextColor(85,85,85);
-  doc.text('Primary reflex: ' + REFLEX_DATA[primary].name + '  \u00B7  ' + getLevelLabel(getLevel(scores[primary])) + ' (' + scores[primary] + '/16)', M, y); y += 14;
+  doc.text('Primary reflex: ' + REFLEX_DATA[primary].name + '  \u00B7  ' + getLevelLabel(getLevel(scores[primary],16)) + ' (' + scores[primary] + '/16)', M, y); y += 14;
 
   doc.setDrawColor(224,224,224); doc.line(M,y,W-M,y); y += 10;
   doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
   doc.text('YOUR PATTERN PROFILE', M, y); y += 8;
 
   REFLEX_ORDER.forEach(function(r) {
-    var s=scores[r], lvl=getLevel(s), pct=s/16, c=lc[lvl];
+    var s=scores[r], lvl=getLevel(s,16), pct=s/16, c=lc[lvl];
     doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
     doc.text(r.charAt(0).toUpperCase()+r.slice(1), M, y);
     doc.setFillColor(240,240,240); doc.roundedRect(M+52,y-4,100,5,2,2,'F');
@@ -1212,14 +1291,24 @@ function downloadPDF() {
     doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(c[0],c[1],c[2]);
     doc.text(s+'/16  '+getLevelLabel(lvl), M+158, y); y+=10;
   });
-  var rLvl=readiness<=8?'quiet':readiness<=12?'active':'loud', rlc=lc[rLvl];
-  var rLabel=readiness<=8?'Strong':readiness<=12?'Some gaps':'Needs attention';
+  // Cost of Reflexes
+  var cLvl=getLevel(costScore,40), clc=lc[cLvl];
+  var cLabel=cLvl==='quiet'?'Low cost':cLvl==='active'?'Moderate cost':'High cost';
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
+  doc.text('Cost of Pattern', M, y);
+  doc.setFillColor(240,240,240); doc.roundedRect(M+52,y-4,100,5,2,2,'F');
+  doc.setFillColor(clc[0],clc[1],clc[2]); doc.roundedRect(M+52,y-4,100*(costScore/40),5,2,2,'F');
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(clc[0],clc[1],clc[2]);
+  doc.text(costScore+'/40  '+cLabel, M+158, y); y+=10;
+  // Starting and Rhythm
+  var rLvl=getLevel(rhythmScore,16), rlc=lc[rLvl];
+  var rLabel=rLvl==='quiet'?'Strong':rLvl==='active'?'Some gaps':'Needs attention';
   doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
   doc.text('Starting & Rhythm', M, y);
   doc.setFillColor(240,240,240); doc.roundedRect(M+52,y-4,100,5,2,2,'F');
-  doc.setFillColor(rlc[0],rlc[1],rlc[2]); doc.roundedRect(M+52,y-4,100*(readiness/16),5,2,2,'F');
+  doc.setFillColor(rlc[0],rlc[1],rlc[2]); doc.roundedRect(M+52,y-4,100*(rhythmScore/16),5,2,2,'F');
   doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(rlc[0],rlc[1],rlc[2]);
-  doc.text(readiness+'/16  '+rLabel, M+158, y); y+=14;
+  doc.text(rhythmScore+'/16  '+rLabel, M+158, y); y+=14;
 
   doc.setDrawColor(224,224,224); doc.line(M,y,W-M,y); y+=10;
   doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
@@ -1228,8 +1317,14 @@ function downloadPDF() {
   doc.text(REFLEX_DATA[primary].name, M, y); y+=9;
   doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(42,42,42);
   var descLines=doc.splitTextToSize(REFLEX_DATA[primary].whatItIs+' '+REFLEX_DATA[primary].whatItActuallyIs, W-M*2);
-  doc.text(descLines, M, y); y+=descLines.length*5.5+10;
+  doc.text(descLines, M, y); y+=descLines.length*5.5+6;
 
+  // Cost
+  doc.setFontSize(9.5); doc.setFont('helvetica','bold'); doc.setTextColor(153,27,27);
+  var costLines=doc.splitTextToSize('The Cost: ' + REFLEX_DATA[primary].cost, W-M*2);
+  doc.text(costLines, M, y); y+=costLines.length*5.5+10;
+
+  // Strategies
   doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
   doc.text('YOUR TOP 3 STRATEGIES', M, y); y+=8;
   REFLEX_DATA[primary].strategies.forEach(function(st,i) {
@@ -1241,12 +1336,20 @@ function downloadPDF() {
     doc.text(stLines, M+6, y); y+=stLines.length*5.2+8;
   });
 
+  // Layered strategies
+  if(y>250){ doc.addPage(); y=24; }
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(13,31,60);
+  doc.text('LAYERED STRATEGIES', M, y); y+=8;
+  doc.setFontSize(9.5); doc.setFont('helvetica','normal'); doc.setTextColor(42,42,42);
+  var layeredLines=doc.splitTextToSize(REFLEX_DATA[primary].layered, W-M*2);
+  doc.text(layeredLines, M, y); y+=layeredLines.length*5.5+12;
+
   if(y>265){ doc.addPage(); y=24; }
   doc.setDrawColor(224,224,224); doc.line(M,y+4,W-M,y+4); y+=12;
   doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(136,136,136);
   doc.text('KOORA: The Finisher Protocol  \u00B7  House of Mastery  \u00B7  Dr. Job Mogire, MD FACC  \u00B7  www.hom2026.com', M, y);
 
-  doc.save('4C-Reflex-Screen-'+name.replace(/\s+/g,'-')+'.pdf');
+  doc.save('Emotional-Sovereignty-Screen-'+name.replace(/\s+/g,'-')+'.pdf');
 }
 
 /* ── WHATSAPP IMAGE ─────────────────────────────────── */
@@ -1255,7 +1358,7 @@ function downloadWhatsApp() {
   var scores = {};
   REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
   var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
-  var primaryLevel = getLevel(scores[primary]);
+  var primaryLevel = getLevel(scores[primary], 16);
   var lvlColors = { quiet:'#166534', active:'#92400E', loud:'#991B1B' };
   var lvlBg     = { quiet:'#F0FDF4', active:'#FFFBEB', loud:'#FEF2F2' };
 
@@ -1263,8 +1366,8 @@ function downloadWhatsApp() {
   canvas.width = 1080; canvas.height = 1080;
   var ctx = canvas.getContext('2d');
 
-  // White background
-  ctx.fillStyle = '#ffffff';
+  // Cream background
+  ctx.fillStyle = '#FAF9F6';
   ctx.fillRect(0, 0, 1080, 1080);
 
   // Top gold bar
@@ -1277,7 +1380,7 @@ function downloadWhatsApp() {
 
   ctx.fillStyle = '#C9973A';
   ctx.font = '700 20px sans-serif';
-  ctx.fillText('HOUSE OF MASTERY  \u00B7  THE 4C REFLEX SCREEN', 60, 62);
+  ctx.fillText('HOUSE OF MASTERY  \u00B7  EMOTIONAL SOVEREIGNTY SCREEN', 60, 62);
   ctx.fillStyle = 'rgba(255,255,255,0.65)';
   ctx.font = '500 19px sans-serif';
   ctx.fillText('Result for ' + name, 60, 100);
@@ -1310,7 +1413,7 @@ function downloadWhatsApp() {
   ctx.beginPath(); ctx.moveTo(60, barY - 6); ctx.lineTo(1020, barY - 6); ctx.stroke();
 
   REFLEX_ORDER.forEach(function(r, i) {
-    var s = scores[r], lvl = getLevel(s), pct = s/16;
+    var s = scores[r], lvl = getLevel(s, 16), pct = s/16;
     var by = barY + i * 88;
     ctx.fillStyle = '#111111';
     ctx.font = '600 19px sans-serif';
@@ -1336,7 +1439,7 @@ function downloadWhatsApp() {
   ctx.fillText('KOORA: The Finisher Protocol  \u00B7  www.hom2026.com', 60, 1038);
 
   var link = document.createElement('a');
-  link.download = '4C-Reflex-' + name.replace(/\s+/g,'-') + '.png';
+  link.download = 'Emotional-Sovereignty-' + name.replace(/\s+/g,'-') + '.png';
   link.href = canvas.toDataURL('image/png');
   link.click();
 }
