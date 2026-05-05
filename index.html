@@ -4,925 +4,1330 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The 4C Reflex Screen · House of Mastery</title>
-<meta name="description" content="A short assessment that shows you which of the four reflexes is running your decisions — and the three moves that interrupt it.">
+<meta name="description" content="A short assessment that shows you which of the four reflexes is running your decisions, and the three moves that interrupt it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
+/* ── RESET ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; }
+
+/* ── TOKENS ─────────────────────────────────────────── */
 :root {
-  --cream:   #FAF9F6;
-  --white:   #FFFFFF;
-  --ink:     #111111;
-  --body:    #222222;
-  --mid:     #444444;
-  --border:  rgba(17,17,17,0.12);
-  --gold:    #C9973A;
-  --gold-bg: rgba(201,151,58,0.10);
-  --navy:    #0D1F3C;
-  --navy-dk: #081429;
-  --green:   #1B5E20;
-  --amber:   #B45309;
-  --red:     #991B1B;
-  --green-bg:#F0FBF4;
-  --amber-bg:#FFFBEB;
-  --red-bg:  #FEF2F2;
-  --serif:   'Source Serif 4', Georgia, serif;
-  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
-  --r:       6px;
-  --max:     680px;
+  --serif:  'Source Serif 4', Georgia, serif;
+  --sans:   'Plus Jakarta Sans', system-ui, sans-serif;
+  --navy:   #0D1F3C;
+  --gold:   #C9973A;
+  --ink:    #111111;
+  --body:   #2C2C2C;
+  --mid:    #666666;
+  --dim:    #999999;
+  --rule:   #E2E2E2;
+  --white:  #ffffff;
+  --green:  #166534;
+  --amber:  #92400E;
+  --red:    #991B1B;
 }
-html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-body { background: var(--cream); color: var(--body); font-family: var(--sans); font-size: 16px; line-height: 1.72; min-height: 100vh; }
-.wrap { max-width: var(--max); margin: 0 auto; padding: 0 22px; }
 
-/* ── HEADER ─────────────────────────────────────────── */
-.site-header { background: var(--navy); border-bottom: 2px solid var(--gold); }
-.header-inner { max-width: var(--max); margin: 0 auto; padding: 20px 22px 18px; display: flex; align-items: center; justify-content: space-between; }
-.header-brand { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
-.header-tag { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: rgba(255,255,255,0.40); }
+body {
+  font-family: var(--sans);
+  background: var(--white);
+  color: var(--body);
+  min-height: 100vh;
+}
 
-/* ── PROGRESS ───────────────────────────────────────── */
-.progress-wrap { height: 3px; background: rgba(17,17,17,0.08); }
-.progress-bar  { height: 3px; background: var(--gold); width: 0%; transition: width 0.5s ease; }
+/* ── PROGRESS BAR ───────────────────────────────────── */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--gold);
+  width: 0%;
+  transition: width 0.35s ease;
+  z-index: 999;
+}
+
+/* ── NAV ────────────────────────────────────────────── */
+.nav {
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  border-bottom: 1px solid var(--rule);
+  z-index: 100;
+  padding: 18px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-brand {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav-tag {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── LAYOUT ─────────────────────────────────────────── */
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
 
 /* ── SCREENS ────────────────────────────────────────── */
 .screen { display: none; }
 .screen.active { display: block; }
 
-/* ── INTRO ──────────────────────────────────────────── */
-#screen-intro { padding: 68px 0 84px; }
-.eyebrow { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 18px; }
-#screen-intro h1 { font-family: var(--serif); font-size: clamp(30px, 5.5vw, 44px); font-weight: 700; color: var(--ink); line-height: 1.16; margin-bottom: 26px; }
-.lead { font-family: var(--sans); font-size: 17px; font-weight: 500; color: var(--body); line-height: 1.74; margin-bottom: 20px; }
-.lead strong { font-weight: 700; color: var(--ink); }
-.gold-rule { height: 1px; background: var(--gold); opacity: 0.35; margin: 36px 0; }
-
-.instruction-box { background: var(--white); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: var(--r); padding: 24px 26px; margin: 32px 0 40px; }
-.instruction-box p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--body); line-height: 1.70; margin-bottom: 10px; }
-.instruction-box p:last-child { margin-bottom: 0; }
-.instruction-box strong { font-weight: 700; color: var(--ink); }
-
-.name-wrap { margin-bottom: 40px; }
-.name-wrap label { display: block; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink); margin-bottom: 10px; }
-.name-wrap input { width: 100%; padding: 14px 16px; font-family: var(--sans); font-size: 16px; font-weight: 500; color: var(--ink); background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r); outline: none; transition: border-color 0.2s; }
-.name-wrap input:focus { border-color: var(--gold); }
-.name-wrap input::placeholder { color: rgba(17,17,17,0.30); }
+/* ════════════════════════════════════════════════════
+   INTRO SCREEN
+════════════════════════════════════════════════════ */
+#screen-intro {
+  padding: 88px 0 100px;
+}
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 22px;
+}
+.intro-h1 {
+  font-family: var(--serif);
+  font-size: clamp(32px, 5.5vw, 46px);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.14;
+  margin-bottom: 32px;
+}
+.intro-body {
+  font-family: var(--sans);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.76;
+  margin-bottom: 20px;
+}
+.intro-rule {
+  height: 1px;
+  background: var(--rule);
+  margin: 44px 0;
+}
+.intro-instruction {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.72;
+  margin-bottom: 14px;
+}
+.intro-instruction strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.name-block {
+  margin-top: 48px;
+}
+.name-label {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.name-input {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  padding: 14px 16px;
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 32px;
+}
+.name-input:focus { border-color: var(--gold); }
+.name-input::placeholder { color: #C0C0C0; }
 
 /* ── BUTTONS ────────────────────────────────────────── */
-.btn-primary { display: inline-block; background: var(--navy); color: #fff; font-family: var(--sans); font-size: 13px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; padding: 16px 36px; border-radius: 4px; border: none; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.15s; }
-.btn-primary:hover { background: var(--navy-dk); transform: translateY(-1px); }
-.btn-secondary { display: inline-block; background: transparent; color: var(--ink); font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; padding: 13px 28px; border-radius: 4px; border: 1.5px solid var(--border); cursor: pointer; text-decoration: none; margin-top: 14px; transition: border-color 0.2s; }
-.btn-secondary:hover { border-color: var(--ink); }
+.btn-navy {
+  display: inline-block;
+  background: var(--navy);
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 16px 40px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.btn-navy:hover { opacity: 0.85; }
 
-/* ── QUESTIONS ──────────────────────────────────────── */
-#screen-questions { padding: 52px 0 88px; }
-.section-label { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 8px; }
-.section-divider { height: 1px; background: var(--gold); opacity: 0.40; margin-bottom: 32px; }
-.section-divider-light { height: 1px; background: var(--border); margin-bottom: 28px; }
+.btn-gold {
+  display: inline-block;
+  background: var(--gold);
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 16px 40px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.btn-gold:hover { opacity: 0.85; }
 
-.question-group { margin-bottom: 52px; }
-.question-group-title { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-.question-group-sub { font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--mid); margin-bottom: 24px; line-height: 1.55; }
+.btn-outline {
+  display: inline-block;
+  background: transparent;
+  color: var(--mid);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  border-radius: 4px;
+  border: 1.5px solid var(--rule);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-outline:hover { border-color: var(--ink); color: var(--ink); }
 
-.question-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 22px 24px; margin-bottom: 12px; transition: border-color 0.2s; }
-.question-item.answered { border-color: var(--gold); }
-.question-item.error { border-color: var(--red) !important; }
-.question-text { font-family: var(--serif); font-size: 16px; font-weight: 400; font-style: italic; color: var(--ink); line-height: 1.62; margin-bottom: 18px; }
+/* ════════════════════════════════════════════════════
+   QUESTION SCREEN
+════════════════════════════════════════════════════ */
+#screen-questions {
+  padding: 72px 0 100px;
+}
+.q-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.q-count {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.q-domain {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.q-text {
+  font-family: var(--serif);
+  font-size: clamp(20px, 3.4vw, 27px);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.38;
+  margin-bottom: 48px;
+}
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 48px;
+}
+.opt-btn {
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  padding: 18px 18px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--body);
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.42;
+  transition: border-color 0.16s, background 0.16s, color 0.16s;
+  -webkit-tap-highlight-color: transparent;
+}
+.opt-btn:hover {
+  border-color: var(--gold);
+  color: var(--ink);
+}
+.opt-btn.selected {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #ffffff;
+}
+.q-footer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.q-back {
+  background: none;
+  border: none;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 0;
+}
+.q-back:hover { color: var(--ink); }
+.q-error {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red);
+  margin-top: 14px;
+  display: none;
+}
 
-.options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.option-btn { background: var(--cream); border: 1.5px solid var(--border); border-radius: 4px; padding: 11px 6px; font-family: var(--sans); font-size: 12px; font-weight: 700; color: var(--body); cursor: pointer; text-align: center; line-height: 1.3; transition: all 0.18s; -webkit-tap-highlight-color: transparent; }
-.option-btn:hover { border-color: var(--gold); background: var(--white); color: var(--ink); }
-.option-btn.selected { background: var(--navy); border-color: var(--navy); color: var(--gold); }
+/* ════════════════════════════════════════════════════
+   RESULTS SCREEN
+════════════════════════════════════════════════════ */
+#screen-results {
+  padding: 80px 0 100px;
+}
+.results-eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 18px;
+}
+.results-h1 {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4.8vw, 40px);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.16;
+  margin-bottom: 12px;
+}
+.results-sub {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--mid);
+  margin-bottom: 56px;
+}
+.results-sub strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.results-rule {
+  height: 1px;
+  background: var(--rule);
+  margin: 52px 0;
+}
 
-.submit-area { margin-top: 44px; text-align: center; }
-.unanswered-warning { font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--red); margin-bottom: 16px; display: none; }
-
-/* ── RESULTS ────────────────────────────────────────── */
-#screen-results { padding: 52px 0 88px; }
-.results-intro { margin-bottom: 48px; }
-.results-intro h2 { font-family: var(--serif); font-size: clamp(26px, 4.5vw, 36px); font-weight: 700; color: var(--ink); line-height: 1.22; margin-bottom: 16px; }
-.results-intro p { font-family: var(--sans); font-size: 16px; font-weight: 500; color: var(--body); line-height: 1.72; }
-
-/* Score bars */
-.score-section { margin-bottom: 48px; }
-.score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-.score-row-label { font-family: var(--sans); font-size: 13px; font-weight: 700; color: var(--ink); width: 120px; flex-shrink: 0; }
-.score-bar-wrap { flex: 1; height: 8px; background: rgba(17,17,17,0.08); border-radius: 4px; overflow: hidden; }
-.score-bar-fill { height: 100%; border-radius: 4px; transition: width 0.9s ease; }
+/* ── SCORE TABLE ────────────────────────────────────── */
+.score-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mid);
+  display: block;
+  margin-bottom: 18px;
+}
+.score-table {
+  width: 100%;
+  margin-bottom: 56px;
+}
+.score-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 96px;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.score-row:first-child { border-top: 1px solid var(--rule); }
+.score-row-name {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.score-bar-track {
+  height: 5px;
+  background: #EBEBEB;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
 .score-bar-fill.quiet  { background: var(--green); }
-.score-bar-fill.active { background: var(--amber); }
-.score-bar-fill.loud   { background: var(--red); }
-.score-row-value { font-family: var(--sans); font-size: 12px; font-weight: 700; width: 100px; flex-shrink: 0; text-align: right; }
-.score-row-value.quiet  { color: var(--green); }
-.score-row-value.active { color: var(--amber); }
-.score-row-value.loud   { color: var(--red); }
+.score-bar-fill.active { background: #D97706; }
+.score-bar-fill.loud   { background: #DC2626; }
+.score-row-val {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: right;
+}
+.score-row-val.quiet  { color: var(--green); }
+.score-row-val.active { color: var(--amber); }
+.score-row-val.loud   { color: var(--red); }
 
-/* Action row */
-.action-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 44px; }
-.btn-action { display: inline-flex; align-items: center; gap: 8px; background: var(--white); color: var(--ink); font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 13px 20px; border-radius: 4px; border: 1.5px solid var(--border); cursor: pointer; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
-.btn-action:hover { border-color: var(--navy); background: var(--cream); }
-.btn-action svg { width: 15px; height: 15px; flex-shrink: 0; }
+/* ── REFLEX CARDS ───────────────────────────────────── */
+.reflex-cards {
+  margin-bottom: 56px;
+}
+.reflex-card {
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.reflex-card.loud   { border-top: 3px solid #DC2626; }
+.reflex-card.active { border-top: 3px solid #D97706; }
+.reflex-card.quiet  { border-top: 3px solid var(--green); }
 
-/* Reflex cards */
-.reflex-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 24px; overflow: hidden; }
-.reflex-card.loud   { border-left: 4px solid var(--red); }
-.reflex-card.active { border-left: 4px solid var(--amber); }
-.reflex-card.quiet  { border-left: 4px solid var(--green); }
-.reflex-card-header { display: flex; align-items: center; gap: 12px; padding: 20px 24px 16px; border-bottom: 1px solid rgba(17,17,17,0.06); }
-.reflex-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.reflex-status-dot.quiet  { background: var(--green); }
-.reflex-status-dot.active { background: var(--amber); }
-.reflex-status-dot.loud   { background: var(--red); }
-.reflex-card-header h3 { font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--ink); flex: 1; }
-.status-tag { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; flex-shrink: 0; }
-.status-tag.quiet  { background: var(--green-bg); color: var(--green); }
-.status-tag.active { background: var(--amber-bg); color: var(--amber); }
-.status-tag.loud   { background: var(--red-bg);   color: var(--red); }
-.reflex-card-body { padding: 22px 24px; }
-.reflex-card-body .card-label { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 8px; }
-.reflex-card-body p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--body); line-height: 1.70; margin-bottom: 10px; }
-.reflex-card-body p:last-child { margin-bottom: 0; }
-.reflex-underneath { background: var(--cream); border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0; padding: 16px 18px; margin: 18px 0 24px; }
-.reflex-underneath .card-label { color: var(--gold); }
-.reflex-underneath p { font-size: 14px; margin-bottom: 0; }
-.strategies-label { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--navy); display: block; margin-bottom: 16px; }
-.strategy-item { display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start; }
-.strategy-num { width: 26px; height: 26px; background: var(--navy); color: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
-.strategy-text strong { font-family: var(--sans); font-size: 14px; font-weight: 700; color: var(--ink); display: block; margin-bottom: 4px; }
-.strategy-text p { font-size: 14px; font-weight: 500; color: var(--body); line-height: 1.66; margin-bottom: 0; }
-.quiet-note { font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--mid); line-height: 1.68; }
+.reflex-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--rule);
+}
+.r-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.r-dot.loud   { background: #DC2626; }
+.r-dot.active { background: #D97706; }
+.r-dot.quiet  { background: var(--green); }
 
-/* Now What */
-.now-what-section { background: var(--navy); border-radius: var(--r); overflow: hidden; margin: 48px 0; }
-.now-what-header { padding: 34px 30px 26px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.now-what-header .eyebrow-w { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 14px; }
-.now-what-header h3 { font-family: var(--serif); font-size: 24px; font-weight: 700; color: #fff; line-height: 1.28; margin-bottom: 12px; }
-.now-what-header p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.65); line-height: 1.68; margin-bottom: 0; }
-.now-what-body { padding: 28px 30px 32px; }
-.qa-item { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.qa-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-.qa-question { font-family: var(--serif); font-size: 17px; font-weight: 700; color: #fff; line-height: 1.40; margin-bottom: 12px; }
-.qa-answer { font-family: var(--sans); font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.78); line-height: 1.72; }
-.qa-answer p { margin-bottom: 10px; color: rgba(255,255,255,0.78); }
-.qa-answer p:last-child { margin-bottom: 0; }
-.qa-answer strong { color: #fff; font-weight: 700; }
+.reflex-card-head h3 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  flex: 1;
+  line-height: 1.28;
+}
+.r-tag {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.r-tag.loud   { background: #FEE2E2; color: var(--red); }
+.r-tag.active { background: #FEF3C7; color: var(--amber); }
+.r-tag.quiet  { background: #DCFCE7; color: var(--green); }
 
-/* Allegiance Matrix */
-.matrix-section { margin: 48px 0; }
-.matrix-sub { font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--mid); margin-bottom: 20px; line-height: 1.60; }
-.matrix-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.matrix-table { width: 100%; min-width: 480px; border-collapse: collapse; font-family: var(--sans); font-size: 13px; }
-.matrix-table th { background: var(--navy); color: #fff; font-weight: 700; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 12px 14px; text-align: left; border: 1px solid rgba(255,255,255,0.08); }
-.matrix-table td { padding: 12px 14px; border: 1px solid var(--border); font-weight: 500; color: var(--body); vertical-align: top; line-height: 1.50; }
-.matrix-table td:first-child { font-weight: 700; color: var(--ink); white-space: nowrap; }
-.matrix-table tr:nth-child(even) td { background: var(--white); }
-.matrix-table tr.highlight-row td { background: var(--gold-bg); border-color: rgba(201,151,58,0.30); }
-.matrix-table tr.highlight-row td:first-child { color: var(--navy); }
+.reflex-card-body {
+  padding: 24px;
+}
+.card-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 10px;
+  margin-top: 22px;
+}
+.card-label:first-child { margin-top: 0; }
+.card-text {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.72;
+  margin-bottom: 10px;
+}
+.card-text:last-child { margin-bottom: 0; }
+.underneath-block {
+  background: #FAFAFA;
+  border-left: 3px solid var(--gold);
+  padding: 16px 18px;
+  border-radius: 0 5px 5px 0;
+  margin: 20px 0;
+}
+.underneath-block p {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.68;
+  font-style: italic;
+}
+.strategies {
+  margin-top: 4px;
+}
+.strategy-row {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.strategy-row:last-child { border-bottom: none; }
+.s-num {
+  width: 26px; height: 26px;
+  background: var(--navy);
+  color: #ffffff;
+  border-radius: 50%;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.s-title {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.s-body {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.68;
+}
+.quiet-note {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mid);
+  line-height: 1.65;
+}
 
-/* Commitment */
-.commitment-section { background: var(--navy); border-radius: var(--r); padding: 40px 30px; margin: 48px 0; text-align: center; }
-.eyebrow-gold { font-family: var(--sans); font-size: 11px; font-weight: 800; letter-spacing: 0.20em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 16px; }
-.commitment-section h3 { font-family: var(--serif); font-size: 24px; font-weight: 700; color: #fff; line-height: 1.30; margin-bottom: 16px; }
-.commitment-section p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.70); line-height: 1.68; margin-bottom: 24px; }
-.commitment-template { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 20px 24px; font-family: var(--serif); font-size: 17px; font-style: italic; color: rgba(255,255,255,0.88); line-height: 1.60; text-align: left; margin-bottom: 20px; }
+/* ── NOW WHAT ───────────────────────────────────────── */
+.now-what-block {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 40px;
+  margin-bottom: 52px;
+}
+.nw-eyebrow {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 14px;
+}
+.nw-h3 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.28;
+  margin-bottom: 10px;
+}
+.nw-intro {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.68;
+  margin-bottom: 28px;
+}
+.qa-item {
+  padding: 20px 0;
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+.qa-q {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.38;
+  margin-bottom: 10px;
+}
+.qa-a {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.78);
+  line-height: 1.72;
+}
+.qa-a p { margin-bottom: 8px; }
+.qa-a p:last-child { margin-bottom: 0; }
+.qa-a strong { color: #ffffff; font-weight: 700; }
 
-/* Email results */
-.email-section { background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--gold); border-radius: var(--r); padding: 34px 30px; margin: 48px 0; }
-.email-section h3 { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
-.email-section p { font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--body); line-height: 1.65; margin-bottom: 22px; }
-.email-row { display: flex; gap: 10px; flex-wrap: wrap; }
-.email-row input { flex: 1; min-width: 200px; padding: 13px 16px; font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--ink); background: var(--cream); border: 1.5px solid var(--border); border-radius: 4px; outline: none; transition: border-color 0.2s; }
-.email-row input:focus { border-color: var(--gold); }
-.email-row input::placeholder { color: rgba(17,17,17,0.35); }
-.email-send-btn { background: var(--navy); color: #fff; font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; padding: 13px 22px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
-.email-send-btn:hover { background: var(--navy-dk); }
-.email-status { font-family: var(--sans); font-size: 14px; font-weight: 600; margin-top: 12px; display: none; }
+/* ── EMAIL SECTION ──────────────────────────────────── */
+.email-block {
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 36px;
+}
+.email-block-title {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.email-block-body {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mid);
+  line-height: 1.65;
+  margin-bottom: 18px;
+}
+.email-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.email-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 13px 15px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.email-input:focus { border-color: var(--gold); }
+.email-input::placeholder { color: #C0C0C0; }
+.email-status {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+  display: none;
+}
 .email-status.ok  { color: var(--green); }
 .email-status.err { color: var(--red); }
 
-/* CTA */
-.cta-section { text-align: center; padding: 56px 0 16px; border-top: 1px solid var(--border); margin-top: 48px; }
-.cta-section h3 { font-family: var(--serif); font-size: clamp(24px, 4vw, 32px); font-weight: 700; color: var(--ink); line-height: 1.26; margin-bottom: 16px; }
-.cta-section p { font-family: var(--sans); font-size: 16px; font-weight: 500; color: var(--body); line-height: 1.68; max-width: 480px; margin: 0 auto 32px; }
+/* ── ACTIONS ────────────────────────────────────────── */
+.actions-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 52px;
+}
 
-/* Footer */
-.site-footer { background: var(--navy); border-top: 2px solid var(--gold); padding: 28px 22px; text-align: center; }
-.site-footer p { font-family: var(--sans); font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.50); line-height: 1.72; margin: 0; }
-.site-footer strong { color: rgba(255,255,255,0.82); font-weight: 700; }
+/* ── KOORA CTA ──────────────────────────────────────── */
+.koora-block {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 44px 40px;
+  text-align: center;
+  margin-bottom: 64px;
+}
+.koora-eyebrow {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 14px;
+}
+.koora-h3 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.26;
+  margin-bottom: 14px;
+}
+.koora-p {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.65;
+  margin-bottom: 28px;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-/* Hidden canvas */
-#waCanvas { display: none; }
+/* ── FOOTER ─────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--rule);
+  padding: 28px 40px;
+  text-align: center;
+}
+.site-footer p {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--dim);
+  line-height: 1.6;
+}
 
-/* Mobile */
-@media (max-width: 580px) {
-  #screen-intro, #screen-questions, #screen-results { padding-top: 44px; }
-  .options { grid-template-columns: repeat(2, 1fr); }
-  .score-row-label { width: 90px; font-size: 12px; }
-  .score-row-value { width: 80px; font-size: 11px; }
-  .now-what-header { padding: 26px 20px 20px; }
-  .now-what-body { padding: 22px 20px 26px; }
-  .commitment-section, .email-section { padding: 28px 20px; }
-  .reflex-card-header { padding: 16px 18px 14px; }
-  .reflex-card-body { padding: 18px 18px; }
-  .action-row { flex-direction: column; }
-  .header-tag { display: none; }
-  .matrix-table { font-size: 12px; }
-  .matrix-table th, .matrix-table td { padding: 10px 10px; }
+/* ── MOBILE ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .nav { padding: 15px 20px; }
+  .wrap { padding: 0 20px; }
+  #screen-intro { padding: 60px 0 72px; }
+  #screen-questions { padding: 52px 0 72px; }
+  #screen-results { padding: 60px 0 72px; }
+  .options-grid { grid-template-columns: 1fr; }
+  .score-row { grid-template-columns: 90px 1fr 80px; gap: 10px; }
+  .now-what-block { padding: 28px 22px; }
+  .koora-block { padding: 32px 22px; }
+  .email-block { padding: 22px 18px; }
+  .actions-row { flex-direction: column; }
+  .actions-row .btn-navy,
+  .actions-row .btn-gold,
+  .actions-row .btn-outline { width: 100%; text-align: center; }
 }
 </style>
 </head>
 <body>
 
-<header class="site-header">
-  <div class="header-inner">
-    <a class="header-brand" href="https://www.houseofmastery.co">House of Mastery</a>
-    <span class="header-tag">4C Reflex Screen</span>
-  </div>
-</header>
-<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div id="progress-bar"></div>
 
-<!-- ═══ INTRO ═══ -->
+<nav class="nav">
+  <a href="https://www.houseofmastery.co" class="nav-brand">House of Mastery</a>
+  <span class="nav-tag">4C Reflex Screen</span>
+</nav>
+
+<!-- ══════════════════════════════════════════════════
+     INTRO
+══════════════════════════════════════════════════ -->
 <div id="screen-intro" class="screen active">
   <div class="wrap">
     <span class="eyebrow">The 4C Reflex Screen</span>
-    <h1>Four reflexes.<br>One is running you right now.</h1>
-    <p class="lead">Complaining. Criticizing. Comparing. Competing. Every person carries all four. One of them is louder than the others — and it is shaping your decisions, your relationships, and your unfinished work without your permission.</p>
-    <p class="lead">This screen takes under ten minutes. It shows you which reflex is most active, where it is showing up, and the three moves that interrupt it.</p>
-    <div class="gold-rule"></div>
-    <div class="instruction-box">
-      <p><strong>20 statements. Four options each.</strong></p>
-      <p>Read each statement. Choose the option that is most true for you right now — not who you want to be. The more honest you are, the more useful the result.</p>
-      <p>There are no good or bad answers. There is only what is true.</p>
+    <h1 class="intro-h1">Four reflexes.<br>One is running you right now.</h1>
+    <p class="intro-body">Complaining. Criticizing. Comparing. Competing. Every person carries all four. One of them is louder than the others, and it is shaping your decisions, your relationships, and your unfinished work without your permission.</p>
+    <p class="intro-body">This screen takes under ten minutes. It shows you which reflex is most active, where it is showing up in your life, and the three moves that interrupt it.</p>
+    <div class="intro-rule"></div>
+    <p class="intro-instruction"><strong>20 statements. Four options each.</strong> Read each statement and choose the option that is most true for you right now, not who you want to be. The more honest you are, the more useful the result.</p>
+    <div class="name-block">
+      <label class="name-label" for="participantName">Your first name</label>
+      <input class="name-input" type="text" id="participantName" placeholder="Enter your first name" autocomplete="given-name">
+      <button class="btn-navy" onclick="startAssessment()">Begin the Screen</button>
     </div>
-    <div class="name-wrap">
-      <label for="participantName">Your first name</label>
-      <input type="text" id="participantName" placeholder="Enter your first name" autocomplete="given-name">
-    </div>
-    <button class="btn-primary" onclick="startAssessment()">Begin the Screen</button>
   </div>
 </div>
 
-<!-- ═══ QUESTIONS ═══ -->
+<!-- ══════════════════════════════════════════════════
+     QUESTIONS
+══════════════════════════════════════════════════ -->
 <div id="screen-questions" class="screen">
   <div class="wrap">
-
-    <div class="question-group">
-      <span class="section-label">Complaining</span>
-      <div class="section-divider"></div>
-      <div class="question-group-title">The Complaining Reflex</div>
-      <p class="question-group-sub">How your mind handles what is wrong.</p>
-      <div class="question-item" id="q1-wrap">
-        <p class="question-text">I talk about what is wrong more than I act on what I can change.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(1,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(1,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(1,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(1,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q2-wrap">
-        <p class="question-text">When something goes wrong, my first move is to name the problem — not solve it.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(2,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(2,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(2,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(2,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q3-wrap">
-        <p class="question-text">I feel better after venting — but nothing actually changes.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(3,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(3,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(3,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(3,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q4-wrap">
-        <p class="question-text">I can list everything in my way. I have a harder time listing what I will do about it.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(4,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(4,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(4,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(4,4)">This is me</button>
-        </div>
-      </div>
+    <div class="q-meta">
+      <span class="q-count" id="qCount">Question 1 of 20</span>
+      <span class="q-domain" id="qDomain">The Complaining Reflex</span>
     </div>
-
-    <div class="question-group">
-      <span class="section-label">Criticizing</span>
-      <div class="section-divider"></div>
-      <div class="question-group-title">The Criticizing Reflex</div>
-      <p class="question-group-sub">How your mind handles your own performance.</p>
-      <div class="question-item" id="q5-wrap">
-        <p class="question-text">My inner voice is harder on me than I would be on anyone I care about.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(5,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(5,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(5,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(5,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q6-wrap">
-        <p class="question-text">I speak to myself in ways I would not speak to someone I respect.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(6,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(6,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(6,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(6,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q7-wrap">
-        <p class="question-text">I rehearse my mistakes longer than I learn from them.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(7,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(7,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(7,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(7,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q8-wrap">
-        <p class="question-text">I see my flaws faster than I see what is working.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(8,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(8,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(8,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(8,4)">This is me</button>
-        </div>
-      </div>
+    <p class="q-text" id="qText"></p>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="q-footer">
+      <button class="btn-navy" id="qNextBtn" onclick="nextQuestion()">Next</button>
+      <button class="q-back" id="qBackBtn" onclick="prevQuestion()" style="display:none">Back</button>
     </div>
-
-    <div class="question-group">
-      <span class="section-label">Comparing</span>
-      <div class="section-divider"></div>
-      <div class="question-group-title">The Comparing Reflex</div>
-      <p class="question-group-sub">How your mind handles other people's progress.</p>
-      <div class="question-item" id="q9-wrap">
-        <p class="question-text">I measure my life against someone else's pace.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(9,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(9,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(9,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(9,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q10-wrap">
-        <p class="question-text">I scroll, then feel smaller than before I started.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(10,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(10,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(10,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(10,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q11-wrap">
-        <p class="question-text">I downgrade my own progress when I see someone else's.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(11,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(11,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(11,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(11,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q12-wrap">
-        <p class="question-text">I lose track of what I want when I see what they have.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(12,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(12,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(12,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(12,4)">This is me</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="question-group">
-      <span class="section-label">Competing</span>
-      <div class="section-divider"></div>
-      <div class="question-group-title">The Competing Reflex</div>
-      <p class="question-group-sub">How your mind handles your own worth.</p>
-      <div class="question-item" id="q13-wrap">
-        <p class="question-text">I track who is ahead of me in my field.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(13,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(13,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(13,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(13,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q14-wrap">
-        <p class="question-text">My sense of worth is tied to whether I am winning.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(14,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(14,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(14,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(14,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q15-wrap">
-        <p class="question-text">I do things mostly to be seen doing them.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(15,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(15,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(15,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(15,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q16-wrap">
-        <p class="question-text">I feel unsettled when someone in my circle succeeds at something I have not yet done.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(16,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(16,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(16,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(16,4)">This is me</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="question-group">
-      <span class="section-label">Starting &amp; Rhythm</span>
-      <div class="section-divider"></div>
-      <div class="question-group-title">Starting and Rhythm</div>
-      <p class="question-group-sub">How you begin and how you sustain.</p>
-      <div class="question-item" id="q17-wrap">
-        <p class="question-text">I know what I need to do. Starting is the part that stalls me.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(17,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(17,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(17,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(17,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q18-wrap">
-        <p class="question-text">I start well. I lose the rhythm after a few days.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(18,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(18,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(18,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(18,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q19-wrap">
-        <p class="question-text">I do not have a clear way to measure whether I am actually growing.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(19,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(19,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(19,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(19,4)">This is me</button>
-        </div>
-      </div>
-      <div class="question-item" id="q20-wrap">
-        <p class="question-text">I have no one who will notice — and say something — if I stop.</p>
-        <div class="options">
-          <button class="option-btn" onclick="selectOption(20,1)">Not me</button>
-          <button class="option-btn" onclick="selectOption(20,2)">Sometimes me</button>
-          <button class="option-btn" onclick="selectOption(20,3)">Often me</button>
-          <button class="option-btn" onclick="selectOption(20,4)">This is me</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="submit-area">
-      <p class="unanswered-warning" id="unansweredWarning">Please answer all 20 statements before continuing.</p>
-      <button class="btn-primary" onclick="submitAssessment()">See My Results</button>
-    </div>
+    <p class="q-error" id="qError">Please choose an option before continuing.</p>
   </div>
 </div>
 
-<!-- ═══ RESULTS ═══ -->
+<!-- ══════════════════════════════════════════════════
+     RESULTS
+══════════════════════════════════════════════════ -->
 <div id="screen-results" class="screen">
   <div class="wrap">
-    <div class="results-intro">
-      <span class="eyebrow">Your Result</span>
-      <h2 id="results-headline">Here is what is running you.</h2>
-      <p id="results-subhead">A named pattern can be addressed. An unnamed one can only be endured. Below is what your answers show — and the moves that interrupt it.</p>
-    </div>
+    <span class="results-eyebrow">Your Result</span>
+    <h1 class="results-h1" id="resultsHeadline">Here is what is running you.</h1>
+    <p class="results-sub" id="resultsSub"></p>
 
-    <div class="score-section">
-      <span class="section-label">Your Pattern Profile</span>
-      <div class="section-divider"></div>
-      <div id="scoreGrid"></div>
-    </div>
+    <span class="score-label">Your Pattern Profile</span>
+    <div class="score-table" id="scoreTable"></div>
 
-    <div class="action-row">
-      <button class="btn-action" onclick="downloadPDF()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        Download PDF Report
-      </button>
-      <button class="btn-action" onclick="downloadWhatsApp()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M8 12h8M12 8l4 4-4 4"/></svg>
-        Save WhatsApp Image
-      </button>
-    </div>
+    <div class="reflex-cards" id="reflexCards"></div>
 
-    <span class="section-label">What Each Reflex Is Doing</span>
-    <div class="section-divider-light"></div>
-    <div id="reflexCards"></div>
+    <div id="nowWhatBlock"></div>
 
-    <div id="nowWhatSection"></div>
+    <div class="results-rule"></div>
 
-    <div class="matrix-section">
-      <span class="section-label">The Allegiance Matrix</span>
-      <div class="section-divider-light"></div>
-      <p class="matrix-sub">Where each reflex breaks the four covenants. Your highlighted row is your primary reflex.</p>
-      <div class="matrix-table-wrap">
-        <table class="matrix-table" id="matrixTable">
-          <thead>
-            <tr>
-              <th>Reflex</th>
-              <th>Attention</th>
-              <th>Allegiance</th>
-              <th>Integrity</th>
-              <th>Return</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id="matrix-complaining"><td>Complaining</td><td>Mind drifts to what is wrong</td><td>Grievance has final authority</td><td>You name problems you will not fix</td><td>You stay inside the grievance</td></tr>
-            <tr id="matrix-criticizing"><td>Criticizing</td><td>Mind hunts flaws first</td><td>Harshest inner voice has final say</td><td>You condemn what you keep doing</td><td>You stay inside the verdict</td></tr>
-            <tr id="matrix-comparing"><td>Comparing</td><td>Mind goes to other people's lives</td><td>Imagined audience has final say</td><td>You measure in someone else's currency</td><td>You leave for their life and stay</td></tr>
-            <tr id="matrix-competing"><td>Competing</td><td>Mind tracks who is ahead</td><td>Scoreboard has final say</td><td>You perform what you should live</td><td>You return only after you lose</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="commitment-section">
-      <span class="eyebrow-gold">Your Commitment This Week</span>
-      <h3>The covenant is not perfection.<br>The covenant is return.</h3>
-      <p>On Friday's cohort call, say this sentence out loud. The third blank is the hardest. Make it specific — one behavior, doable before noon tomorrow.</p>
-      <div class="commitment-template">"This week, __________ ran me. What broke first was my __________. Tomorrow I will __________."</div>
-      <p style="font-size:14px;color:rgba(255,255,255,0.50);">You are permitted to fall. You are not permitted to stop returning.</p>
-    </div>
-
-    <div class="email-section">
-      <h3>Send these results to your email</h3>
-      <p>Enter your email address and we will send you a full copy of your results. A copy also goes to your coach.</p>
+    <div class="email-block">
+      <p class="email-block-title">Receive your results by email</p>
+      <p class="email-block-body">Enter your email address and your full result will be sent to your inbox. A copy goes to your coach automatically.</p>
       <div class="email-row">
-        <input type="email" id="resultEmail" placeholder="Your email address">
-        <button class="email-send-btn" onclick="sendResultsEmail()">Send Results</button>
+        <input class="email-input" type="email" id="emailInput" placeholder="Your email address">
+        <button class="btn-navy" onclick="sendEmail()">Send Results</button>
       </div>
-      <div class="email-status" id="emailStatus"></div>
+      <p class="email-status" id="emailStatus"></p>
     </div>
 
-    <div class="cta-section">
-      <span class="eyebrow">Next Step</span>
-      <h3>You have seen the pattern.<br>Now interrupt it.</h3>
-      <p>KOORA: The Finisher Protocol is a 180-day return path for the person who has started enough times. Not motivation. A system. A covenant.</p>
-      <a href="https://www.hom2026.com" class="btn-primary" target="_blank" rel="noopener">Reserve Your Place in KOORA</a>
-      <br>
-      <button class="btn-secondary" onclick="retakeAssessment()">Take It Again</button>
+    <div class="actions-row">
+      <button class="btn-navy" onclick="downloadPDF()">Download PDF Report</button>
+      <button class="btn-gold" onclick="downloadWhatsApp()">Save WhatsApp Image</button>
+      <button class="btn-outline" onclick="retakeAssessment()">Retake the Screen</button>
+    </div>
+
+    <div class="koora-block">
+      <span class="koora-eyebrow">The Next Step</span>
+      <h3 class="koora-h3">You have seen the pattern.<br>Now interrupt it.</h3>
+      <p class="koora-p">KOORA: The Finisher Protocol is a 180-day return path for the person who has started enough times. It is not motivation. It is a system and a covenant.</p>
+      <a href="https://www.hom2026.com" target="_blank" class="btn-gold">Reserve Your Place in KOORA</a>
     </div>
   </div>
 </div>
 
-<canvas id="waCanvas" width="1080" height="1080"></canvas>
-
 <footer class="site-footer">
-  <p><strong>KOORA · The Finisher Protocol · House of Mastery</strong><br>
-  Dr. Job Mogire, MD FACC · Cardiologist · Founder</p>
+  <p>KOORA: The Finisher Protocol &middot; House of Mastery<br>Dr. Job Mogire, MD FACC &middot; Cardiologist &middot; Founder</p>
 </footer>
 
 <script>
 emailjs.init('FEEOw8NA0cwBM4Vum');
+
 var answers = {};
+var currentQ = 1;
+var TOTAL = 20;
+
+var QUESTIONS = [
+  { n:1,  domain:'The Complaining Reflex',  text:'I talk about what is wrong more than I act on what I can change.' },
+  { n:2,  domain:'The Complaining Reflex',  text:'When something goes wrong, my first move is to name the problem, not solve it.' },
+  { n:3,  domain:'The Complaining Reflex',  text:'I feel better after venting, but nothing actually changes.' },
+  { n:4,  domain:'The Complaining Reflex',  text:'I can list everything in my way. I have a harder time listing what I will do about it.' },
+  { n:5,  domain:'The Criticizing Reflex',  text:'My inner voice is harder on me than I would be on anyone I care about.' },
+  { n:6,  domain:'The Criticizing Reflex',  text:'I speak to myself in ways I would not speak to someone I respect.' },
+  { n:7,  domain:'The Criticizing Reflex',  text:'I rehearse my mistakes longer than I learn from them.' },
+  { n:8,  domain:'The Criticizing Reflex',  text:'I see my flaws faster than I see what is working.' },
+  { n:9,  domain:'The Comparing Reflex',    text:'I measure my life against someone else\'s pace.' },
+  { n:10, domain:'The Comparing Reflex',    text:'I scroll through social media and feel smaller than before I started.' },
+  { n:11, domain:'The Comparing Reflex',    text:'I downgrade my own progress when I see someone else\'s.' },
+  { n:12, domain:'The Comparing Reflex',    text:'I lose track of what I want when I see what they have.' },
+  { n:13, domain:'The Competing Reflex',    text:'I track who is ahead of me in my field.' },
+  { n:14, domain:'The Competing Reflex',    text:'My sense of worth is tied to whether I am winning.' },
+  { n:15, domain:'The Competing Reflex',    text:'I do things mostly to be seen doing them.' },
+  { n:16, domain:'The Competing Reflex',    text:'I feel unsettled when someone in my circle succeeds at something I have not yet done.' },
+  { n:17, domain:'Starting and Rhythm',     text:'I know what I need to do. Starting is the part that stalls me.' },
+  { n:18, domain:'Starting and Rhythm',     text:'I do well for a few days, then I stop, and starting again takes longer than it should.' },
+  { n:19, domain:'Starting and Rhythm',     text:'I have a clear sense of what progress looks like, but I rarely measure it.' },
+  { n:20, domain:'Starting and Rhythm',     text:'I know who I want to be accountable to. I have not made that arrangement yet.' }
+];
+
+var OPTIONS = [
+  { label:'Rarely or never', score:1 },
+  { label:'Sometimes',       score:2 },
+  { label:'Often',           score:3 },
+  { label:'Almost always',   score:4 }
+];
+
 var REFLEX_ORDER = ['complaining','criticizing','comparing','competing'];
+
 var REFLEX_DATA = {
   complaining: {
-    name: "The Complaining Reflex", questions: [1,2,3,4],
-    whatItIs: "Your mind goes to what is wrong before what is working. You name problems. You describe barriers. You can list everything that is in your way.",
-    whatItActuallyIs: "Complaining feels like action. It is not. It is the rehearsal of powerlessness — a pattern that confuses being heard with being healed.",
-    underneath: "Fatigue. You are tired of carrying what has not changed. The complaint is a signal, not a strategy.",
+    name: 'The Complaining Reflex', questions: [1,2,3,4],
+    whatItIs: 'Your mind goes to what is wrong before it goes to what is working. You name problems with precision. You describe barriers clearly. You can list everything in your way.',
+    whatItActuallyIs: 'Complaining feels like honesty. It is not. It is the rehearsal of powerlessness. Every time you name the problem without moving toward a solution, you train your mind to see obstacles as permanent.',
+    underneath: 'A belief that the circumstances are the reason. The reflex protects you from the discomfort of owning the next move.',
     strategies: [
-      { title: "The 60-second rule.", body: "You may complain for 60 seconds. Then you must name one thing you can do about it. No action? The complaint is noise. Let it go." },
-      { title: "The translation.", body: "Every time you hear yourself complain, ask: \"What am I actually tired of?\" The answer beneath the complaint is the real signal." },
-      { title: "The swap.", body: "Replace \"This is wrong\" with \"This is what I have. What can I do with it?\" Reality refusal loses its grip when you accept what is actually here." }
+      { title: 'The two-minute rule on naming problems.', body: 'You are permitted to name what is wrong. You are not permitted to stay there for more than two minutes. After two minutes, the rule is: one thing you can do. Not the whole solution. One thing.' },
+      { title: 'The ratio check.', body: 'At the end of each day, ask yourself how many minutes you spent naming problems versus taking action on them. You do not need a perfect ratio. You need an honest one. The awareness alone changes the pattern.' },
+      { title: 'Replace the complaint with a request or a decision.', body: 'Every complaint contains a hidden request or a hidden decision. "This is not working" becomes "I am going to change this one thing." Practice making the translation out loud.' }
     ]
   },
   criticizing: {
-    name: "The Criticizing Reflex", questions: [5,6,7,8],
-    whatItIs: "The voice in your head that says \"not good enough,\" \"you should have known better.\" It speaks with final authority. You do not question it. You obey it.",
-    whatItActuallyIs: "The critic believes that cruelty creates change. It does not. It creates shame. And shame does not finish things — it abandons them.",
-    underneath: "A protector. The critic started as a habit that learned being harsh on yourself was safer than being surprised by failure. It is trying to keep you safe. It is doing it badly.",
+    name: 'The Criticizing Reflex', questions: [5,6,7,8],
+    whatItIs: 'The voice in your head speaks with final authority. It says "not good enough," "you should have known better," "look at what you did." It arrives before the evidence is in.',
+    whatItActuallyIs: 'The critic believes that cruelty creates change. It does not. It creates shame, and shame does not finish things. Shame makes you smaller. Finishing requires you to be larger than the task.',
+    underneath: 'A standard you absorbed from somewhere else, applied to yourself with a severity you would never apply to someone you love.',
     strategies: [
-      { title: "Name the voice.", body: "When you hear the critic, say — out loud or silently — \"That is the critic. It is trying to protect me. I do not need protection right now.\" Naming it breaks its grip." },
-      { title: "The friend test.", body: "Ask: \"Would I speak to someone I respect the way I just spoke to myself?\" If the answer is no, stop. Then speak to yourself the way you would speak to that person." },
-      { title: "The 60-second rule on self-criticism.", body: "You are permitted to notice a mistake. You are not permitted to rehearse it for more than 60 seconds. After that, ask: \"What do I learn? What do I do next?\" Then move." }
+      { title: 'The friend test.', body: 'When the critical voice speaks, ask: "Would I say this to a friend who made the same mistake?" If the answer is no, you are not being honest with yourself. You are being cruel. Restate the observation in the way you would speak to that friend.' },
+      { title: 'The 60-second rule on self-criticism.', body: 'You are permitted to notice a mistake. You are not permitted to rehearse it for more than 60 seconds. After that, ask two questions: What do I learn from this? What do I do next? Then move.' },
+      { title: 'Separate the act from the person.', body: '"I made a poor decision" is a fact. "I am a failure" is a verdict. The critic collapses the two. Your job is to keep them separate. You are not your worst moment. You are what you do after it.' }
     ]
   },
   comparing: {
-    name: "The Comparing Reflex", questions: [9,10,11,12],
-    whatItIs: "You measure your life against someone else's feed, someone else's pace, someone else's highlight reel. You feel behind. You feel smaller. You feel like you are losing a race you never agreed to enter.",
-    whatItActuallyIs: "Comparison is not envy. It is the surrender of your own ground. You cannot stand on your own foundation if you are always looking at theirs.",
-    underneath: "A forgotten self. You stopped asking what you actually want. The reflex filled the silence.",
+    name: 'The Comparing Reflex', questions: [9,10,11,12],
+    whatItIs: 'You measure your life against someone else\'s feed, someone else\'s pace, someone else\'s highlight reel. You feel behind. You feel smaller. You feel like you are losing a race you never agreed to enter.',
+    whatItActuallyIs: 'Comparison is not envy. It is the surrender of your own ground. You cannot stand on your own foundation if you are always looking at theirs. The comparing reflex does not make you work harder. It makes you feel less.',
+    underneath: 'A forgotten self. You stopped asking what you actually want. The reflex filled the silence with someone else\'s answer.',
     strategies: [
-      { title: "The \"compared to what?\" question.", body: "When you catch yourself comparing, ask: \"Compared to what standard that I actually chose?\" Most comparisons are automatic, not chosen. You will rarely have an answer. That is the point." },
-      { title: "The one true thing.", body: "Ask: \"What is one true thing about my own path right now?\" Not better or worse. Just true. \"I showed up. I tried. I am still here.\" Stand on that ground." },
-      { title: "The feed audit.", body: "For 7 days, do not check the feed of anyone you compare yourself to. Replace that time with one small act that is yours alone — something you would do even if no one ever saw it." }
+      { title: 'The "compared to what?" question.', body: 'When you catch yourself comparing, ask: "Compared to what standard that I actually chose?" Most comparisons are automatic, not chosen. You will rarely have a clear answer. That is the point. The question interrupts the reflex.' },
+      { title: 'The one true thing.', body: 'Ask yourself: "What is one true thing about my own path right now?" Not better or worse than anyone else. Just true. "I showed up. I tried. I am still here." Stand on that ground before you look anywhere else.' },
+      { title: 'The feed audit.', body: 'For seven days, do not check the feed of anyone you compare yourself to. Replace that time with one small act that belongs to you alone, something you would do even if no one ever saw it.' }
     ]
   },
   competing: {
-    name: "The Competing Reflex", questions: [13,14,15,16],
-    whatItIs: "You track who is ahead. You measure your worth by whether you are winning. You perform what you should be living — you do things to be seen doing them.",
-    whatItActuallyIs: "Competition is useful on a court. It is destructive when it becomes the lens for your entire life. The scoreboard is not your soul.",
-    underneath: "The fear that you have no inherent value. If you are not winning, you are nothing. The reflex is trying to prove that you matter. You cannot prove mattering. You can only live it.",
+    name: 'The Competing Reflex', questions: [13,14,15,16],
+    whatItIs: 'You track who is ahead. You measure your worth by whether you are winning. You perform what you should be living. You do things to be seen doing them, and the doing feels hollow.',
+    whatItActuallyIs: 'Competition is useful on a court. It is destructive when it becomes the lens for your entire life. The scoreboard is not your soul. When you compete for your own worth, you can never win enough.',
+    underneath: 'The fear that you have no inherent value. If you are not winning, you are nothing. The reflex is trying to prove that you matter. You cannot prove mattering. You can only live it.',
     strategies: [
-      { title: "The audience test.", body: "When you feel the pull to compete, ask: \"If no one ever knew I did this, would I still want to do it?\" If the answer is no, you are competing. If yes, you are choosing. Choose more of what you would do in private." },
-      { title: "One private act per day.", body: "Do one thing today that you want for its own sake, with no audience. Do not post it. Do not tell anyone. Let it be yours. This act unearths the self underneath the competitor." },
-      { title: "Finish over win.", body: "At the end of each day, ask: \"Did I finish anything today — no matter how small?\" Not \"did I win.\" Just: did I close what I opened? That is the only score that matters." }
+      { title: 'The private act test.', body: 'When you feel the pull to compete, ask: "If no one ever knew I did this, would I still want to do it?" If the answer is no, you are competing. If yes, you are choosing. Choose more of what you would do in private.' },
+      { title: 'One private act per day.', body: 'Do one thing today that you want for its own sake, with no audience. Do not post it. Do not tell anyone. Let it be yours. This act unearths the self underneath the competitor.' },
+      { title: 'Finish over win.', body: 'At the end of each day, ask: "Did I finish anything today, no matter how small?" Not "did I win." Just: did I close what I opened? That is the only score that matters in the long run.' }
     ]
   }
 };
+
 var NOW_WHAT = {
-  intro: "These are the questions almost everyone has once they see their pattern. They are good questions. Here are direct answers.",
+  intro: 'These are the questions almost everyone asks once they see their pattern. They are good questions. Here are direct answers.',
   items: [
-    { q: "I know I need to change. Where do I start?", a: "<p>Start with the one reflex that scored highest. Not all four. One. The loudest one is the one that is costing you the most right now. Everything else is secondary.</p><p>Your first move is not a plan. It is a single behavior you can do tomorrow before noon. Name it. Write it down. Do it. That is where you start.</p>" },
-    { q: "How do I actually start — not just decide to?", a: "<p><strong>Decide on the smallest possible version.</strong> Not the full change. The smallest version of it that you could do in under five minutes. If you want to build a writing habit, the start is one sentence. If you want to stop complaining, the start is one 60-second rule, once.</p><p>You will not feel ready. Start before you feel ready. Readiness follows action — it does not precede it.</p>" },
-    { q: "How do I maintain rhythm — even with the little things?", a: "<p><strong>Rhythm is not motivation. Rhythm is structure.</strong> Motivation disappears. Structure stays.</p><p>Pick a time of day — not a goal, a time. Attach the new behavior to something you already do. Brush your teeth, then do the one thing. When you miss a day, the rule is: never miss twice. One miss is an interruption. Two misses is a new pattern. Return the next day. That is the whole system.</p>" },
-    { q: "How do I evaluate my growth and progress?", a: "<p><strong>Track behavior, not feelings.</strong> \"Did I do the thing?\" is a question you can answer. \"Am I growing?\" is a question that will always feel uncertain.</p><p>At the end of each week, ask three questions: What did I finish? What did I interrupt? What did I return to after I stopped? Those three answers tell you more about your actual progress than any feeling ever will.</p>" },
-    { q: "How do I become accountable — and to whom?", a: "<p><strong>Accountability is not someone checking on you. It is someone who will tell you the truth.</strong> You need one person who will ask: \"Did you do what you said?\" and wait for the real answer. Not someone who will let you off the hook. Not someone who will shame you. Someone who will hold the standard and still be in your corner.</p><p>In KOORA, that is the cohort. On Friday calls, you say what ran you and what you will do next. That is the accountability structure. Use it.</p>" }
+    { q: 'I know I need to change. Where do I start?',
+      a: '<p>Start with the one reflex that scored highest. Not all four. One. The loudest one is the one that is costing you the most right now. Everything else is secondary.</p><p>Your first move is not a plan. It is a single behavior you can do tomorrow before noon. Name it. Write it down. Do it. That is where you start.</p>' },
+    { q: 'How do I actually start, not just decide to?',
+      a: '<p><strong>Decide on the smallest possible version.</strong> Not the full change. The smallest version of it that you could do in under five minutes. If you want to build a writing habit, the start is one sentence. If you want to stop complaining, the start is one two-minute rule, once.</p><p>You will not feel ready. Start before you feel ready. Readiness follows action. It does not precede it.</p>' },
+    { q: 'How do I maintain rhythm, even with the little things?',
+      a: '<p><strong>Rhythm is not motivation. Rhythm is structure.</strong> Motivation disappears. Structure stays.</p><p>Pick a time of day, not a goal, a time. Attach the new behavior to something you already do. When you miss a day, the rule is: never miss twice. One miss is an interruption. Two misses is a new pattern. Return the next day. That is the whole system.</p>' },
+    { q: 'How do I evaluate my growth and progress?',
+      a: '<p><strong>Track behavior, not feelings.</strong> "Did I do the thing?" is a question you can answer. "Am I growing?" is a question that will always feel uncertain.</p><p>At the end of each week, ask three questions: What did I finish? What did I interrupt? What did I return to after I stopped? Those three answers tell you more about your actual progress than any feeling ever will.</p>' },
+    { q: 'How do I become accountable, and to whom?',
+      a: '<p><strong>Accountability is not someone checking on you. It is someone who will tell you the truth.</strong> You need one person who will ask: "Did you do what you said?" and wait for the real answer. Not someone who will let you off the hook. Not someone who will shame you. Someone who will hold the standard and still be in your corner.</p><p>In KOORA, that is the cohort. On Friday calls, you say what ran you and what you will do next. That is the accountability structure. Use it.</p>' }
   ]
 };
 
+/* ── SCREEN NAVIGATION ──────────────────────────────── */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
-  var bar = document.getElementById('progressBar');
-  if (id === 'screen-intro')     bar.style.width = '0%';
-  if (id === 'screen-questions') bar.style.width = '50%';
-  if (id === 'screen-results')   bar.style.width = '100%';
 }
-function startAssessment() { showScreen('screen-questions'); }
+
+function setProgress(pct) {
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function startAssessment() {
+  currentQ = 1;
+  renderQuestion(1);
+  showScreen('screen-questions');
+  setProgress(0);
+}
+
 function retakeAssessment() {
   answers = {};
-  document.querySelectorAll('.option-btn').forEach(function(b){ b.classList.remove('selected'); });
-  document.querySelectorAll('.question-item').forEach(function(i){ i.classList.remove('answered','error'); i.style.borderColor = ''; });
-  document.getElementById('unansweredWarning').style.display = 'none';
+  currentQ = 1;
   showScreen('screen-intro');
+  setProgress(0);
 }
-function selectOption(qNum, score) {
-  answers[qNum] = score;
-  var wrap = document.getElementById('q' + qNum + '-wrap');
-  wrap.querySelectorAll('.option-btn').forEach(function(btn, idx){ btn.classList.toggle('selected', idx + 1 === score); });
-  wrap.classList.add('answered');
-  wrap.classList.remove('error');
-  wrap.style.borderColor = '';
-}
-function getReflexScore(reflex) { return REFLEX_DATA[reflex].questions.reduce(function(s,q){ return s + (answers[q]||0); }, 0); }
-function getReadinessScore() { return [17,18,19,20].reduce(function(s,q){ return s + (answers[q]||0); }, 0); }
-function getReflexLevel(score) { return score <= 7 ? 'quiet' : score <= 11 ? 'active' : 'loud'; }
-function getLevelLabel(level) { return level === 'quiet' ? 'Quiet' : level === 'active' ? 'Active' : 'Loud'; }
-function getLevelColor(level) { return level === 'quiet' ? '#1B5E20' : level === 'active' ? '#B45309' : '#991B1B'; }
 
-function submitAssessment() {
-  var missing = [];
-  for (var i = 1; i <= 20; i++) { if (!answers[i]) missing.push(i); }
-  if (missing.length > 0) {
-    document.getElementById('unansweredWarning').style.display = 'block';
-    missing.forEach(function(q){ var w = document.getElementById('q'+q+'-wrap'); w.classList.add('error'); });
+/* ── QUESTION RENDERING ─────────────────────────────── */
+function renderQuestion(n) {
+  var q = QUESTIONS[n - 1];
+  document.getElementById('qCount').textContent = 'Question ' + n + ' of ' + TOTAL;
+  document.getElementById('qDomain').textContent = q.domain;
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('qError').style.display = 'none';
+
+  var grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  OPTIONS.forEach(function(opt) {
+    var btn = document.createElement('button');
+    btn.className = 'opt-btn' + (answers[n] === opt.score ? ' selected' : '');
+    btn.textContent = opt.label;
+    (function(score){ btn.onclick = function(){ selectOption(n, score); }; })(opt.score);
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('qBackBtn').style.display = n > 1 ? 'inline-block' : 'none';
+  document.getElementById('qNextBtn').textContent = n === TOTAL ? 'See My Results' : 'Next';
+
+  var pct = Math.round(((n - 1) / TOTAL) * 90);
+  setProgress(pct);
+}
+
+function selectOption(n, score) {
+  answers[n] = score;
+  var btns = document.querySelectorAll('#optionsGrid .opt-btn');
+  btns.forEach(function(btn, idx){
+    btn.classList.toggle('selected', OPTIONS[idx].score === score);
+  });
+  document.getElementById('qError').style.display = 'none';
+}
+
+function nextQuestion() {
+  if (!answers[currentQ]) {
+    document.getElementById('qError').style.display = 'block';
     return;
   }
-  document.getElementById('unansweredWarning').style.display = 'none';
-  buildResults();
-  showScreen('screen-results');
+  if (currentQ === TOTAL) {
+    buildResults();
+    showScreen('screen-results');
+    setProgress(100);
+    return;
+  }
+  currentQ++;
+  renderQuestion(currentQ);
 }
 
+function prevQuestion() {
+  if (currentQ > 1) {
+    currentQ--;
+    renderQuestion(currentQ);
+  }
+}
+
+/* ── SCORING ────────────────────────────────────────── */
+function getReflexScore(r) {
+  return REFLEX_DATA[r].questions.reduce(function(s,q){ return s + (answers[q]||0); }, 0);
+}
+function getReadinessScore() {
+  return [17,18,19,20].reduce(function(s,q){ return s + (answers[q]||0); }, 0);
+}
+function getLevel(score) {
+  return score <= 7 ? 'quiet' : score <= 11 ? 'active' : 'loud';
+}
+function getLevelLabel(level) {
+  return level === 'quiet' ? 'Quiet' : level === 'active' ? 'Active' : 'Loud';
+}
+
+/* ── BUILD RESULTS ──────────────────────────────────── */
 function buildResults() {
-  var scores = {}; REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
+  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
+  var scores = {};
+  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
   var readiness = getReadinessScore();
   var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
-  var primaryLevel = getReflexLevel(scores[primary]);
-  var headlines = { loud: 'Here is what is running you.', active: 'Here is what is active in you.', quiet: 'Here is your pattern profile.' };
-  document.getElementById('results-headline').textContent = headlines[primaryLevel];
+  var primaryLevel = getLevel(scores[primary]);
 
-  // Score bars
-  var grid = document.getElementById('scoreGrid'); grid.innerHTML = '';
-  REFLEX_ORDER.forEach(function(r){
-    var s = scores[r], lvl = getReflexLevel(s), pct = Math.round((s/16)*100);
-    grid.innerHTML += '<div class="score-row"><div class="score-row-label">'+r.charAt(0).toUpperCase()+r.slice(1)+'</div><div class="score-bar-wrap"><div class="score-bar-fill '+lvl+'" style="width:'+pct+'%"></div></div><div class="score-row-value '+lvl+'">'+s+'/16 &middot; '+getLevelLabel(lvl)+'</div></div>';
+  var headlines = {
+    loud:   'Here is what is running you.',
+    active: 'Here is what is active in you.',
+    quiet:  'Here is your pattern profile.'
+  };
+  document.getElementById('resultsHeadline').textContent = headlines[primaryLevel];
+  document.getElementById('resultsSub').innerHTML = 'Result for <strong>' + name + '</strong>';
+
+  // Score table
+  var table = document.getElementById('scoreTable');
+  table.innerHTML = '';
+  REFLEX_ORDER.forEach(function(r) {
+    var s = scores[r], lvl = getLevel(s), pct = Math.round((s/16)*100);
+    table.innerHTML += '<div class="score-row">' +
+      '<div class="score-row-name">' + r.charAt(0).toUpperCase() + r.slice(1) + '</div>' +
+      '<div class="score-bar-track"><div class="score-bar-fill ' + lvl + '" style="width:' + pct + '%"></div></div>' +
+      '<div class="score-row-val ' + lvl + '">' + s + '/16 &middot; ' + getLevelLabel(lvl) + '</div>' +
+      '</div>';
   });
-  var rLvl = readiness<=8?'quiet':readiness<=12?'active':'loud', rPct = Math.round((readiness/16)*100);
-  var rLabel = readiness<=8?'Strong':readiness<=12?'Some gaps':'Needs attention';
-  grid.innerHTML += '<div class="score-row" style="margin-top:8px;padding-top:14px;border-top:1px solid rgba(17,17,17,0.08);"><div class="score-row-label">Starting &amp; Rhythm</div><div class="score-bar-wrap"><div class="score-bar-fill '+rLvl+'" style="width:'+rPct+'%"></div></div><div class="score-row-value '+rLvl+'">'+readiness+'/16 &middot; '+rLabel+'</div></div>';
+  var rLvl = readiness <= 8 ? 'quiet' : readiness <= 12 ? 'active' : 'loud';
+  var rLabel = readiness <= 8 ? 'Strong' : readiness <= 12 ? 'Some gaps' : 'Needs attention';
+  var rPct = Math.round((readiness/16)*100);
+  table.innerHTML += '<div class="score-row" style="border-top:2px solid var(--rule);margin-top:4px;">' +
+    '<div class="score-row-name">Starting &amp; Rhythm</div>' +
+    '<div class="score-bar-track"><div class="score-bar-fill ' + rLvl + '" style="width:' + rPct + '%"></div></div>' +
+    '<div class="score-row-val ' + rLvl + '">' + readiness + '/16 &middot; ' + rLabel + '</div>' +
+    '</div>';
 
   // Reflex cards
-  var cardsEl = document.getElementById('reflexCards'); cardsEl.innerHTML = '';
-  REFLEX_ORDER.slice().sort(function(a,b){ return scores[b]-scores[a]; }).forEach(function(r){
-    var d = REFLEX_DATA[r], s = scores[r], lvl = getReflexLevel(s);
+  var cards = document.getElementById('reflexCards');
+  cards.innerHTML = '';
+  REFLEX_ORDER.slice().sort(function(a,b){ return scores[b]-scores[a]; }).forEach(function(r) {
+    var d = REFLEX_DATA[r], s = scores[r], lvl = getLevel(s);
     if (lvl === 'quiet') {
-      cardsEl.innerHTML += '<div class="reflex-card quiet"><div class="reflex-card-header"><div class="reflex-status-dot quiet"></div><h3>'+d.name+'</h3><span class="status-tag quiet">Quiet</span></div><div class="reflex-card-body"><p class="quiet-note">Score: '+s+'/16. This reflex is not running you right now. Keep an eye on it — reflexes shift under pressure.</p></div></div>';
+      cards.innerHTML += '<div class="reflex-card quiet">' +
+        '<div class="reflex-card-head"><div class="r-dot quiet"></div><h3>' + d.name + '</h3><span class="r-tag quiet">Quiet</span></div>' +
+        '<div class="reflex-card-body"><p class="quiet-note">Score: ' + s + '/16. This reflex is not running you right now. Keep an eye on it, as reflexes shift under pressure.</p></div>' +
+        '</div>';
     } else {
-      var stHtml = ''; d.strategies.forEach(function(st,i){ stHtml += '<div class="strategy-item"><div class="strategy-num">'+(i+1)+'</div><div class="strategy-text"><strong>'+st.title+'</strong><p>'+st.body+'</p></div></div>'; });
-      cardsEl.innerHTML += '<div class="reflex-card '+lvl+'"><div class="reflex-card-header"><div class="reflex-status-dot '+lvl+'"></div><h3>'+d.name+'</h3><span class="status-tag '+lvl+'">'+getLevelLabel(lvl)+' &middot; '+s+'/16</span></div><div class="reflex-card-body"><span class="card-label">What it looks like</span><p>'+d.whatItIs+'</p><p>'+d.whatItActuallyIs+'</p><div class="reflex-underneath"><span class="card-label">What hides underneath</span><p>'+d.underneath+'</p></div><span class="strategies-label">Your Top 3 Strategies</span>'+stHtml+'</div></div>';
+      var stHtml = '<div class="strategies">';
+      d.strategies.forEach(function(st, i) {
+        stHtml += '<div class="strategy-row">' +
+          '<div class="s-num">' + (i+1) + '</div>' +
+          '<div><div class="s-title">' + st.title + '</div><div class="s-body">' + st.body + '</div></div>' +
+          '</div>';
+      });
+      stHtml += '</div>';
+      cards.innerHTML += '<div class="reflex-card ' + lvl + '">' +
+        '<div class="reflex-card-head"><div class="r-dot ' + lvl + '"></div><h3>' + d.name + '</h3><span class="r-tag ' + lvl + '">' + getLevelLabel(lvl) + ' &middot; ' + s + '/16</span></div>' +
+        '<div class="reflex-card-body">' +
+        '<span class="card-label">What it looks like</span>' +
+        '<p class="card-text">' + d.whatItIs + '</p>' +
+        '<p class="card-text">' + d.whatItActuallyIs + '</p>' +
+        '<div class="underneath-block"><p>' + d.underneath + '</p></div>' +
+        '<span class="card-label">Your top 3 strategies</span>' +
+        stHtml +
+        '</div></div>';
     }
   });
 
   // Now What
-  var nw = document.getElementById('nowWhatSection'); var qaHtml = '';
-  NOW_WHAT.items.forEach(function(item){ qaHtml += '<div class="qa-item"><div class="qa-question">'+item.q+'</div><div class="qa-answer">'+item.a+'</div></div>'; });
-  nw.innerHTML = '<div class="now-what-section"><div class="now-what-header"><span class="eyebrow-w">Now What?</span><h3>Five questions every person asks after they see the pattern.</h3><p>'+NOW_WHAT.intro+'</p></div><div class="now-what-body">'+qaHtml+'</div></div>';
-
-  // Matrix highlight
-  REFLEX_ORDER.forEach(function(r){ var row = document.getElementById('matrix-'+r); if(row) row.classList.remove('highlight-row'); });
-  var pr = document.getElementById('matrix-'+primary); if(pr) pr.classList.add('highlight-row');
+  var nwEl = document.getElementById('nowWhatBlock');
+  var qaHtml = '';
+  NOW_WHAT.items.forEach(function(item) {
+    qaHtml += '<div class="qa-item"><div class="qa-q">' + item.q + '</div><div class="qa-a">' + item.a + '</div></div>';
+  });
+  nwEl.innerHTML = '<div class="now-what-block">' +
+    '<span class="nw-eyebrow">Now What?</span>' +
+    '<h3 class="nw-h3">Five questions every person asks after they see the pattern.</h3>' +
+    '<p class="nw-intro">' + NOW_WHAT.intro + '</p>' + qaHtml +
+    '</div>';
 }
 
-// ── PDF ──────────────────────────────────────────────
+/* ── EMAIL ──────────────────────────────────────────── */
+function sendEmail() {
+  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
+  var email = document.getElementById('emailInput').value.trim();
+  var statusEl = document.getElementById('emailStatus');
+  if (!email || !email.includes('@')) {
+    statusEl.textContent = 'Please enter a valid email address.';
+    statusEl.className = 'email-status err';
+    statusEl.style.display = 'block';
+    return;
+  }
+  var scores = {};
+  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
+  var readiness = getReadinessScore();
+  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
+  var pd = REFLEX_DATA[primary];
+  var pl = getLevel(scores[primary]);
+
+  var trafficSummary = REFLEX_ORDER.map(function(r) {
+    var lvl = getLevel(scores[r]);
+    return r.charAt(0).toUpperCase() + r.slice(1) + ': ' + scores[r] + '/16 (' + getLevelLabel(lvl) + ')';
+  }).join('<br>') + '<br>Starting and Rhythm: ' + readiness + '/16';
+
+  var stratHtml = pd.strategies.map(function(st, i) {
+    return '<strong>' + (i+1) + '. ' + st.title + '</strong><br>' + st.body;
+  }).join('<br><br>');
+
+  statusEl.textContent = 'Sending...';
+  statusEl.className = 'email-status';
+  statusEl.style.display = 'block';
+
+  emailjs.send('service_76loif8', 'template_3j2uhtd', {
+    to_name:         name,
+    to_email:        email,
+    cc_email:        'mogiremd@gmail.com',
+    primary_reflex:  pd.name,
+    primary_level:   getLevelLabel(pl) + ' (' + scores[primary] + '/16)',
+    archetype_desc:  pd.whatItIs + '<br><br>' + pd.whatItActuallyIs,
+    traffic_summary: trafficSummary,
+    strategies_html: stratHtml,
+    summit_url:      'https://www.hom2026.com'
+  }).then(function() {
+    statusEl.textContent = 'Your results have been sent to ' + email + '.';
+    statusEl.className = 'email-status ok';
+  }, function() {
+    statusEl.textContent = 'There was a problem sending the email. Please try again.';
+    statusEl.className = 'email-status err';
+  });
+}
+
+/* ── PDF ────────────────────────────────────────────── */
 function downloadPDF() {
   var name = (document.getElementById('participantName').value.trim()) || 'Participant';
-  var scores = {}; REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
+  var scores = {};
+  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
   var readiness = getReadinessScore();
-  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a]>=scores[b]?a:b; });
+  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
   var { jsPDF } = window.jspdf;
   var doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-  var W=210, M=20, y=0;
-  var lc = { quiet:[27,94,32], active:[180,83,9], loud:[153,27,27] };
+  var W=210, M=22, y=0;
+  var lc = { quiet:[22,101,52], active:[146,64,14], loud:[153,27,27] };
 
   // Header
-  doc.setFillColor(13,31,60); doc.rect(0,0,W,26,'F');
+  doc.setFillColor(13,31,60); doc.rect(0,0,W,28,'F');
   doc.setFillColor(201,151,58); doc.rect(0,0,W,2.5,'F');
   doc.setTextColor(201,151,58); doc.setFontSize(8); doc.setFont('helvetica','bold');
-  doc.text('HOUSE OF MASTERY · THE 4C REFLEX SCREEN', M, 12);
+  doc.text('HOUSE OF MASTERY  \u00B7  THE 4C REFLEX SCREEN', M, 13);
   doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','normal');
-  doc.text('Confidential · '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}), M, 21);
-  y = 40;
+  doc.text('Confidential  \u00B7  ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}), M, 22);
+  y = 44;
 
   doc.setTextColor(17,17,17); doc.setFontSize(22); doc.setFont('helvetica','bold');
-  doc.text('Your 4C Reflex Report', M, y); y += 9;
-  doc.setFontSize(12); doc.setFont('helvetica','normal'); doc.setTextColor(60,60,60);
-  doc.text('Prepared for: '+name, M, y); y += 14;
-  doc.setDrawColor(201,151,58); doc.setLineWidth(0.5); doc.line(M,y,W-M,y); y += 12;
+  doc.text('Result for ' + name, M, y); y += 12;
+  doc.setFontSize(11); doc.setFont('helvetica','normal'); doc.setTextColor(85,85,85);
+  doc.text('Primary reflex: ' + REFLEX_DATA[primary].name + '  \u00B7  ' + getLevelLabel(getLevel(scores[primary])) + ' (' + scores[primary] + '/16)', M, y); y += 14;
 
-  doc.setTextColor(201,151,58); doc.setFontSize(8); doc.setFont('helvetica','bold');
+  doc.setDrawColor(224,224,224); doc.line(M,y,W-M,y); y += 10;
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
   doc.text('YOUR PATTERN PROFILE', M, y); y += 8;
 
-  var allD = REFLEX_ORDER.map(function(r){ return {label:r.charAt(0).toUpperCase()+r.slice(1), score:scores[r], max:16, level:getReflexLevel(scores[r])}; });
-  allD.push({label:'Starting & Rhythm', score:readiness, max:16, level:readiness<=8?'quiet':readiness<=12?'active':'loud'});
-  var bW = W-M*2-58;
-  allD.forEach(function(d){
-    var fW = Math.round((d.score/d.max)*bW); var c = lc[d.level];
-    doc.setTextColor(17,17,17); doc.setFontSize(10); doc.setFont('helvetica','bold');
-    doc.text(d.label, M, y);
-    doc.setFillColor(220,220,220); doc.roundedRect(M+58,y-5,bW,6,1,1,'F');
-    if(fW>0){ doc.setFillColor(c[0],c[1],c[2]); doc.roundedRect(M+58,y-5,fW,6,1,1,'F'); }
-    doc.setTextColor(c[0],c[1],c[2]); doc.setFontSize(9); doc.setFont('helvetica','bold');
-    doc.text(d.score+'/'+d.max+' · '+getLevelLabel(d.level), M+58+bW+3, y);
-    y += 11;
+  REFLEX_ORDER.forEach(function(r) {
+    var s=scores[r], lvl=getLevel(s), pct=s/16, c=lc[lvl];
+    doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
+    doc.text(r.charAt(0).toUpperCase()+r.slice(1), M, y);
+    doc.setFillColor(240,240,240); doc.roundedRect(M+52,y-4,100,5,2,2,'F');
+    doc.setFillColor(c[0],c[1],c[2]); doc.roundedRect(M+52,y-4,100*pct,5,2,2,'F');
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(c[0],c[1],c[2]);
+    doc.text(s+'/16  '+getLevelLabel(lvl), M+158, y); y+=10;
   });
-  y += 4;
-  doc.setDrawColor(201,151,58); doc.line(M,y,W-M,y); y += 12;
+  var rLvl=readiness<=8?'quiet':readiness<=12?'active':'loud', rlc=lc[rLvl];
+  var rLabel=readiness<=8?'Strong':readiness<=12?'Some gaps':'Needs attention';
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
+  doc.text('Starting & Rhythm', M, y);
+  doc.setFillColor(240,240,240); doc.roundedRect(M+52,y-4,100,5,2,2,'F');
+  doc.setFillColor(rlc[0],rlc[1],rlc[2]); doc.roundedRect(M+52,y-4,100*(readiness/16),5,2,2,'F');
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(rlc[0],rlc[1],rlc[2]);
+  doc.text(readiness+'/16  '+rLabel, M+158, y); y+=14;
 
-  var pd = REFLEX_DATA[primary];
-  doc.setTextColor(201,151,58); doc.setFontSize(8); doc.setFont('helvetica','bold');
-  doc.text('PRIMARY REFLEX', M, y); y += 8;
-  doc.setTextColor(17,17,17); doc.setFontSize(14); doc.setFont('helvetica','bold');
-  doc.text(pd.name, M, y); y += 8;
-  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(40,40,40);
-  var desc = doc.splitTextToSize(pd.whatItIs+' '+pd.whatItActuallyIs, W-M*2);
-  doc.text(desc, M, y); y += desc.length*5+6;
+  doc.setDrawColor(224,224,224); doc.line(M,y,W-M,y); y+=10;
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
+  doc.text('PRIMARY REFLEX', M, y); y+=8;
+  doc.setFontSize(13); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
+  doc.text(REFLEX_DATA[primary].name, M, y); y+=9;
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(42,42,42);
+  var descLines=doc.splitTextToSize(REFLEX_DATA[primary].whatItIs+' '+REFLEX_DATA[primary].whatItActuallyIs, W-M*2);
+  doc.text(descLines, M, y); y+=descLines.length*5.5+10;
 
-  var undL = doc.splitTextToSize(pd.underneath, W-M*2-8);
-  doc.setFillColor(250,249,246); doc.setDrawColor(201,151,58); doc.setLineWidth(0.3);
-  doc.roundedRect(M,y-4,W-M*2,undL.length*5+12,2,2,'FD');
-  doc.setTextColor(17,17,17); doc.setFontSize(9); doc.setFont('helvetica','bold');
-  doc.text('What hides underneath', M+4, y+2); y += 7;
-  doc.setFont('helvetica','normal'); doc.setFontSize(10);
-  doc.text(undL, M+4, y); y += undL.length*5+12;
-
-  doc.setTextColor(13,31,60); doc.setFontSize(8); doc.setFont('helvetica','bold');
-  doc.text('YOUR TOP 3 STRATEGIES', M, y); y += 8;
-  pd.strategies.forEach(function(st,i){
-    if(y>260){ doc.addPage(); y=20; }
-    doc.setTextColor(201,151,58); doc.setFontSize(10); doc.setFont('helvetica','bold');
-    doc.text((i+1)+'. '+st.title, M, y); y += 6;
-    doc.setTextColor(40,40,40); doc.setFont('helvetica','normal');
-    var stL = doc.splitTextToSize(st.body, W-M*2-8);
-    doc.text(stL, M+4, y); y += stL.length*5+8;
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
+  doc.text('YOUR TOP 3 STRATEGIES', M, y); y+=8;
+  REFLEX_DATA[primary].strategies.forEach(function(st,i) {
+    if(y>260){ doc.addPage(); y=24; }
+    doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
+    doc.text((i+1)+'.  '+st.title, M, y); y+=7;
+    doc.setFontSize(9.5); doc.setFont('helvetica','normal'); doc.setTextColor(42,42,42);
+    var stLines=doc.splitTextToSize(st.body, W-M*2-6);
+    doc.text(stLines, M+6, y); y+=stLines.length*5.2+8;
   });
 
-  doc.setFillColor(13,31,60); doc.rect(0,282,W,15,'F');
-  doc.setFillColor(201,151,58); doc.rect(0,282,W,2,'F');
-  doc.setTextColor(201,151,58); doc.setFontSize(8); doc.setFont('helvetica','bold');
-  doc.text('KOORA · THE FINISHER PROTOCOL · HOUSE OF MASTERY', M, 291);
-  doc.setTextColor(255,255,255); doc.setFont('helvetica','normal');
-  doc.text('www.hom2026.com', W-M-28, 291);
-  doc.save('4C-Reflex-Report-'+name.replace(/\s+/g,'-')+'.pdf');
+  if(y>265){ doc.addPage(); y=24; }
+  doc.setDrawColor(224,224,224); doc.line(M,y+4,W-M,y+4); y+=12;
+  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(136,136,136);
+  doc.text('KOORA: The Finisher Protocol  \u00B7  House of Mastery  \u00B7  Dr. Job Mogire, MD FACC  \u00B7  www.hom2026.com', M, y);
+
+  doc.save('4C-Reflex-Screen-'+name.replace(/\s+/g,'-')+'.pdf');
 }
 
-// ── WHATSAPP IMAGE ───────────────────────────────────
+/* ── WHATSAPP IMAGE ─────────────────────────────────── */
 function downloadWhatsApp() {
   var name = (document.getElementById('participantName').value.trim()) || 'Participant';
-  var scores = {}; REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
-  var readiness = getReadinessScore();
-  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a]>=scores[b]?a:b; });
-  var primaryLevel = getReflexLevel(scores[primary]);
+  var scores = {};
+  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
+  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
+  var primaryLevel = getLevel(scores[primary]);
+  var lvlColors = { quiet:'#166534', active:'#92400E', loud:'#991B1B' };
+  var lvlBg     = { quiet:'#F0FDF4', active:'#FFFBEB', loud:'#FEF2F2' };
 
-  var canvas = document.getElementById('waCanvas');
+  var canvas = document.createElement('canvas');
+  canvas.width = 1080; canvas.height = 1080;
   var ctx = canvas.getContext('2d');
-  var W=1080, H=1080;
-  canvas.width=W; canvas.height=H;
 
-  // Background
-  ctx.fillStyle='#FAF9F6'; ctx.fillRect(0,0,W,H);
-  // Top bar
-  ctx.fillStyle='#0D1F3C'; ctx.fillRect(0,0,W,118);
-  // Gold top rule
-  ctx.fillStyle='#C9973A'; ctx.fillRect(0,0,W,5);
-  // Brand
-  ctx.fillStyle='#C9973A'; ctx.font='bold 26px sans-serif';
-  ctx.fillText('HOUSE OF MASTERY', 60, 62);
-  ctx.fillStyle='rgba(255,255,255,0.40)'; ctx.font='500 20px sans-serif';
-  ctx.fillText('THE 4C REFLEX SCREEN', 60, 96);
+  // White background
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, 1080, 1080);
 
-  // Name heading
-  ctx.fillStyle='#111111'; ctx.font='bold 48px serif';
-  ctx.fillText('Results for '+name, 60, 192);
+  // Top gold bar
+  ctx.fillStyle = '#C9973A';
+  ctx.fillRect(0, 0, 1080, 7);
 
-  // Gold rule
-  ctx.fillStyle='#C9973A'; ctx.globalAlpha=0.35; ctx.fillRect(60,212,W-120,1.5); ctx.globalAlpha=1;
+  // Navy header band
+  ctx.fillStyle = '#0D1F3C';
+  ctx.fillRect(0, 7, 1080, 130);
 
-  // Pattern profile label
-  ctx.fillStyle='#C9973A'; ctx.font='bold 20px sans-serif';
-  ctx.fillText('YOUR PATTERN PROFILE', 60, 256);
+  ctx.fillStyle = '#C9973A';
+  ctx.font = '700 20px sans-serif';
+  ctx.fillText('HOUSE OF MASTERY  \u00B7  THE 4C REFLEX SCREEN', 60, 62);
+  ctx.fillStyle = 'rgba(255,255,255,0.65)';
+  ctx.font = '500 19px sans-serif';
+  ctx.fillText('Result for ' + name, 60, 100);
 
-  var barY=286, barH=22, barMaxW=W-120-260;
-  var lColors = { quiet:'#1B5E20', active:'#B45309', loud:'#991B1B' };
-  var lLabels = { quiet:'QUIET', active:'ACTIVE', loud:'LOUD' };
-  var allD = REFLEX_ORDER.map(function(r){ return {label:r.charAt(0).toUpperCase()+r.slice(1), score:scores[r], max:16, level:getReflexLevel(scores[r])}; });
-  allD.push({label:'Starting & Rhythm', score:readiness, max:16, level:readiness<=8?'quiet':readiness<=12?'active':'loud'});
+  // Primary reflex card
+  ctx.fillStyle = lvlBg[primaryLevel];
+  ctx.beginPath();
+  if (ctx.roundRect) {
+    ctx.roundRect(60, 175, 960, 160, 10);
+  } else {
+    ctx.rect(60, 175, 960, 160);
+  }
+  ctx.fill();
+  ctx.fillStyle = lvlColors[primaryLevel];
+  ctx.font = '700 17px sans-serif';
+  ctx.fillText('PRIMARY REFLEX', 88, 215);
+  ctx.fillStyle = '#111111';
+  ctx.font = '700 34px sans-serif';
+  ctx.fillText(REFLEX_DATA[primary].name, 88, 262);
+  ctx.fillStyle = lvlColors[primaryLevel];
+  ctx.font = '700 20px sans-serif';
+  ctx.fillText(getLevelLabel(primaryLevel) + '  \u00B7  ' + scores[primary] + '/16', 88, 300);
 
-  allD.forEach(function(d){
-    ctx.fillStyle='#111111'; ctx.font='bold 26px sans-serif';
-    ctx.fillText(d.label, 60, barY+17);
-    ctx.fillStyle='rgba(17,17,17,0.10)';
-    ctx.beginPath(); ctx.roundRect(280,barY,barMaxW,barH,3); ctx.fill();
-    var fW = Math.round((d.score/d.max)*barMaxW);
-    ctx.fillStyle=lColors[d.level];
-    ctx.beginPath(); ctx.roundRect(280,barY,Math.max(fW,6),barH,3); ctx.fill();
-    ctx.fillStyle=lColors[d.level]; ctx.font='bold 22px sans-serif';
-    ctx.fillText(d.score+'/16  '+lLabels[d.level], 280+barMaxW+14, barY+17);
-    barY+=56;
+  // Pattern profile
+  var barY = 400;
+  ctx.fillStyle = '#111111';
+  ctx.font = '700 17px sans-serif';
+  ctx.fillText('YOUR PATTERN PROFILE', 60, barY - 14);
+  ctx.strokeStyle = '#E2E2E2'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(60, barY - 6); ctx.lineTo(1020, barY - 6); ctx.stroke();
+
+  REFLEX_ORDER.forEach(function(r, i) {
+    var s = scores[r], lvl = getLevel(s), pct = s/16;
+    var by = barY + i * 88;
+    ctx.fillStyle = '#111111';
+    ctx.font = '600 19px sans-serif';
+    ctx.fillText(r.charAt(0).toUpperCase() + r.slice(1), 60, by + 28);
+    ctx.fillStyle = '#EBEBEB';
+    ctx.beginPath();
+    if (ctx.roundRect) { ctx.roundRect(240, by+12, 660, 12, 6); } else { ctx.rect(240, by+12, 660, 12); }
+    ctx.fill();
+    ctx.fillStyle = lvlColors[lvl];
+    ctx.beginPath();
+    if (ctx.roundRect) { ctx.roundRect(240, by+12, 660*pct, 12, 6); } else { ctx.rect(240, by+12, 660*pct, 12); }
+    ctx.fill();
+    ctx.fillStyle = lvlColors[lvl];
+    ctx.font = '700 17px sans-serif';
+    ctx.fillText(s + '/16  ' + getLevelLabel(lvl), 920, by + 28);
   });
-
-  // Gold rule
-  ctx.fillStyle='#C9973A'; ctx.globalAlpha=0.35; ctx.fillRect(60,barY+8,W-120,1.5); ctx.globalAlpha=1;
-  barY+=32;
-
-  // Primary reflex
-  ctx.fillStyle='#C9973A'; ctx.font='bold 20px sans-serif';
-  ctx.fillText('PRIMARY REFLEX', 60, barY); barY+=40;
-  ctx.fillStyle='#0D1F3C'; ctx.font='bold 40px serif';
-  ctx.fillText(REFLEX_DATA[primary].name, 60, barY); barY+=34;
-  ctx.fillStyle='#333333'; ctx.font='500 24px sans-serif';
-  var words = REFLEX_DATA[primary].whatItIs.split(' '), line='', lines=[];
-  words.forEach(function(w){ var t=line+(line?' ':'')+w; if(ctx.measureText(t).width>W-120){lines.push(line);line=w;}else{line=t;} });
-  if(line) lines.push(line);
-  lines.slice(0,3).forEach(function(l){ ctx.fillText(l,60,barY); barY+=34; });
 
   // Footer
-  ctx.fillStyle='#0D1F3C'; ctx.fillRect(0,H-88,W,88);
-  ctx.fillStyle='#C9973A'; ctx.fillRect(0,H-90,W,2);
-  ctx.fillStyle='#C9973A'; ctx.font='bold 22px sans-serif';
-  ctx.fillText('KOORA · THE FINISHER PROTOCOL · HOUSE OF MASTERY', 60, H-50);
-  ctx.fillStyle='rgba(255,255,255,0.50)'; ctx.font='500 18px sans-serif';
-  ctx.fillText('www.hom2026.com', 60, H-22);
+  ctx.fillStyle = '#0D1F3C';
+  ctx.fillRect(0, 980, 1080, 100);
+  ctx.fillStyle = '#C9973A';
+  ctx.font = '600 17px sans-serif';
+  ctx.fillText('KOORA: The Finisher Protocol  \u00B7  www.hom2026.com', 60, 1038);
 
   var link = document.createElement('a');
-  link.download='4C-Reflex-'+name.replace(/\s+/g,'-')+'.png';
-  link.href=canvas.toDataURL('image/png');
+  link.download = '4C-Reflex-' + name.replace(/\s+/g,'-') + '.png';
+  link.href = canvas.toDataURL('image/png');
   link.click();
-}
-
-// ── EMAIL ────────────────────────────────────────────
-function sendResultsEmail() {
-  var email = document.getElementById('resultEmail').value.trim();
-  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
-  var statusEl = document.getElementById('emailStatus');
-  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-    statusEl.textContent='Please enter a valid email address.';
-    statusEl.className='email-status err'; statusEl.style.display='block'; return;
-  }
-  var scores = {}; REFLEX_ORDER.forEach(function(r){ scores[r]=getReflexScore(r); });
-  var readiness = getReadinessScore();
-  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a]>=scores[b]?a:b; });
-  var primaryLevel = getReflexLevel(scores[primary]);
-  var profile = REFLEX_ORDER.map(function(r){ return r.charAt(0).toUpperCase()+r.slice(1)+': '+scores[r]+'/16 — '+getLevelLabel(getReflexLevel(scores[r])); }).join('\n')
-    + '\nStarting & Rhythm: '+readiness+'/16 — '+(readiness<=8?'Strong':readiness<=12?'Some gaps':'Needs attention');
-  var strategies = REFLEX_DATA[primary].strategies.map(function(s,i){ return (i+1)+'. '+s.title+' '+s.body; }).join('\n\n');
-
-  statusEl.textContent='Sending...'; statusEl.className='email-status'; statusEl.style.display='block';
-  emailjs.send('service_76loif8','template_3j2uhtd',{
-    to_name: name, to_email: email, cc_email: 'mogiremd@gmail.com',
-    primary_reflex: REFLEX_DATA[primary].name, primary_level: getLevelLabel(primaryLevel),
-    profile_summary: profile, what_it_is: REFLEX_DATA[primary].whatItIs,
-    underneath: REFLEX_DATA[primary].underneath, top_strategies: strategies,
-    koora_link: 'https://www.hom2026.com'
-  }).then(function(){
-    statusEl.textContent='Sent. Check your inbox.'; statusEl.className='email-status ok';
-  }).catch(function(){
-    statusEl.textContent='Could not send. Please try again or screenshot your results.'; statusEl.className='email-status err';
-  });
 }
 </script>
 </body>
