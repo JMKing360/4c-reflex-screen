@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>The Emotional Sovereignty Screen · House of Mastery</title>
-<meta name="description" content="A 30-question assessment that shows you which of the four reflexes is running your decisions, what it is costing you, and the three moves that interrupt it.">
+<meta name="description" content="A 30-question screen that shows you which of the four reflexes is running you, what it is costing you, and the three moves that interrupt it.">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +14,13 @@
 <style>
 /* ── RESET ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; -webkit-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; }
+html, body {
+  height: 100%;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
 
 /* ── TOKENS ─────────────────────────────────────────── */
 :root {
@@ -31,13 +38,9 @@ html { font-size: 16px; -webkit-text-size-adjust: 100%; -webkit-font-smoothing: 
   --green:  #166534;
   --amber:  #92400E;
   --red:    #991B1B;
-}
-
-body {
-  font-family: var(--sans);
-  background: var(--cream);
-  color: var(--body);
-  min-height: 100vh;
+  --green-bg: #F0FDF4;
+  --amber-bg: #FFFBEB;
+  --red-bg:   #FEF2F2;
 }
 
 /* ── PROGRESS BAR ───────────────────────────────────── */
@@ -47,117 +50,175 @@ body {
   height: 3px;
   background: var(--gold);
   width: 0%;
-  transition: width 0.35s ease;
-  z-index: 999;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  z-index: 1000;
 }
 
-/* ── NAV ────────────────────────────────────────────── */
-.nav {
-  position: sticky;
-  top: 0;
+/* ── TOP NAV ────────────────────────────────────────── */
+#top-nav {
+  position: fixed;
+  top: 3px; left: 0; right: 0;
+  height: 52px;
   background: var(--cream);
   border-bottom: 1px solid var(--rule);
-  z-index: 100;
-  padding: 18px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 28px;
+  z-index: 100;
 }
 .nav-brand {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink);
   text-decoration: none;
 }
-.nav-tag {
+.nav-counter {
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
   color: var(--dim);
+  letter-spacing: 0.06em;
 }
 
-/* ── LAYOUT ─────────────────────────────────────────── */
-.wrap {
-  max-width: 640px;
+/* ── VIEWPORT WRAPPER ───────────────────────────────── */
+#viewport {
+  position: fixed;
+  top: 55px; left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+}
+
+/* ── SLIDES CONTAINER ───────────────────────────────── */
+#slides {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* ── SLIDE ──────────────────────────────────────────── */
+.slide {
+  min-height: calc(100vh - 55px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 28px;
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.45s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+}
+.slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+  position: relative;
+}
+.slide.exit-up {
+  opacity: 0;
+  transform: translateY(-32px);
+  pointer-events: none;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+}
+
+/* ── SLIDE INNER ────────────────────────────────────── */
+.slide-inner {
+  width: 100%;
+  max-width: 620px;
   margin: 0 auto;
-  padding: 0 28px;
 }
 
-/* ── SCREENS ────────────────────────────────────────── */
-.screen { display: none; }
-.screen.active { display: block; }
-
-/* ════════════════════════════════════════════════════
-   INTRO SCREEN
-════════════════════════════════════════════════════ */
-#screen-intro {
-  padding: 64px 0 80px;
-}
-.eyebrow {
+/* ── WELCOME SLIDE ──────────────────────────────────── */
+.welcome-eyebrow {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.20em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--gold);
   display: block;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
-.intro-h1 {
+.welcome-h1 {
   font-family: var(--serif);
-  font-size: clamp(32px, 5.5vw, 46px);
+  font-size: clamp(28px, 5vw, 44px);
   font-weight: 700;
   color: var(--ink);
   line-height: 1.14;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
 }
-.intro-body {
+.welcome-italic {
+  font-family: var(--serif);
+  font-size: clamp(22px, 3.8vw, 36px);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--navy-a);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+.welcome-body {
   font-family: var(--sans);
   font-size: 17px;
   font-weight: 500;
   color: var(--body);
   line-height: 1.76;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
-.intro-rule {
-  height: 1px;
-  background: var(--rule);
-  margin: 44px 0;
+.intro-pillars {
+  background: #FAFAFA;
+  border-left: 3px solid var(--gold);
+  padding: 14px 18px;
+  margin: 24px 0 20px;
+  border-radius: 0 5px 5px 0;
 }
-.intro-instruction {
+.intro-pillars p {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--body);
-  line-height: 1.72;
-  margin-bottom: 14px;
+  line-height: 1.65;
+  margin: 0;
 }
-.intro-instruction strong {
-  font-weight: 700;
+.intro-pillars strong {
   color: var(--ink);
+  font-weight: 700;
 }
-.name-block {
-  margin-top: 48px;
+.welcome-rule {
+  height: 1px;
+  background: var(--rule);
+  margin: 36px 0;
+}
+.welcome-instruction {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mid);
+  line-height: 1.70;
+  margin-bottom: 28px;
 }
 .name-label {
   display: block;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--mid);
   margin-bottom: 10px;
 }
 .name-input {
-  display: block;
   width: 100%;
-  max-width: 380px;
+  max-width: 320px;
   padding: 14px 16px;
   font-family: var(--sans);
   font-size: 16px;
@@ -165,235 +226,225 @@ body {
   color: var(--ink);
   background: var(--white);
   border: 1.5px solid var(--rule);
-  border-radius: 5px;
+  border-radius: 6px;
   outline: none;
+  display: block;
+  margin-bottom: 20px;
   transition: border-color 0.2s;
-  margin-bottom: 32px;
 }
 .name-input:focus { border-color: var(--gold); }
 .name-input::placeholder { color: #C0C0C0; }
 
-/* ── BUTTONS ────────────────────────────────────────── */
-.btn-navy {
-  display: inline-block;
-  background: var(--navy);
-  color: #ffffff;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 16px 40px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-.btn-navy:hover { opacity: 0.85; }
-
-.btn-gold {
-  display: inline-block;
-  background: var(--gold);
-  color: #ffffff;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 16px 40px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-.btn-gold:hover { opacity: 0.85; }
-
-.btn-outline {
-  display: inline-block;
-  background: transparent;
-  color: var(--mid);
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 14px 32px;
-  border-radius: 4px;
-  border: 1.5px solid var(--rule);
-  cursor: pointer;
-  text-decoration: none;
-  transition: border-color 0.2s, color 0.2s;
-}
-.btn-outline:hover { border-color: var(--ink); color: var(--ink); }
-
-/* ════════════════════════════════════════════════════
-   QUESTION SCREEN
-════════════════════════════════════════════════════ */
-#screen-questions {
-  padding: 52px 0 72px;
-}
-.q-meta {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-.q-count {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
+/* ── QUESTION SLIDE ─────────────────────────────────── */
 .q-domain {
   font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.10em;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--dim);
+  color: var(--gold);
+  display: block;
+  margin-bottom: 18px;
+}
+.q-frame {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
 }
 .q-text {
   font-family: var(--serif);
-  font-size: clamp(20px, 3.4vw, 27px);
+  font-size: clamp(20px, 3.5vw, 28px);
   font-weight: 600;
   color: var(--ink);
-  line-height: 1.38;
-  margin-bottom: 48px;
+  line-height: 1.36;
+  margin-bottom: 40px;
+  letter-spacing: -0.01em;
 }
-.options-grid {
+.options-stack {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 48px;
+  gap: 12px;
+  margin-bottom: 36px;
 }
 .opt-btn {
+  width: 100%;
+  padding: 16px 20px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
   background: var(--white);
   border: 1.5px solid var(--rule);
-  border-radius: 6px;
-  padding: 18px 18px;
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--body);
+  border-radius: 8px;
   cursor: pointer;
   text-align: left;
-  line-height: 1.42;
-  transition: border-color 0.16s, background 0.16s, color 0.16s;
-  -webkit-tap-highlight-color: transparent;
-}
-.opt-btn:hover {
-  border-color: var(--navy);
-  color: var(--ink);
-}
-.opt-btn.selected {
-  background: var(--navy);
-  border-color: var(--navy);
-  color: #ffffff;
-}
-.q-footer {
+  transition: border-color 0.18s, background 0.18s, color 0.18s;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 14px;
+  line-height: 1.4;
 }
-.q-back {
-  background: none;
-  border: none;
+.opt-btn:hover {
+  border-color: var(--gold);
+  background: #FFFDF7;
+}
+.opt-btn.selected {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: #ffffff;
+}
+.opt-btn.selected .opt-key { color: var(--gold); }
+.opt-key {
   font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--dim);
-  cursor: pointer;
-  padding: 0;
+  min-width: 18px;
+  flex-shrink: 0;
 }
-.q-back:hover { color: var(--ink); }
+.q-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 .q-error {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 600;
   color: var(--red);
-  margin-top: 14px;
+  margin-top: 12px;
   display: none;
 }
 
-/* ════════════════════════════════════════════════════
-   RESULTS SCREEN
-════════════════════════════════════════════════════ */
-#screen-results {
-  padding: 56px 0 72px;
-}
-.results-eyebrow {
+/* ── BUTTONS ────────────────────────────────────────── */
+.btn-navy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--navy);
+  color: #ffffff;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.20em;
-  text-transform: uppercase;
-  color: var(--gold);
-  display: block;
-  margin-bottom: 18px;
+  letter-spacing: 0.04em;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+}
+.btn-navy:hover { opacity: 0.88; }
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--gold);
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+}
+.btn-gold:hover { opacity: 0.88; }
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 24px;
+  background: transparent;
+  color: var(--mid);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  text-decoration: none;
+}
+.btn-outline:hover { border-color: var(--navy); color: var(--navy); }
+.btn-back {
+  background: none;
+  border: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-back:hover { color: var(--ink); }
+
+/* ── RESULTS SLIDE ──────────────────────────────────── */
+#slide-results {
+  min-height: auto;
+  padding: 36px 28px 64px;
+  align-items: flex-start;
 }
 .results-h1 {
   font-family: var(--serif);
-  font-size: clamp(28px, 4.8vw, 40px);
+  font-size: clamp(28px, 4.5vw, 40px);
   font-weight: 700;
   color: var(--ink);
   line-height: 1.16;
-  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
 }
 .results-sub {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--mid);
-  margin-bottom: 56px;
-}
-.results-sub strong {
-  font-weight: 700;
-  color: var(--ink);
+  margin-bottom: 40px;
 }
 .results-rule {
   height: 1px;
   background: var(--rule);
-  margin: 52px 0;
+  margin: 44px 0;
 }
 
 /* ── SCORE TABLE ────────────────────────────────────── */
-.score-label {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--mid);
-  display: block;
-  margin-bottom: 18px;
-}
 .score-table {
-  width: 100%;
-  margin-bottom: 56px;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 36px;
 }
 .score-row {
   display: grid;
-  grid-template-columns: 130px 1fr 110px;
+  grid-template-columns: 110px 1fr 100px;
+  gap: 12px;
   align-items: center;
-  gap: 14px;
-  padding: 13px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--rule);
 }
-.score-row:first-child { border-top: 1px solid var(--rule); }
+.score-row:last-child { border-bottom: none; }
 .score-row-name {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--ink);
+  letter-spacing: 0.02em;
 }
 .score-bar-track {
-  height: 5px;
+  height: 6px;
   background: #EBEBEB;
   border-radius: 3px;
   overflow: hidden;
@@ -401,154 +452,166 @@ body {
 .score-bar-fill {
   height: 100%;
   border-radius: 3px;
-  transition: width 0.8s ease;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
 }
 .score-bar-fill.quiet  { background: var(--green); }
 .score-bar-fill.active { background: #D97706; }
-.score-bar-fill.loud   { background: #DC2626; }
+.score-bar-fill.loud   { background: var(--red); }
 .score-row-val {
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   text-align: right;
+  letter-spacing: 0.02em;
 }
 .score-row-val.quiet  { color: var(--green); }
 .score-row-val.active { color: var(--amber); }
 .score-row-val.loud   { color: var(--red); }
 
 /* ── REFLEX CARDS ───────────────────────────────────── */
-.reflex-cards {
-  margin-bottom: 56px;
-}
+.reflex-cards { margin-bottom: 36px; }
 .reflex-card {
   border: 1px solid var(--rule);
-  border-radius: 8px;
-  margin-bottom: 16px;
+  border-radius: 10px;
   overflow: hidden;
+  margin-bottom: 16px;
   background: var(--white);
 }
 .reflex-card.loud   { border-top: 3px solid #DC2626; }
 .reflex-card.active { border-top: 3px solid #D97706; }
 .reflex-card.quiet  { border-top: 3px solid var(--green); }
-
 .reflex-card-head {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 20px 24px;
+  padding: 18px 22px;
   border-bottom: 1px solid var(--rule);
 }
 .r-dot {
-  width: 9px; height: 9px;
+  width: 10px; height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
 }
-.r-dot.loud   { background: #DC2626; }
-.r-dot.active { background: #D97706; }
 .r-dot.quiet  { background: var(--green); }
-
+.r-dot.active { background: #D97706; }
+.r-dot.loud   { background: var(--red); }
 .reflex-card-head h3 {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--ink);
   flex: 1;
-  line-height: 1.28;
 }
 .r-tag {
   font-family: var(--sans);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  padding: 4px 9px;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
   border-radius: 20px;
-  flex-shrink: 0;
+  white-space: nowrap;
 }
-.r-tag.loud   { background: #FEE2E2; color: var(--red); }
+.r-tag.quiet  { background: var(--green-bg); color: var(--green); }
 .r-tag.active { background: #FEF3C7; color: var(--amber); }
-.r-tag.quiet  { background: #DCFCE7; color: var(--green); }
-
-.reflex-card-body {
-  padding: 24px;
-}
+.r-tag.loud   { background: var(--red-bg);   color: var(--red); }
+.reflex-card-body { padding: 22px 22px 26px; }
 .card-label {
+  display: block;
   font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gold);
-  display: block;
   margin-bottom: 10px;
-  margin-top: 22px;
+  margin-top: 20px;
 }
 .card-label:first-child { margin-top: 0; }
 .card-text {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--body);
   line-height: 1.72;
   margin-bottom: 10px;
 }
-.card-text:last-child { margin-bottom: 0; }
 .underneath-block {
-  background: #F7F6F2;
+  background: var(--cream);
   border-left: 3px solid var(--gold);
-  padding: 16px 18px;
+  padding: 14px 16px;
   border-radius: 0 5px 5px 0;
-  margin: 20px 0;
+  margin: 14px 0;
 }
 .underneath-block p {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  color: var(--body);
+  color: var(--mid);
   line-height: 1.68;
-  font-style: italic;
+}
+.breaks-block {
+  background: var(--navy);
+  padding: 18px 20px;
+  border-radius: 5px;
+  margin: 22px 0;
+  color: var(--white);
+}
+.breaks-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 8px;
+}
+.breaks-component {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.breaks-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.6;
+  margin: 0;
 }
 .cost-block {
-  background: #FEF2F2;
-  border-left: 3px solid #DC2626;
-  padding: 16px 18px;
+  background: #FEF9EE;
+  border-left: 3px solid var(--gold);
+  padding: 14px 16px;
   border-radius: 0 5px 5px 0;
-  margin: 16px 0 20px;
+  margin: 14px 0;
 }
 .cost-block p {
   font-family: var(--sans);
   font-size: 14px;
   font-weight: 500;
   color: var(--body);
-  line-height: 1.68;
+  line-height: 1.72;
 }
-.cost-block p strong {
-  color: var(--red);
-  font-weight: 700;
-}
-.strategies {
-  margin-top: 4px;
-}
+.cost-block p strong { color: var(--navy); font-weight: 700; }
+.strategies { margin-top: 4px; }
 .strategy-row {
-  display: flex;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
 }
-.strategy-row:last-child { border-bottom: none; }
+.strategy-row:first-child { border-top: none; }
 .s-num {
-  width: 26px; height: 26px;
-  background: var(--navy);
-  color: #ffffff;
-  border-radius: 50%;
-  font-family: var(--sans);
-  font-size: 11px;
+  font-family: var(--serif);
+  font-size: 18px;
   font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
+  color: var(--gold);
+  line-height: 1;
+  padding-top: 2px;
 }
 .s-title {
   font-family: var(--sans);
@@ -578,10 +641,7 @@ body {
   color: var(--body);
   line-height: 1.68;
 }
-.layered-block p strong {
-  color: var(--navy);
-  font-weight: 700;
-}
+.layered-block p strong { color: var(--navy); font-weight: 700; }
 .quiet-note {
   font-family: var(--sans);
   font-size: 14px;
@@ -591,13 +651,6 @@ body {
 }
 
 /* ── NOW WHAT ───────────────────────────────────────── */
-.now-what-block {
-  background: var(--white);
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  padding: 40px;
-  margin-bottom: 52px;
-}
 .nw-eyebrow {
   font-family: var(--sans);
   font-size: 10px;
@@ -608,13 +661,39 @@ body {
   display: block;
   margin-bottom: 14px;
 }
+.nw-bridge {
+  margin-top: 28px;
+  padding: 20px 22px;
+  background: #FAFAFA;
+  border-left: 3px solid var(--gold);
+  border-radius: 0 5px 5px 0;
+}
+.nw-bridge p {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.65;
+  margin: 0;
+}
+.nw-bridge strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.now-what-block {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 36px 28px;
+  margin-bottom: 36px;
+}
 .nw-h3 {
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 700;
   color: var(--ink);
   line-height: 1.28;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .nw-intro {
   font-family: var(--sans);
@@ -622,12 +701,9 @@ body {
   font-weight: 500;
   color: var(--mid);
   line-height: 1.68;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
-.qa-item {
-  padding: 20px 0;
-  border-top: 1px solid var(--rule);
-}
+.qa-item { padding: 18px 0; border-top: 1px solid var(--rule); }
 .qa-q {
   font-family: var(--serif);
   font-size: 16px;
@@ -652,15 +728,15 @@ body {
   background: var(--white);
   border: 1px solid var(--rule);
   border-radius: 8px;
-  padding: 30px;
-  margin-bottom: 36px;
+  padding: 28px;
+  margin-bottom: 20px;
 }
 .email-block-title {
   font-family: var(--serif);
   font-size: 19px;
   font-weight: 700;
   color: var(--ink);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .email-block-body {
   font-family: var(--sans);
@@ -668,7 +744,7 @@ body {
   font-weight: 500;
   color: var(--mid);
   line-height: 1.65;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 .email-row {
   display: flex;
@@ -698,34 +774,41 @@ body {
   margin-top: 10px;
   display: none;
 }
-.email-status.ok  { color: var(--green); }
-.email-status.err { color: var(--red); }
+.email-status.ok  { color: var(--green); display: block; }
+.email-status.err { color: var(--red);   display: block; }
 
 /* ── ACTIONS ────────────────────────────────────────── */
 .actions-row {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 52px;
+  margin-bottom: 36px;
 }
+
+/* ── LEARN MORE ─────────────────────────────────────── */
+.learn-more-row {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.learn-more-link {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mid);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.learn-more-link:hover { color: var(--navy); border-color: var(--navy); }
 
 /* ── KOORA CTA ──────────────────────────────────────── */
 .koora-block {
   background: var(--navy);
   border-radius: 10px;
-  padding: 44px 40px;
+  padding: 40px 32px;
   text-align: center;
-  margin-bottom: 64px;
-}
-.koora-eyebrow {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.20em;
-  text-transform: uppercase;
-  color: var(--gold);
-  display: block;
-  margin-bottom: 14px;
+  margin-bottom: 56px;
 }
 .koora-h3 {
   font-family: var(--serif);
@@ -739,22 +822,32 @@ body {
   font-family: var(--sans);
   font-size: 15px;
   font-weight: 500;
-  color: rgba(255,255,255,0.72);
+  color: rgba(255,255,255,0.70);
   line-height: 1.65;
-  margin-bottom: 28px;
+  margin-bottom: 16px;
   max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.koora-covenant {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.60;
+  margin-bottom: 28px;
+  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
 }
 
 /* ── FOOTER ─────────────────────────────────────────── */
-.site-footer {
+.results-footer {
   border-top: 1px solid var(--rule);
-  padding: 28px 40px;
+  padding: 24px 0 8px;
   text-align: center;
-  background: var(--cream);
 }
-.site-footer p {
+.results-footer p {
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 500;
@@ -764,22 +857,19 @@ body {
 
 /* ── MOBILE ─────────────────────────────────────────── */
 @media (max-width: 600px) {
-  .nav { padding: 15px 20px; }
-  .wrap { padding: 0 20px; }
-  #screen-intro { padding: 60px 0 72px; }
-  #screen-questions { padding: 52px 0 72px; }
-  #screen-results { padding: 60px 0 72px; }
-  .options-grid { flex-direction: column; }
-  .score-row { grid-template-columns: 80px 1fr 90px; gap: 8px; }
+  #top-nav { padding: 0 18px; }
+  .slide { padding: 28px 18px; }
+  #slide-results { padding: 36px 18px 60px; }
+  .score-row { grid-template-columns: 80px 1fr 80px; gap: 8px; }
   .score-row-name { font-size: 11px; }
   .score-row-val { font-size: 10px; }
-  .now-what-block { padding: 28px 22px; }
-  .koora-block { padding: 32px 22px; }
-  .email-block { padding: 22px 18px; }
+  .now-what-block { padding: 24px 18px; }
+  .koora-block { padding: 30px 20px; }
+  .email-block { padding: 20px 16px; }
   .actions-row { flex-direction: column; }
   .actions-row .btn-navy,
   .actions-row .btn-gold,
-  .actions-row .btn-outline { width: 100%; text-align: center; }
+  .actions-row .btn-outline { width: 100%; justify-content: center; }
 }
 </style>
 </head>
@@ -787,98 +877,120 @@ body {
 
 <div id="progress-bar"></div>
 
-<nav class="nav">
+<nav id="top-nav">
   <a href="https://www.houseofmastery.co" class="nav-brand">House of Mastery</a>
-  <span class="nav-tag">Emotional Sovereignty Screen</span>
+  <span class="nav-counter" id="navCounter"></span>
 </nav>
 
-<!-- ══════════════════════════════════════════════════
-     INTRO
-══════════════════════════════════════════════════ -->
-<div id="screen-intro" class="screen active">
-  <div class="wrap">
-    <h1 class="intro-h1">You have hit a wall.<br>Because you keep starting things<br>and never finishing them.</h1>
-    <p class="intro-body">You are not failing. You are stuck. And the reason is specific: you have violated your own promises enough times that you stopped trusting yourself. Not other people. You. Your own word stopped meaning something to you. That is the cost. Not just the unfinished projects. The cost is that the person you most need to believe in you no longer does.</p>
-    <p class="intro-body">There are four patterns that produce this. One of them is louder than the others right now. This screen takes under twelve minutes. It shows you which one, what it is costing you, and the three moves that begin to interrupt it today.</p>
-    <p class="intro-instruction">Read each statement. Choose the option that is most true for you right now, not who you want to be.</p>
-    <div class="name-block">
-      <label class="name-label" for="participantName">Your first name</label>
-      <input class="name-input" type="text" id="participantName" placeholder="Enter your first name" autocomplete="given-name">
-      <button class="btn-navy" onclick="startAssessment()">Begin the Screen</button>
-    </div>
-  </div>
-</div>
+<div id="viewport">
+  <div id="slides">
 
-<!-- ══════════════════════════════════════════════════
-     QUESTIONS
-══════════════════════════════════════════════════ -->
-<div id="screen-questions" class="screen">
-  <div class="wrap">
-    <div class="q-meta">
-      <span class="q-count" id="qCount">Statement 1 of 30</span>
-      <span class="q-domain" id="qDomain">The Complaining Reflex</span>
-    </div>
-    <p class="q-text" id="qText"></p>
-    <div class="options-grid" id="optionsGrid"></div>
-    <div class="q-footer">
-      <button class="btn-navy" id="qNextBtn" onclick="nextQuestion()">Next</button>
-      <button class="q-back" id="qBackBtn" onclick="prevQuestion()" style="display:none">Back</button>
-    </div>
-    <p class="q-error" id="qError">Please choose an option before continuing.</p>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════
-     RESULTS
-══════════════════════════════════════════════════ -->
-<div id="screen-results" class="screen">
-  <div class="wrap">
-    <h1 class="results-h1" id="resultsHeadline">Here is what is running you.</h1>
-    <p class="results-sub" id="resultsSub"></p>
-
-    <div class="score-table" id="scoreTable"></div>
-
-    <div class="reflex-cards" id="reflexCards"></div>
-
-    <div id="nowWhatBlock"></div>
-
-    <div class="results-rule"></div>
-
-    <div class="email-block">
-      <p class="email-block-title">Receive your results by email</p>
-      <p class="email-block-body">Enter your email address and your full result will be sent to your inbox. A copy goes to your coach automatically.</p>
-      <div class="email-row">
-        <input class="email-input" type="email" id="emailInput" placeholder="Your email address">
-        <button class="btn-navy" onclick="sendEmail()">Send Results</button>
+    <!-- ══════════════════════════════════════════════
+         SLIDE 0 — WELCOME
+    ══════════════════════════════════════════════ -->
+    <div class="slide active" id="slide-welcome">
+      <div class="slide-inner">
+        <span class="welcome-eyebrow">The Emotional Sovereignty Screen</span>
+        <h1 class="welcome-h1">You are not failing. You are stuck.</h1>
+        <p class="welcome-italic"><em>Stuck at the finish line is not a character flaw. It is a known pattern. It has a name.</em></p>
+        <p class="welcome-body">Somewhere along the way, you violated your own promises enough times that you stopped trusting yourself. Not other people. You. Your own word stopped meaning something to you.</p>
+        <p class="welcome-body">There are four patterns that produce this. One of them is louder than the others right now. This screen takes under twelve minutes. It shows you which one, what it is costing you, and the three moves that begin to interrupt it today.</p>
+        <div class="intro-pillars">
+          <p>Your results will show which of four components each reflex breaks first: <strong>Integrity, Allegiance, Attention,</strong> or <strong>Return.</strong></p>
+        </div>
+        <div class="welcome-rule"></div>
+        <p class="welcome-instruction">Read each statement. Choose the option that is most true for you right now — not who you want to be.</p>
+        <label class="name-label" for="participantName">Your first name</label>
+        <input class="name-input" type="text" id="participantName" placeholder="Enter your first name" autocomplete="given-name">
+        <button class="btn-navy" onclick="startAssessment()">Name What Is Running You</button>
       </div>
-      <p class="email-status" id="emailStatus"></p>
     </div>
 
-    <div class="actions-row">
-      <button class="btn-navy" onclick="downloadPDF()">Download PDF Report</button>
-      <button class="btn-gold" onclick="downloadWhatsApp()">Save WhatsApp Image</button>
-      <button class="btn-outline" onclick="retakeAssessment()">Retake the Screen</button>
+    <!-- ══════════════════════════════════════════════
+         SLIDE 1–30 — QUESTIONS (rendered by JS)
+    ══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-question">
+      <div class="slide-inner">
+        <span class="q-domain" id="qDomain"></span>
+        <p class="q-frame">In the past 7 days...</p>
+        <p class="q-text" id="qText"></p>
+        <div class="options-stack" id="optionsStack"></div>
+        <div class="q-nav">
+          <button class="btn-navy" id="qNextBtn" onclick="nextQuestion()">Next &rarr;</button>
+          <button class="btn-back" id="qBackBtn" onclick="prevQuestion()" style="display:none">&#8592; Back</button>
+        </div>
+        <p class="q-error" id="qError">Please choose an option before continuing.</p>
+      </div>
     </div>
 
-    <div class="koora-block">
-      <h3 class="koora-h3">Become a Finisher.<br>Finish what you started.</h3>
-      <p class="koora-p">KOORA is a 180-day return path for the person who has started enough times. It is not motivation. It is a system and a covenant. The work runs in structured 30-day cycles with a daily operating system, weekly deep dives, and a cohort of people who have decided to stop performing and start returning.</p>
-      <p class="koora-p" style="margin-bottom:28px;">The covenant is not perfection. The covenant is return. You are permitted to fall. You are not permitted to stop returning.</p>
-      <a href="https://www.hom2026.com" target="_blank" class="btn-gold">Reserve Your Place in KOORA</a>
-    </div>
-  </div>
-</div>
+    <!-- ══════════════════════════════════════════════
+         RESULTS SLIDE
+    ══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-results">
+      <div class="slide-inner">
+        <h1 class="results-h1" id="resultsHeadline">Here is what is running you.</h1>
+        <p class="results-sub" id="resultsSub"></p>
 
-<footer class="site-footer">
-  <p>KOORA: The Finisher Protocol &middot; House of Mastery<br>Dr. Job Mogire, MD FACC &middot; Cardiologist &middot; Founder</p>
-</footer>
+        <div class="score-table" id="scoreTable"></div>
+        <div id="startStopBlock"></div>
+        <div class="reflex-cards" id="reflexCards"></div>
+        <div id="nowWhatBlock"></div>
+
+        <div class="results-rule"></div>
+
+        <div class="email-block">
+          <p class="email-block-title">Send this to yourself</p>
+          <p class="email-block-body">Your full results, your cost statement, and your three strategies — sent to your inbox. A copy goes to your coach automatically.</p>
+          <div class="email-row">
+            <input class="email-input" type="email" id="emailInput" placeholder="Your email address">
+            <button class="btn-navy" id="btnSendEmail" onclick="sendEmail()">Send Results</button>
+          </div>
+          <p class="email-status" id="emailStatus"></p>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn-navy" id="btnDownloadPDF" onclick="downloadPDF()">Download PDF Report</button>
+          <button class="btn-gold" onclick="downloadWhatsApp()">Save WhatsApp Image</button>
+          <button class="btn-outline" onclick="retakeAssessment()">Retake the Screen</button>
+        </div>
+
+        <div class="learn-more-row">
+          <a href="/4CKOORA" class="learn-more-link">Learn more about these patterns &rarr;</a>
+        </div>
+
+        <div class="koora-block">
+          <h3 class="koora-h3">Become a Finisher.<br>Finish what you started.</h3>
+          <p class="koora-p">Seeing the pattern does not break it. The reflex returns. KOORA is the 180-day system that interrupts it — not once, but every day. It runs in three movements: The Seal (30 seconds at sunrise), The Daily Reset (five prompts, five words each), and The Evening Check (three numbers at sunset). Together they install the gap between stimulus and response as a daily practice. That gap is where sovereignty lives.</p>
+          <p class="koora-p">This is not motivation. It is a covenant. The work runs in structured 30-day cycles with a daily operating system, weekly deep dives, and a cohort of people who have decided to stop performing and start returning.</p>
+          <p class="koora-covenant">The covenant is not perfection. The covenant is return.<br>You are permitted to fall. You are not permitted to stop returning.</p>
+          <a href="https://www.houseofmastery.co/4ckoora" target="_blank" class="btn-gold">Reserve Your Place in KOORA</a>
+        </div>
+
+        <div class="results-footer">
+          <p>KOORA: The Finisher Protocol &middot; House of Mastery<br>Dr. Job Mogire, MD FACC &middot; Cardiologist &middot; Founder</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /slides -->
+</div><!-- /viewport -->
 
 <script>
-emailjs.init('FEEOw8NA0cwBM4Vum');
+var EMAILJS_READY = false;
+try {
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init('FEEOw8NA0cwBM4Vum');
+    EMAILJS_READY = true;
+  }
+} catch(e) {
+  console.warn('EmailJS unavailable; email send will be disabled.');
+}
+var JSPDF_READY = (typeof window.jspdf !== 'undefined');
 
 var answers = {};
 var currentQ = 1;
 var TOTAL = 30;
+var participantName = '';
 
 var QUESTIONS = [
   { n:1,  domain:'The Complaining Reflex',   text:'I can easily list the reasons why something will not work before I think of how it could.' },
@@ -886,25 +998,25 @@ var QUESTIONS = [
   { n:3,  domain:'The Comparing Reflex',     text:'I measure my life against someone else\'s pace.' },
   { n:4,  domain:'The Competing Reflex',     text:'I track who is ahead of me in my field.' },
   { n:5,  domain:'The Cost of the Reflexes', text:'I feel a lingering sense of anger that I cannot easily trace to a single event.' },
-  { n:6,  domain:'Starting and Rhythm',      text:'I know what I need to do. Starting is the part that stalls me.' },
+  { n:6,  domain:'Start-Stop Pattern',      text:'I know what I need to do. Starting is the part that stalls me.' },
   { n:7,  domain:'The Complaining Reflex',   text:'When faced with a barrier, my first instinct is to explain why it is unfair.' },
   { n:8,  domain:'The Criticizing Reflex',   text:'I speak to myself in ways I would not speak to someone I respect.' },
   { n:9,  domain:'The Comparing Reflex',     text:'I scroll through social media and feel smaller than before I started.' },
   { n:10, domain:'The Competing Reflex',     text:'My sense of worth is tied to whether I am winning.' },
   { n:11, domain:'The Cost of the Reflexes', text:'I carry regret about things I started but never finished.' },
-  { n:12, domain:'Starting and Rhythm',      text:'I do well for a few days, then I stop, and starting again takes longer than it should.' },
+  { n:12, domain:'Start-Stop Pattern',      text:'I do well for a few days, then I stop, and starting again takes longer than it should.' },
   { n:13, domain:'The Complaining Reflex',   text:'I spend more time discussing the problem than executing the solution.' },
   { n:14, domain:'The Criticizing Reflex',   text:'I rehearse my mistakes longer than I learn from them.' },
   { n:15, domain:'The Comparing Reflex',     text:'I downgrade my own progress when I see someone else\'s.' },
   { n:16, domain:'The Competing Reflex',     text:'I do things mostly to be seen doing them.' },
   { n:17, domain:'The Cost of the Reflexes', text:'I feel guilty when I rest, as if I should always be producing.' },
-  { n:18, domain:'Starting and Rhythm',      text:'I have a clear sense of what progress looks like, but I rarely measure it.' },
+  { n:18, domain:'Start-Stop Pattern',      text:'I have a clear sense of what progress looks like, but I rarely measure it.' },
   { n:19, domain:'The Complaining Reflex',   text:'I feel a sense of relief when I find a valid excuse for why I cannot proceed.' },
   { n:20, domain:'The Criticizing Reflex',   text:'I see my flaws faster than I see what is working.' },
   { n:21, domain:'The Comparing Reflex',     text:'I lose track of what I want when I see what they have.' },
   { n:22, domain:'The Competing Reflex',     text:'I feel unsettled when someone in my circle succeeds at something I have not yet done.' },
   { n:23, domain:'The Cost of the Reflexes', text:'I experience shame when I fall short of the standard I set for myself.' },
-  { n:24, domain:'Starting and Rhythm',      text:'I know who I want to be accountable to. I have not made that arrangement yet.' },
+  { n:24, domain:'Start-Stop Pattern',      text:'I know who I want to be accountable to. I have not made that arrangement yet.' },
   { n:25, domain:'The Cost of the Reflexes', text:'My relationships suffer because I am often distracted by my own internal pressure.' },
   { n:26, domain:'The Cost of the Reflexes', text:'I feel disconnected from the people closest to me, even when we are in the same room.' },
   { n:27, domain:'The Cost of the Reflexes', text:'I resent others who seem to move forward with less effort than I exert.' },
@@ -917,8 +1029,10 @@ var OPTIONS = [
   { label:'Rarely or never', score:1 },
   { label:'Sometimes',       score:2 },
   { label:'Often',           score:3 },
-  { label:'Almost always',   score:4 }
+  { label:'Most of the time', score:4 }
 ];
+
+var OPT_KEYS = ['A','B','C','D'];
 
 var REFLEX_ORDER = ['complaining','criticizing','comparing','competing'];
 
@@ -929,6 +1043,10 @@ var REFLEX_DATA = {
     whatItIs: 'Your mind goes to what is wrong before it goes to what is working. You name problems with precision. You describe barriers clearly. You can list everything in your way.',
     whatItActuallyIs: 'Complaining feels like honesty. It is not. It is the rehearsal of powerlessness. Every time you name the problem without moving toward a solution, you train your mind to see obstacles as permanent.',
     underneath: 'A belief that the circumstances are the reason. The reflex protects you from the discomfort of owning the next move.',
+    breaks: {
+      component: 'Integrity',
+      desc: 'You name problems your actions will not address. The gap between your words and your work widens, and your trust in your own word with it.'
+    },
     cost: 'The cost is your emotional sovereignty. You surrender your agency to circumstances, leaving behind unkept promises, a slow untraceable anger, and a life defined by what you could not do rather than what you built. Every complaint that goes unanswered with action adds another layer to the weight you are already carrying.',
     strategies: [
       { title: 'The two-minute rule on naming problems.', body: 'You are permitted to name what is wrong. You are not permitted to stay there for more than two minutes. After two minutes, the rule is: one thing you can do. Not the whole solution. One thing.' },
@@ -943,6 +1061,10 @@ var REFLEX_DATA = {
     whatItIs: 'You are harder on yourself than you would ever be on a friend. You rehearse your mistakes. You see the flaw before you see the progress. You believe that if you stop criticizing yourself, you will lose your edge.',
     whatItActuallyIs: 'Self-criticism is not a standard of excellence. It is a preemptive strike. You are attacking yourself before the world can. It does not make you better. It makes you exhausted.',
     underneath: 'The fear of being exposed as inadequate. The reflex tries to control the narrative by being the harshest judge in the room.',
+    breaks: {
+      component: 'Allegiance',
+      desc: 'The harshest voice inside you carries the final say. You give your authority to the critic and obey it instead of your own judgment.'
+    },
     cost: 'The cost is your emotional sovereignty. Your own intelligence is weaponized against you, producing hidden shame that makes finishing impossible and guilt that makes rest feel like a crime. Self-trust erodes with every verdict the inner critic delivers before the evidence is in.',
     strategies: [
       { title: 'The colleague standard.', body: 'When the inner voice starts, ask: "Would I speak this way to a colleague I respect?" If the answer is no, you must rephrase the thought. You do not have to be overly positive. You just have to be respectful.' },
@@ -957,6 +1079,10 @@ var REFLEX_DATA = {
     whatItIs: 'You measure your life against someone else\'s pace. You look at what they have built and feel behind. You downgrade your own progress because it does not look like theirs.',
     whatItActuallyIs: 'Comparison is the theft of context. You are comparing your internal reality to their curated exterior. It forces you to run a race you never signed up for, on a track you did not choose.',
     underneath: 'The fear that you are falling behind. The reflex looks outward for a metric because it lacks an internal anchor.',
+    breaks: {
+      component: 'Attention',
+      desc: "Your mind defaults to other people's lives instead of your own. The internal compass loses its north because it keeps pointing at theirs."
+    },
     cost: 'The cost is your emotional sovereignty. Your identity fractures as you replace your own timeline with someone else\'s. Regret accumulates quietly. You stop knowing what you actually want, and the gap between your life and theirs becomes the only measure you trust.',
     strategies: [
       { title: 'Define your own finish line.', body: 'You cannot win a race if you do not know where the finish line is. Write down what a finished, successful year looks like for you, using your own metrics. When you feel the pull to compare, read your own definition.' },
@@ -971,6 +1097,10 @@ var REFLEX_DATA = {
     whatItIs: 'You track who is ahead. You measure your worth by whether you are winning. You perform what you should be living. You do things to be seen doing them, and the doing feels hollow.',
     whatItActuallyIs: 'Competition is useful on a court. It is destructive when it becomes the lens for your entire life. The scoreboard is not your soul. When you compete for your own worth, you can never win enough.',
     underneath: 'The fear that you have no inherent value. If you are not winning, you are nothing. The reflex is trying to prove that you matter. You cannot prove mattering. You can only live it.',
+    breaks: {
+      component: 'Return',
+      desc: 'You leave yourself for the result and only come back after you lose. The win postpones the homecoming. The loss forces it.'
+    },
     cost: 'The cost is your emotional sovereignty. You become a performer in your own life, self-trust depleted by every hollow win. Relationships grow shallow because you are never fully present. You are exhausted from carrying a version of yourself you never chose, proving a worth that was never in question.',
     strategies: [
       { title: 'The private act test.', body: 'When you feel the pull to compete, ask: "If no one ever knew I did this, would I still want to do it?" If the answer is no, you are competing. If yes, you are choosing. Choose more of what you would do in private.' },
@@ -997,62 +1127,110 @@ var NOW_WHAT = {
   ]
 };
 
-/* ── SCREEN NAVIGATION ──────────────────────────────── */
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
-  document.getElementById(id).classList.add('active');
+/* ── SLIDE TRANSITIONS ──────────────────────────────── */
+function showSlide(id) {
+  var current = document.querySelector('.slide.active');
+  var next = document.getElementById(id);
+  if (!next || current === next) return;
+
+  current.classList.add('exit-up');
+  current.classList.remove('active');
+
+  next.style.display = '';
+  // Force reflow
+  next.getBoundingClientRect();
+  next.classList.add('active');
+
+  setTimeout(function() {
+    current.classList.remove('exit-up');
+  }, 450);
+
+  // Scroll results to top
+  if (id === 'slide-results') {
+    document.getElementById('slides').scrollTop = 0;
+  }
 }
 
 function setProgress(pct) {
   document.getElementById('progress-bar').style.width = pct + '%';
 }
 
+function setCounter(text) {
+  document.getElementById('navCounter').textContent = text;
+}
+
+/* ── START ──────────────────────────────────────────── */
 function startAssessment() {
+  window._assessmentStarted = true;
+  window.addEventListener('beforeunload', function(e) {
+    if (window._assessmentStarted && !window._assessmentComplete) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+  participantName = (document.getElementById('participantName').value.trim()) || 'Participant';
   currentQ = 1;
   renderQuestion(1);
-  showScreen('screen-questions');
+  showSlide('slide-question');
   setProgress(0);
+  setCounter('1 of ' + TOTAL);
 }
 
 function retakeAssessment() {
   answers = {};
   currentQ = 1;
-  showScreen('screen-intro');
+  showSlide('slide-welcome');
   setProgress(0);
+  setCounter('');
 }
 
 /* ── QUESTION RENDERING ─────────────────────────────── */
 function renderQuestion(n) {
   var q = QUESTIONS[n - 1];
-  document.getElementById('qCount').textContent = 'Statement ' + n + ' of ' + TOTAL;
   document.getElementById('qDomain').textContent = q.domain;
   document.getElementById('qText').textContent = q.text;
   document.getElementById('qError').style.display = 'none';
 
-  var grid = document.getElementById('optionsGrid');
-  grid.innerHTML = '';
-  OPTIONS.forEach(function(opt) {
+  var stack = document.getElementById('optionsStack');
+  stack.innerHTML = '';
+  OPTIONS.forEach(function(opt, idx) {
     var btn = document.createElement('button');
     btn.className = 'opt-btn' + (answers[n] === opt.score ? ' selected' : '');
-    btn.textContent = opt.label;
+    btn.innerHTML = '<span class="opt-key">' + OPT_KEYS[idx] + '</span>' + opt.label;
     (function(score){ btn.onclick = function(){ selectOption(n, score); }; })(opt.score);
-    grid.appendChild(btn);
+    stack.appendChild(btn);
   });
 
-  document.getElementById('qBackBtn').style.display = n > 1 ? 'inline-block' : 'none';
-  document.getElementById('qNextBtn').textContent = n === TOTAL ? 'See My Results' : 'Next';
+  document.getElementById('qBackBtn').style.display = n > 1 ? 'inline-flex' : 'none';
+  document.getElementById('qNextBtn').textContent = n === TOTAL ? 'See My Results' : 'Next \u2192';
 
   var pct = Math.round(((n - 1) / TOTAL) * 90);
   setProgress(pct);
+  setCounter(n + ' of ' + TOTAL);
 }
 
 function selectOption(n, score) {
   answers[n] = score;
-  var btns = document.querySelectorAll('#optionsGrid .opt-btn');
-  btns.forEach(function(btn, idx){
+  var btns = document.querySelectorAll('#optionsStack .opt-btn');
+  btns.forEach(function(btn, idx) {
     btn.classList.toggle('selected', OPTIONS[idx].score === score);
   });
   document.getElementById('qError').style.display = 'none';
+
+  // Auto-advance after short delay
+  setTimeout(function() {
+    if (answers[n]) {
+      if (currentQ === TOTAL) {
+        buildResults();
+        showSlide('slide-results');
+        setProgress(100);
+        setCounter('');
+      } else {
+        currentQ++;
+        renderQuestion(currentQ);
+      }
+    }
+  }, 320);
 }
 
 function nextQuestion() {
@@ -1062,8 +1240,9 @@ function nextQuestion() {
   }
   if (currentQ === TOTAL) {
     buildResults();
-    showScreen('screen-results');
+    showSlide('slide-results');
     setProgress(100);
+    setCounter('');
     return;
   }
   currentQ++;
@@ -1081,11 +1260,9 @@ function prevQuestion() {
 function getReflexScore(r) {
   return REFLEX_DATA[r].questions.reduce(function(s,q){ return s + (answers[q]||0); }, 0);
 }
-/* Cost of Reflexes: questions 5,11,17,23,25,26,27,28,29,30 — max 40 */
 function getCostScore() {
   return [5,11,17,23,25,26,27,28,29,30].reduce(function(s,q){ return s + (answers[q]||0); }, 0);
 }
-/* Starting and Rhythm: questions 6,12,18,24 — max 16 */
 function getRhythmScore() {
   return [6,12,18,24].reduce(function(s,q){ return s + (answers[q]||0); }, 0);
 }
@@ -1099,7 +1276,8 @@ function getLevelLabel(level) {
 
 /* ── BUILD RESULTS ──────────────────────────────────── */
 function buildResults() {
-  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
+  window._assessmentComplete = true;
+  var name = participantName;
   var scores = {};
   REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
   var costScore = getCostScore();
@@ -1126,7 +1304,6 @@ function buildResults() {
       '<div class="score-row-val ' + lvl + '">' + s + '/16 &middot; ' + getLevelLabel(lvl) + '</div>' +
       '</div>';
   });
-  // Cost of Reflexes row (max 40)
   var cLvl = getLevel(costScore, 40);
   var cLabel = cLvl === 'quiet' ? 'Low cost' : cLvl === 'active' ? 'Moderate cost' : 'High cost';
   var cPct = Math.round((costScore/40)*100);
@@ -1135,15 +1312,19 @@ function buildResults() {
     '<div class="score-bar-track"><div class="score-bar-fill ' + cLvl + '" style="width:' + cPct + '%"></div></div>' +
     '<div class="score-row-val ' + cLvl + '">' + costScore + '/40 &middot; ' + cLabel + '</div>' +
     '</div>';
-  // Starting and Rhythm row (max 16)
-  var rLvl = getLevel(rhythmScore, 16);
-  var rLabel = rLvl === 'quiet' ? 'Strong' : rLvl === 'active' ? 'Some gaps' : 'Needs attention';
-  var rPct = Math.round((rhythmScore/16)*100);
-  table.innerHTML += '<div class="score-row">' +
-    '<div class="score-row-name">Starting &amp; Rhythm</div>' +
-    '<div class="score-bar-track"><div class="score-bar-fill ' + rLvl + '" style="width:' + rPct + '%"></div></div>' +
-    '<div class="score-row-val ' + rLvl + '">' + rhythmScore + '/16 &middot; ' + rLabel + '</div>' +
-    '</div>';
+  // Start-Stop Pattern — score + one actionable sentence (no bar chart)
+  var ssText = rhythmScore <= 7
+    ? 'Your rhythm is solid. Use it to help someone else.'
+    : rhythmScore <= 11
+    ? 'You start strong but lose steam. You need a week-two check-in, not more motivation.'
+    : 'You restart more than you finish. You need a return protocol, not another plan.';
+  document.getElementById('startStopBlock').innerHTML =
+    '<div class="startstop-row">' +
+    '<div class="startstop-label">Start-Stop Pattern</div>' +
+    '<div class="startstop-content">' +
+    '<span class="startstop-score">' + rhythmScore + '/16</span>' +
+    '<span class="startstop-text">' + ssText + '</span>' +
+    '</div></div>';
 
   // Reflex cards
   var cards = document.getElementById('reflexCards');
@@ -1153,7 +1334,7 @@ function buildResults() {
     if (lvl === 'quiet') {
       cards.innerHTML += '<div class="reflex-card quiet">' +
         '<div class="reflex-card-head"><div class="r-dot quiet"></div><h3>' + d.name + '</h3><span class="r-tag quiet">Quiet</span></div>' +
-        '<div class="reflex-card-body"><p class="quiet-note">Score: ' + s + '/16. This reflex is not running you right now. Keep an eye on it, as reflexes shift under pressure.</p></div>' +
+        '<div class="reflex-card-body"><p class="quiet-note">Score: ' + s + '/16. This reflex is not running you right now. Keep an eye on it — reflexes shift under pressure.</p></div>' +
         '</div>';
     } else {
       var stHtml = '<div class="strategies">';
@@ -1171,10 +1352,13 @@ function buildResults() {
         '<p class="card-text">' + d.whatItIs + '</p>' +
         '<p class="card-text">' + d.whatItActuallyIs + '</p>' +
         '<div class="underneath-block"><p>' + d.underneath + '</p></div>' +
-        '<div class="cost-block"><p><strong>The Cost:</strong> ' + d.cost + '</p></div>' +
+        '<div class="breaks-block">' +
+          '<span class="breaks-label">What this reflex breaks first</span>' +
+          '<div class="breaks-component">' + d.breaks.component + '</div>' +
+          '<p class="breaks-desc">' + d.breaks.desc + '</p>' +
+        '</div>' +
         '<span class="card-label">Your top 3 strategies</span>' +
         stHtml +
-        '<div class="layered-block"><p><strong>Layered Strategies:</strong> ' + d.layered + '</p></div>' +
         '</div></div>';
     }
   });
@@ -1186,19 +1370,29 @@ function buildResults() {
     qaHtml += '<div class="qa-item"><div class="qa-q">' + item.q + '</div><div class="qa-a">' + item.a + '</div></div>';
   });
   nwEl.innerHTML = '<div class="now-what-block">' +
-    ''+
+    '<span class="nw-eyebrow">Now What?</span>' +
     '<h3 class="nw-h3">Five questions every person asks after they see the pattern.</h3>' +
     '<p class="nw-intro">' + NOW_WHAT.intro + '</p>' + qaHtml +
+    '<div class="nw-bridge">' +
+      '<p>These are the headline answers. The full architecture is <strong>The Daily Return</strong>, your daily operating system inside KOORA. Three Movements. Ninety seconds at sunrise. Ninety seconds at sunset. And the 24-Hour Return that catches you when you fall.</p>' +
+    '</div>' +
     '</div>';
 }
 
 /* ── EMAIL ──────────────────────────────────────────── */
 function sendEmail() {
-  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
+  var name = participantName;
   var email = document.getElementById('emailInput').value.trim();
   var statusEl = document.getElementById('emailStatus');
-  if (!email || !email.includes('@')) {
+  var sendBtn = document.getElementById('btnSendEmail');
+  if (!email || !email.includes('@') || !email.includes('.')) {
     statusEl.textContent = 'Please enter a valid email address.';
+    statusEl.className = 'email-status err';
+    statusEl.style.display = 'block';
+    return;
+  }
+  if (!EMAILJS_READY) {
+    statusEl.textContent = 'Email is temporarily unavailable. Use the Download PDF button instead.';
     statusEl.className = 'email-status err';
     statusEl.style.display = 'block';
     return;
@@ -1214,42 +1408,52 @@ function sendEmail() {
   var trafficSummary = REFLEX_ORDER.map(function(r) {
     var lvl = getLevel(scores[r], 16);
     return r.charAt(0).toUpperCase() + r.slice(1) + ': ' + scores[r] + '/16 (' + getLevelLabel(lvl) + ')';
-  }).join('<br>') +
-    '<br>Cost of Pattern: ' + costScore + '/40' +
-    '<br>Starting and Rhythm: ' + rhythmScore + '/16';
+  }).join('\n') +
+    '\nCost of Pattern: ' + costScore + '/40' +
+    '\nStart-Stop Pattern: ' + rhythmScore + '/16';
 
   var stratHtml = pd.strategies.map(function(st, i) {
-    return '<strong>' + (i+1) + '. ' + st.title + '</strong><br>' + st.body;
-  }).join('<br><br>');
+    return (i+1) + '. ' + st.title + '\n' + st.body;
+  }).join('\n\n');
 
   statusEl.textContent = 'Sending...';
   statusEl.className = 'email-status';
   statusEl.style.display = 'block';
-
+  sendBtn.disabled = true;
+  var origBtnText = sendBtn.textContent;
+  sendBtn.textContent = 'Sending...';
   emailjs.send('service_76loif8', 'template_3j2uhtd', {
     to_name:         name,
     to_email:        email,
     cc_email:        'mogiremd@gmail.com',
     primary_reflex:  pd.name,
     primary_level:   getLevelLabel(pl) + ' (' + scores[primary] + '/16)',
-    archetype_desc:  pd.whatItIs + '<br><br>' + pd.whatItActuallyIs,
+    archetype_desc:  pd.whatItIs + '\n\n' + pd.whatItActuallyIs,
     cost_statement:  pd.cost,
     traffic_summary: trafficSummary,
     strategies_html: stratHtml,
     layered_html:    pd.layered,
-    summit_url:      'https://www.hom2026.com'
+    summit_url:      'https://www.houseofmastery.co/4ckoora'
   }).then(function() {
     statusEl.textContent = 'Your results have been sent to ' + email + '.';
     statusEl.className = 'email-status ok';
+    sendBtn.disabled = false;
+    sendBtn.textContent = origBtnText;
   }, function() {
-    statusEl.textContent = 'There was a problem sending the email. Please try again.';
+    statusEl.textContent = 'There was a problem sending the email. Please try again, or use the Download PDF button.';
     statusEl.className = 'email-status err';
+    sendBtn.disabled = false;
+    sendBtn.textContent = origBtnText;
   });
 }
 
 /* ── PDF ────────────────────────────────────────────── */
 function downloadPDF() {
-  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
+  if (!JSPDF_READY || typeof window.jspdf === 'undefined') {
+    alert('PDF download is temporarily unavailable. Please try the email option instead, or refresh the page.');
+    return;
+  }
+  var name = participantName;
   var scores = {};
   REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
   var costScore = getCostScore();
@@ -1270,87 +1474,112 @@ function downloadPDF() {
   y = 44;
 
   doc.setTextColor(17,17,17); doc.setFontSize(22); doc.setFont('helvetica','bold');
-  doc.text('Result for ' + name, M, y); y += 12;
-  doc.setFontSize(11); doc.setFont('helvetica','normal'); doc.setTextColor(85,85,85);
-  doc.text('Primary reflex: ' + REFLEX_DATA[primary].name + '  \u00B7  ' + getLevelLabel(getLevel(scores[primary],16)) + ' (' + scores[primary] + '/16)', M, y); y += 14;
+  doc.text('Result for ' + name, M, y); y += 10;
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
+  doc.text('The Emotional Sovereignty Screen  \u00B7  House of Mastery', M, y); y += 14;
 
-  doc.setDrawColor(224,224,224); doc.line(M,y,W-M,y); y += 10;
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
-  doc.text('YOUR PATTERN PROFILE', M, y); y += 8;
+  // Scores
+  doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(13,31,60);
+  doc.text('Pattern Profile', M, y); y += 7;
+  doc.setDrawColor(226,226,226); doc.setLineWidth(0.3); doc.line(M, y, W-M, y); y += 6;
 
   REFLEX_ORDER.forEach(function(r) {
-    var s=scores[r], lvl=getLevel(s,16), pct=s/16, c=lc[lvl];
-    doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
-    doc.text(r.charAt(0).toUpperCase()+r.slice(1), M, y);
-    doc.setFillColor(240,240,240); doc.roundedRect(M+52,y-4,100,5,2,2,'F');
-    doc.setFillColor(c[0],c[1],c[2]); doc.roundedRect(M+52,y-4,100*pct,5,2,2,'F');
-    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(c[0],c[1],c[2]);
-    doc.text(s+'/16  '+getLevelLabel(lvl), M+158, y); y+=10;
+    var s = scores[r], lvl = getLevel(s,16), pct = s/16;
+    var c = lc[lvl];
+    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
+    doc.text(r.charAt(0).toUpperCase()+r.slice(1), M, y+3);
+    doc.setFillColor(235,235,235); doc.rect(80, y-2, 90, 5, 'F');
+    doc.setFillColor(c[0],c[1],c[2]); doc.rect(80, y-2, 90*pct, 5, 'F');
+    doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(c[0],c[1],c[2]);
+    doc.text(s+'/16  '+getLevelLabel(lvl), 174, y+3);
+    y += 10;
   });
-  // Cost of Reflexes
-  var cLvl=getLevel(costScore,40), clc=lc[cLvl];
-  var cLabel=cLvl==='quiet'?'Low cost':cLvl==='active'?'Moderate cost':'High cost';
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
-  doc.text('Cost of Pattern', M, y);
-  doc.setFillColor(240,240,240); doc.roundedRect(M+52,y-4,100,5,2,2,'F');
-  doc.setFillColor(clc[0],clc[1],clc[2]); doc.roundedRect(M+52,y-4,100*(costScore/40),5,2,2,'F');
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(clc[0],clc[1],clc[2]);
-  doc.text(costScore+'/40  '+cLabel, M+158, y); y+=10;
-  // Starting and Rhythm
-  var rLvl=getLevel(rhythmScore,16), rlc=lc[rLvl];
-  var rLabel=rLvl==='quiet'?'Strong':rLvl==='active'?'Some gaps':'Needs attention';
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
-  doc.text('Starting & Rhythm', M, y);
-  doc.setFillColor(240,240,240); doc.roundedRect(M+52,y-4,100,5,2,2,'F');
-  doc.setFillColor(rlc[0],rlc[1],rlc[2]); doc.roundedRect(M+52,y-4,100*(rhythmScore/16),5,2,2,'F');
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(rlc[0],rlc[1],rlc[2]);
-  doc.text(rhythmScore+'/16  '+rLabel, M+158, y); y+=14;
 
-  doc.setDrawColor(224,224,224); doc.line(M,y,W-M,y); y+=10;
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
-  doc.text('PRIMARY REFLEX', M, y); y+=8;
-  doc.setFontSize(13); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
-  doc.text(REFLEX_DATA[primary].name, M, y); y+=9;
-  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(42,42,42);
-  var descLines=doc.splitTextToSize(REFLEX_DATA[primary].whatItIs+' '+REFLEX_DATA[primary].whatItActuallyIs, W-M*2);
-  doc.text(descLines, M, y); y+=descLines.length*5.5+6;
+  // Cost row
+  var cLvl = getLevel(costScore,40), cPct = costScore/40;
+  var cc = lc[cLvl];
+  doc.setDrawColor(226,226,226); doc.line(M, y, W-M, y); y += 4;
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
+  doc.text('Cost of Pattern', M, y+3);
+  doc.setFillColor(235,235,235); doc.rect(80, y-2, 90, 5, 'F');
+  doc.setFillColor(cc[0],cc[1],cc[2]); doc.rect(80, y-2, 90*cPct, 5, 'F');
+  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(cc[0],cc[1],cc[2]);
+  doc.text(costScore+'/40', 174, y+3); y += 10;
 
-  // Cost
-  doc.setFontSize(9.5); doc.setFont('helvetica','bold'); doc.setTextColor(153,27,27);
-  var costLines=doc.splitTextToSize('The Cost: ' + REFLEX_DATA[primary].cost, W-M*2);
-  doc.text(costLines, M, y); y+=costLines.length*5.5+10;
+  // Rhythm row
+  var rLvl = getLevel(rhythmScore,16), rPct = rhythmScore/16;
+  var rc = lc[rLvl];
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
+  doc.text('Starting & Rhythm', M, y+3);
+  doc.setFillColor(235,235,235); doc.rect(80, y-2, 90, 5, 'F');
+  doc.setFillColor(rc[0],rc[1],rc[2]); doc.rect(80, y-2, 90*rPct, 5, 'F');
+  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(rc[0],rc[1],rc[2]);
+  doc.text(rhythmScore+'/16', 174, y+3); y += 16;
+
+  // Primary reflex
+  var pd = REFLEX_DATA[primary];
+  var pl = getLevel(scores[primary],16);
+  var pc = lc[pl];
+  doc.setFillColor(pc[0],pc[1],pc[2]); doc.rect(M, y, 3, 28, 'F');
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(pc[0],pc[1],pc[2]);
+  doc.text('PRIMARY REFLEX', M+6, y+6);
+  doc.setFontSize(14); doc.setFont('helvetica','bold'); doc.setTextColor(13,31,60);
+  doc.text(pd.name, M+6, y+14);
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
+  doc.text(getLevelLabel(pl) + '  \u00B7  ' + scores[primary] + '/16', M+6, y+22);
+  y += 36;
+
+  // Cost statement
+  doc.setFillColor(255,249,238); doc.rect(M, y, W-2*M, 22, 'F');
+  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
+  doc.text('THE COST OF THIS PATTERN', M+4, y+7);
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(17,17,17);
+  var costLines = doc.splitTextToSize(pd.cost, W-2*M-8);
+  doc.text(costLines, M+4, y+14);
+  y += 22 + (costLines.length > 1 ? (costLines.length-1)*5 : 0) + 8;
 
   // Strategies
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
-  doc.text('YOUR TOP 3 STRATEGIES', M, y); y+=8;
-  REFLEX_DATA[primary].strategies.forEach(function(st,i) {
-    if(y>260){ doc.addPage(); y=24; }
-    doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(17,17,17);
-    doc.text((i+1)+'.  '+st.title, M, y); y+=7;
-    doc.setFontSize(9.5); doc.setFont('helvetica','normal'); doc.setTextColor(42,42,42);
-    var stLines=doc.splitTextToSize(st.body, W-M*2-6);
-    doc.text(stLines, M+6, y); y+=stLines.length*5.2+8;
+  doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(13,31,60);
+  doc.text('Three Strategies to Start Today', M, y); y += 7;
+  doc.setDrawColor(226,226,226); doc.line(M, y, W-M, y); y += 6;
+
+  pd.strategies.forEach(function(st, i) {
+    if (y > 260) { doc.addPage(); y = 22; }
+    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
+    doc.text((i+1)+'.', M, y+3);
+    doc.setTextColor(17,17,17);
+    doc.text(st.title, M+8, y+3);
+    y += 8;
+    doc.setFont('helvetica','normal'); doc.setTextColor(60,60,60);
+    var bodyLines = doc.splitTextToSize(st.body, W-2*M-8);
+    doc.text(bodyLines, M+8, y);
+    y += bodyLines.length * 5 + 6;
   });
 
-  // Layered strategies
-  if(y>250){ doc.addPage(); y=24; }
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(13,31,60);
-  doc.text('LAYERED STRATEGIES', M, y); y+=8;
-  doc.setFontSize(9.5); doc.setFont('helvetica','normal'); doc.setTextColor(42,42,42);
-  var layeredLines=doc.splitTextToSize(REFLEX_DATA[primary].layered, W-M*2);
-  doc.text(layeredLines, M, y); y+=layeredLines.length*5.5+12;
+  // Layered
+  if (y > 240) { doc.addPage(); y = 22; }
+  y += 4;
+  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(13,31,60);
+  doc.text('Layered Strategies', M, y); y += 7;
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(60,60,60);
+  var layLines = doc.splitTextToSize(pd.layered, W-2*M);
+  doc.text(layLines, M, y); y += layLines.length * 5 + 14;
 
-  if(y>265){ doc.addPage(); y=24; }
-  doc.setDrawColor(224,224,224); doc.line(M,y+4,W-M,y+4); y+=12;
-  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(136,136,136);
-  doc.text('KOORA: The Finisher Protocol  \u00B7  House of Mastery  \u00B7  Dr. Job Mogire, MD FACC  \u00B7  www.hom2026.com', M, y);
+  // KOORA footer block
+  if (y > 230) { doc.addPage(); y = 22; }
+  doc.setFillColor(13,31,60); doc.rect(M, y, W-2*M, 28, 'F');
+  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(201,151,58);
+  doc.text('KOORA: The Finisher Protocol', M+6, y+9);
+  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(255,255,255);
+  doc.text('Become a Finisher. Finish what you started. A 180-day path.', M+6, y+16);
+  doc.text('www.houseofmastery.co/4ckoora', M+6, y+23);
 
-  doc.save('Emotional-Sovereignty-Screen-'+name.replace(/\s+/g,'-')+'.pdf');
+  doc.save('Emotional-Sovereignty-' + name.replace(/\s+/g,'-') + '.pdf');
 }
 
 /* ── WHATSAPP IMAGE ─────────────────────────────────── */
 function downloadWhatsApp() {
-  var name = (document.getElementById('participantName').value.trim()) || 'Participant';
+  var name = participantName;
   var scores = {};
   REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
   var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
@@ -1362,15 +1591,10 @@ function downloadWhatsApp() {
   canvas.width = 1080; canvas.height = 1080;
   var ctx = canvas.getContext('2d');
 
-  // Cream background
   ctx.fillStyle = '#FAF9F6';
   ctx.fillRect(0, 0, 1080, 1080);
-
-  // Top gold bar
   ctx.fillStyle = '#C9973A';
   ctx.fillRect(0, 0, 1080, 7);
-
-  // Navy header band
   ctx.fillStyle = '#0D1F3C';
   ctx.fillRect(0, 7, 1080, 130);
 
@@ -1381,14 +1605,9 @@ function downloadWhatsApp() {
   ctx.font = '500 19px sans-serif';
   ctx.fillText('Result for ' + name, 60, 100);
 
-  // Primary reflex card
   ctx.fillStyle = lvlBg[primaryLevel];
   ctx.beginPath();
-  if (ctx.roundRect) {
-    ctx.roundRect(60, 175, 960, 160, 10);
-  } else {
-    ctx.rect(60, 175, 960, 160);
-  }
+  if (ctx.roundRect) { ctx.roundRect(60, 175, 960, 160, 10); } else { ctx.rect(60, 175, 960, 160); }
   ctx.fill();
   ctx.fillStyle = lvlColors[primaryLevel];
   ctx.font = '700 17px sans-serif';
@@ -1400,7 +1619,6 @@ function downloadWhatsApp() {
   ctx.font = '700 20px sans-serif';
   ctx.fillText(getLevelLabel(primaryLevel) + '  \u00B7  ' + scores[primary] + '/16', 88, 300);
 
-  // Pattern profile
   var barY = 400;
   ctx.fillStyle = '#111111';
   ctx.font = '700 17px sans-serif';
@@ -1427,18 +1645,31 @@ function downloadWhatsApp() {
     ctx.fillText(s + '/16  ' + getLevelLabel(lvl), 920, by + 28);
   });
 
-  // Footer
   ctx.fillStyle = '#0D1F3C';
   ctx.fillRect(0, 980, 1080, 100);
   ctx.fillStyle = '#C9973A';
   ctx.font = '600 17px sans-serif';
-  ctx.fillText('KOORA: The Finisher Protocol  \u00B7  www.hom2026.com', 60, 1038);
+  ctx.fillText('KOORA: The Finisher Protocol  \u00B7  www.houseofmastery.co/4ckoora', 60, 1038);
 
   var link = document.createElement('a');
   link.download = 'Emotional-Sovereignty-' + name.replace(/\s+/g,'-') + '.png';
   link.href = canvas.toDataURL('image/png');
   link.click();
 }
+
+/* ── KEYBOARD SHORTCUTS ─────────────────────────────── */
+document.addEventListener('keydown', function(e) {
+  var slide = document.querySelector('.slide.active');
+  if (!slide || slide.id !== 'slide-question') return;
+  var keyMap = { 'a':1, 'b':2, 'c':3, 'd':4 };
+  var k = e.key.toLowerCase();
+  if (keyMap[k]) {
+    selectOption(currentQ, keyMap[k]);
+  }
+  if (e.key === 'Enter') {
+    nextQuestion();
+  }
+});
 </script>
 </body>
 </html>
