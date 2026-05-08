@@ -1379,6 +1379,18 @@ function buildResults() {
     '</div>';
 }
 
+
+/* ── HIGHLEVEL / GHL SUBMISSION ─────────────────────── */
+function submitToGHL(payload) {
+  return fetch('/api/ghl', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    keepalive: true
+  }).catch(function(error) {
+    console.warn('GHL submission failed', error);
+  });
+}
 /* ── EMAIL ──────────────────────────────────────────── */
 function sendEmail() {
   var name = participantName;
@@ -1387,12 +1399,6 @@ function sendEmail() {
   var sendBtn = document.getElementById('btnSendEmail');
   if (!email || !email.includes('@') || !email.includes('.')) {
     statusEl.textContent = 'Please enter a valid email address.';
-    statusEl.className = 'email-status err';
-    statusEl.style.display = 'block';
-    return;
-  }
-  if (!EMAILJS_READY) {
-    statusEl.textContent = 'Email is temporarily unavailable. Use the Download PDF button instead.';
     statusEl.className = 'email-status err';
     statusEl.style.display = 'block';
     return;
@@ -1416,6 +1422,46 @@ function sendEmail() {
     return (i+1) + '. ' + st.title + '\n' + st.body;
   }).join('\n\n');
 
+  var ghlPayload = {
+    assessment_source: 'koora_4c_reflex_screen',
+    assessment_name: 'KOORA 4C Reflex Screen',
+    event_type: 'assessment_completed',
+    contact: {
+      name: name,
+      email: email
+    },
+    tags: ['assessment-koora-4c', 'source-cloudflare-pages', 'ghl-webhook'],
+    result: {
+      primary_reflex_key: primary,
+      primary_reflex: pd.name,
+      primary_level: getLevelLabel(pl),
+      primary_score: scores[primary],
+      cost_score: costScore,
+      rhythm_score: rhythmScore,
+      traffic_summary: trafficSummary
+    },
+    scores: scores,
+    answers: answers,
+    result_details: {
+      what_it_is: pd.whatItIs,
+      what_it_actually_is: pd.whatItActuallyIs,
+      cost_statement: pd.cost,
+      strategies: pd.strategies,
+      layered_strategy: pd.layered
+    },
+    urls: {
+      summit_url: 'https://www.houseofmastery.co/4ckoora'
+    },
+    source_url: window.location.href,
+    submitted_at: new Date().toISOString()
+  };
+  submitToGHL(ghlPayload);
+  if (!EMAILJS_READY) {
+    statusEl.textContent = 'Your results have been received. Email delivery is temporarily unavailable, but your assessment has been captured.';
+    statusEl.className = 'email-status ok';
+    statusEl.style.display = 'block';
+    return;
+  }
   statusEl.textContent = 'Sending...';
   statusEl.className = 'email-status';
   statusEl.style.display = 'block';
