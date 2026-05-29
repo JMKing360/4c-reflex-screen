@@ -1,0 +1,110 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    if: ${{ vars.CLOUDFLARE_PROJECT_NAME != '' }}
+    env:
+      CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+      CLOUDFLARE_OUTPUT_DIR: ${{ vars.CLOUDFLARE_OUTPUT_DIR }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        if: ${{ hashFiles('package.json') != '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable package managers
+        if: ${{ hashFiles('package.json') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          if [ -f pnpm-lock.yaml ]; then
+            corepack prepare pnpm@latest --activate
+          fi
+
+      - name: Install dependencies
+        if: ${{ hashFiles('package.json') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          elif [ -f package-lock.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            yarn install --frozen-lockfile
+          else
+            npm install
+          fi
+
+      - name: Build project when a build script exists
+        if: ${{ hashFiles('package.json') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          HAS_BUILD=$(node -e "const p=require('./package.json'); process.stdout.write(p.scripts && p.scripts.build ? 'yes' : 'no')")
+          if [ "$HAS_BUILD" = "yes" ]; then
+            if [ -f pnpm-lock.yaml ]; then
+              pnpm run build
+            elif [ -f yarn.lock ]; then
+              yarn build
+            else
+              npm run build
+            fi
+          else
+            echo "No build script found; deploying static repository contents."
+          fi
+
+      - name: Resolve Cloudflare Pages upload directory
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidates=()
+          if [ -n "${CLOUDFLARE_OUTPUT_DIR:-}" ]; then candidates+=("$CLOUDFLARE_OUTPUT_DIR"); fi
+          candidates+=("dist/public" "dist" "out" "build" ".vercel/output/static" "public" ".")
+          chosen=""
+          for dir in "${candidates[@]}"; do
+            if [ -d "$dir" ]; then
+              chosen="$dir"
+              break
+            fi
+          done
+          if [ -z "$chosen" ]; then
+            echo "No deployable output directory found."
+            exit 1
+          fi
+          if [ "$chosen" = "." ]; then
+            rm -rf .cloudflare-pages-upload
+            mkdir -p .cloudflare-pages-upload
+            rsync -a ./ .cloudflare-pages-upload/ --exclude .git --exclude .github --exclude node_modules --exclude .env --exclude '.env.*' --exclude '*.log' --exclude .cloudflare-pages-upload
+            chosen=".cloudflare-pages-upload"
+          fi
+          echo "dir=$chosen" >> "$GITHUB_OUTPUT"
+          echo "Deploying directory: $chosen"
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy "${{ steps.resolve.outputs.dir }}" --project-name="${{ vars.CLOUDFLARE_PROJECT_NAME }}" --branch="${{ github.ref_name }}" --commit-dirty=true
