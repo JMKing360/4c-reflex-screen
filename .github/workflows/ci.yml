@@ -30,8 +30,8 @@ jobs:
       - name: Run unit tests
         run: npm test
 
-      - name: Syntax-check the Pages Function
-        run: node --check functions/api/ghl.js
+      - name: Syntax-check the Pages Functions
+        run: for f in functions/api/*.js; do node --check "$f"; done
 
       - name: Validate HTML structure
         run: npx --yes html-validate index.html

@@ -9,10 +9,14 @@
 #     as Content-Security-Policy-Report-Only so we validate it against real
 #     traffic before enforcing — a wrong allowlist on a live funnel would
 #     silently kill EmailJS, Turnstile, jsPDF, GA4, or fonts.
+#   * Violations are reported to /api/csp-report (functions/api/csp-report.js)
+#     via report-to + the legacy report-uri fallback. Tail them with
+#     `wrangler pages deployment tail` (or the Cloudflare dashboard logs)
+#     during the validation window.
 #
-# PROMOTE TO ENFORCING once Report-Only shows no legitimate violations:
-#   fold the Report-Only allowlist into Content-Security-Policy (merge the two
-#   policy strings) and delete the Report-Only header.
+# PROMOTE TO ENFORCING once the /api/csp-report stream is clean over real
+# traffic: fold the Report-Only allowlist into Content-Security-Policy (merge
+# the two policy strings) and delete the Report-Only header.
 #
 # Allowlist provenance (every origin is referenced in index.html / ghl.js):
 #   cdn.jsdelivr.net          EmailJS browser SDK (static <script>)
@@ -31,8 +35,9 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Cross-Origin-Opener-Policy: same-origin
   Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()
+  Reporting-Endpoints: csp-endpoint="/api/csp-report"
   Content-Security-Policy: object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://*.houseofmastery.co
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.googletagmanager.com https://*.google-analytics.com; connect-src 'self' https://api.emailjs.com https://www.googletagmanager.com https://*.google-analytics.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://*.houseofmastery.co; upgrade-insecure-requests
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.googletagmanager.com https://*.google-analytics.com; connect-src 'self' https://api.emailjs.com https://www.googletagmanager.com https://*.google-analytics.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://*.houseofmastery.co; upgrade-insecure-requests; report-to csp-endpoint; report-uri /api/csp-report
 
 /manifest.webmanifest
   Content-Type: application/manifest+json; charset=utf-8
