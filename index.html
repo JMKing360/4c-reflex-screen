@@ -844,6 +844,30 @@ html, body {
 }
 .email-status.ok  { color: var(--green); display: block; }
 .email-status.err { color: var(--red);   display: block; }
+.results-teaser {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.consent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 14px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mid);
+  line-height: 1.5;
+  cursor: pointer;
+}
+.consent-row input { margin-top: 2px; flex: 0 0 auto; }
+.consent-row a { color: var(--gold-ink); }
+.locked { display: none; }
+.locked.unlocked { display: block; }
 
 /* ── ACTIONS ────────────────────────────────────────── */
 .actions-row {
@@ -1001,26 +1025,40 @@ html, body {
 
         <div class="score-table" id="scoreTable"></div>
         <div id="startStopBlock"></div>
-        <div class="reflex-cards" id="reflexCards"></div>
-        <div id="nowWhatBlock"></div>
+        <p class="results-teaser" id="resultsTeaser"></p>
 
-        <div class="results-rule"></div>
-
-        <div class="email-block">
-          <p class="email-block-title">Send this to yourself</p>
-          <p class="email-block-body">Your full results, your cost statement, and your three strategies — sent to your inbox. A copy goes to your coach automatically.</p>
+        <!-- EMAIL GATE — unlocks the cost statement and the three strategies -->
+        <div class="email-block" id="gateBlock">
+          <p class="email-block-title" id="gateTitle">Unlock your full results</p>
+          <p class="email-block-body" id="gateBody">You have seen the scores. Enter your email to unlock your cost statement and your three strategies — and we will send a copy to your inbox to keep.</p>
           <div class="email-row">
             <label class="visually-hidden" for="emailInput">Your email address</label>
             <input class="email-input" type="email" id="emailInput" placeholder="Your email address" autocomplete="email">
-            <button class="btn-navy" id="btnSendEmail" onclick="sendEmail()">Send Results</button>
+            <button class="btn-navy" id="btnSendEmail" onclick="sendEmail()">Unlock My Results</button>
           </div>
+          <label class="consent-row">
+            <input type="checkbox" id="consentCheck">
+            <span>I agree to receive my results and occasional emails from House of Mastery. See our <a href="https://www.houseofmastery.co/privacy" target="_blank" rel="noopener">privacy policy</a>. You can unsubscribe anytime.</span>
+          </label>
+          <div id="turnstileHolder" style="margin-top:12px;"></div>
           <p class="email-status" id="emailStatus" role="status" aria-live="polite"></p>
         </div>
 
-        <div class="actions-row">
-          <button class="btn-navy" id="btnDownloadPDF" onclick="downloadPDF()">Download PDF Report</button>
-          <button class="btn-gold" onclick="downloadWhatsApp()">Save WhatsApp Image</button>
-          <button class="btn-outline" onclick="retakeAssessment()">Retake the Screen</button>
+        <!-- LOCKED CONTENT — revealed after email submit (display:none hides from AT) -->
+        <div id="lockedContent" class="locked">
+          <div class="reflex-cards" id="reflexCards"></div>
+          <div id="nowWhatBlock"></div>
+
+          <div class="results-rule"></div>
+
+          <div class="actions-row">
+            <button class="btn-navy" id="btnDownloadPDF" type="button" onclick="downloadPDF()">Download PDF Report</button>
+            <button class="btn-gold" type="button" onclick="downloadWhatsApp()">Save WhatsApp Image</button>
+          </div>
+        </div>
+
+        <div class="actions-row" style="margin-top:16px;">
+          <button class="btn-outline" type="button" onclick="retakeAssessment()">Retake the Screen</button>
         </div>
 
         <div class="learn-more-row">
@@ -1050,6 +1088,13 @@ var EMAILJS_PUBLIC_KEY = 'FEEOw8NA0cwBM4Vum';
 var EMAILJS_SERVICE_ID = 'service_76loif8';
 var EMAILJS_TEMPLATE_ID = 'template_3j2uhtd';
 var JSPDF_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+
+// Cloudflare Turnstile site key (public). Leave '' to disable the widget.
+// The matching secret key must be set as TURNSTILE_SECRET in Cloudflare env.
+var TURNSTILE_SITE_KEY = '';
+
+// GA4 Measurement ID, e.g. 'G-XXXXXXXXXX'. Leave '' to disable analytics.
+var GA4_MEASUREMENT_ID = '';
 
 /* EmailJS loads with `defer`, so it is not guaranteed ready while this inline
    script runs. Initialise it as soon as it is available. */
@@ -1105,6 +1150,55 @@ var ATTRIBUTION = (function() {
     return out;
   } catch (e) { return {}; }
 })();
+
+/* ── ANALYTICS (GA4, optional) ──────────────────────── */
+window.dataLayer = window.dataLayer || [];
+function gtag(){ window.dataLayer.push(arguments); }
+(function initGA4() {
+  if (!GA4_MEASUREMENT_ID) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA4_MEASUREMENT_ID);
+  document.head.appendChild(s);
+  gtag('js', new Date());
+  gtag('config', GA4_MEASUREMENT_ID);
+})();
+// Fire a funnel event to GA4 (no-op if GA4 is not configured).
+function track(eventName, params) {
+  try {
+    if (GA4_MEASUREMENT_ID) gtag('event', eventName, params || {});
+    else console.debug('[track]', eventName, params || {});
+  } catch (e) { /* analytics must never break the funnel */ }
+}
+
+/* ── TURNSTILE (Cloudflare, optional) ───────────────── */
+var _turnstileWidgetId = null;
+function initTurnstile() {
+  if (!TURNSTILE_SITE_KEY) return;
+  var s = document.createElement('script');
+  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+  s.async = true; s.defer = true;
+  document.head.appendChild(s);
+}
+// Render an invisible/managed Turnstile widget into the gate and return a
+// promise that resolves to the token (or '' when Turnstile is disabled).
+function getTurnstileToken() {
+  if (!TURNSTILE_SITE_KEY || typeof window.turnstile === 'undefined') return Promise.resolve('');
+  return new Promise(function(resolve) {
+    try {
+      var holder = document.getElementById('turnstileHolder');
+      if (_turnstileWidgetId !== null) {
+        window.turnstile.reset(_turnstileWidgetId);
+      }
+      _turnstileWidgetId = window.turnstile.render(holder, {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback: function(token){ resolve(token); },
+        'error-callback': function(){ resolve(''); },
+        'timeout-callback': function(){ resolve(''); }
+      });
+    } catch (e) { resolve(''); }
+  });
+}
 
 var answers = {};
 var currentQ = 1;
@@ -1292,6 +1386,8 @@ function startAssessment() {
   });
   participantName = (document.getElementById('participantName').value.trim()) || 'Participant';
   currentQ = 1;
+  track('quiz_start');
+  initTurnstile();
   renderQuestion(1);
   showSlide('slide-question');
   setProgress(0);
@@ -1430,6 +1526,16 @@ function buildResults() {
   document.getElementById('resultsHeadline').textContent = headlines[primaryLevel];
   document.getElementById('resultsSub').innerHTML = 'Result for <strong>' + escapeHTML(name) + '</strong>';
 
+  // Teaser naming the primary reflex above the gate (without giving away the
+  // cost statement or strategies, which unlock after email).
+  var pd0 = REFLEX_DATA[primary];
+  document.getElementById('resultsTeaser').innerHTML =
+    'Your loudest pattern right now is <strong>' + escapeHTML(pd0.name) + '</strong> (' +
+    getLevelLabel(primaryLevel) + ' &middot; ' + scores[primary] + '/16). ' +
+    'Unlock your full results below to see exactly what it is costing you and the three moves that interrupt it.';
+
+  track('quiz_complete', { primary_reflex: primary, primary_level: getLevelLabel(primaryLevel) });
+
   // Score table
   var table = document.getElementById('scoreTable');
   table.innerHTML = '';
@@ -1524,7 +1630,7 @@ function buildResults() {
 /* ── HIGHLEVEL / GHL SUBMISSION ─────────────────────── */
 // Build the shared lead payload. `email` is optional — the completed quiz is
 // captured without it, and a later email submit enriches the same lead.
-function buildLeadPayload(email, eventType) {
+function buildLeadPayload(email, eventType, extra) {
   var scores = {};
   REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
   var costScore = getCostScore();
@@ -1568,6 +1674,8 @@ function buildLeadPayload(email, eventType) {
       layered_strategy: pd.layered
     },
     attribution: ATTRIBUTION,
+    consent: extra && extra.consent ? true : undefined,
+    turnstile_token: extra && extra.turnstile_token ? extra.turnstile_token : undefined,
     urls: {
       summit_url: 'https://www.houseofmastery.co/4ckoora'
     },
@@ -1598,21 +1706,46 @@ function submitToGHL(payload) {
 
 // Capture the lead (with or without email). Dedupes the email-less completion
 // event so a retake/refresh does not create duplicate "completed" records.
-function captureLead(email, eventType) {
+function captureLead(email, eventType, extra) {
   if (!email && _ghlLeadSent) return Promise.resolve(true);
   if (!email) _ghlLeadSent = true;
-  return submitToGHL(buildLeadPayload(email, eventType));
+  return submitToGHL(buildLeadPayload(email, eventType, extra));
 }
 
-/* ── EMAIL ──────────────────────────────────────────── */
+/* ── EMAIL GATE / UNLOCK ────────────────────────────── */
+var _resultsUnlocked = false;
+// Reveal the gated content (cost statement, strategies, downloads) and replace
+// the gate's prompt with a confirmation + next step.
+function unlockResults(email) {
+  if (_resultsUnlocked) return;
+  _resultsUnlocked = true;
+  var locked = document.getElementById('lockedContent');
+  locked.classList.add('unlocked');
+  locked.setAttribute('aria-hidden', 'false');
+  document.getElementById('gateTitle').textContent = 'Your results are unlocked';
+  document.getElementById('gateBody').innerHTML =
+    'Scroll down for your cost statement and your three strategies. ' +
+    (email ? 'A copy is on its way to <strong>' + escapeHTML(email) + '</strong>. ' : '') +
+    'When you are ready to interrupt the pattern, ' +
+    '<a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener">your next step is KOORA</a>.';
+  track('results_unlocked');
+}
+
 function sendEmail() {
   var name = participantName;
   var email = document.getElementById('emailInput').value.trim();
   var statusEl = document.getElementById('emailStatus');
   var sendBtn = document.getElementById('btnSendEmail');
+  var consent = document.getElementById('consentCheck');
   // RFC-pragmatic check: non-empty local part, @, domain with a dot.
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     statusEl.textContent = 'Please enter a valid email address.';
+    statusEl.className = 'email-status err';
+    statusEl.style.display = 'block';
+    return;
+  }
+  if (consent && !consent.checked) {
+    statusEl.textContent = 'Please tick the box to agree to receive your results before continuing.';
     statusEl.className = 'email-status err';
     statusEl.style.display = 'block';
     return;
@@ -1636,24 +1769,33 @@ function sendEmail() {
     return (i+1) + '. ' + st.title + '\n' + st.body;
   }).join('\n\n');
 
-  // Enrich the CRM lead with the email and show a clear next step.
-  captureLead(email, 'email_submitted').then(function(ok) {
-    if (!ok) console.warn('Lead email enrichment was not forwarded to the CRM.');
-  });
-
-  if (!initEmailJS()) {
-    statusEl.textContent = 'Your results have been received. Email delivery is temporarily unavailable, but your assessment has been captured. Use the Download PDF button to keep a copy.';
-    statusEl.className = 'email-status ok';
-    statusEl.style.display = 'block';
-    return;
-  }
-  statusEl.textContent = 'Sending...';
-  statusEl.className = 'email-status';
-  statusEl.style.display = 'block';
   sendBtn.disabled = true;
   var origBtnText = sendBtn.textContent;
-  sendBtn.textContent = 'Sending...';
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+  statusEl.textContent = 'Verifying...';
+  statusEl.className = 'email-status';
+  statusEl.style.display = 'block';
+
+  // Resolve a Turnstile token (empty string when Turnstile is disabled), then
+  // capture the lead, unlock the results, and send the email.
+  getTurnstileToken().then(function(turnstileToken) {
+    // Enrich the CRM lead with the email + consent + Turnstile token.
+    captureLead(email, 'email_submitted', { consent: !!(consent && consent.checked), turnstile_token: turnstileToken })
+      .then(function(ok) { if (!ok) console.warn('Lead email enrichment was not forwarded to the CRM.'); });
+
+    track('lead_captured', { method: 'email' });
+
+    // Unlock immediately — the user has met the gate regardless of email delivery.
+    unlockResults(email);
+
+    if (!initEmailJS()) {
+      statusEl.textContent = 'Your results are unlocked below. Email delivery is temporarily unavailable — use the Download PDF button to keep a copy.';
+      statusEl.className = 'email-status ok';
+      sendBtn.textContent = 'Unlocked ✓';
+      return;
+    }
+    statusEl.textContent = 'Sending...';
+    sendBtn.textContent = 'Sending...';
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
     to_name:         name,
     to_email:        email,
     primary_reflex:  pd.name,
@@ -1664,18 +1806,18 @@ function sendEmail() {
     strategies_html: stratHtml,
     layered_html:    pd.layered,
     summit_url:      'https://www.houseofmastery.co/4ckoora'
-  }).then(function() {
-    statusEl.innerHTML = 'Your results are on their way to <strong>' + escapeHTML(email) + '</strong>. ' +
-      'Check your inbox in the next few minutes. When you are ready to interrupt the pattern, ' +
-      '<a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener">your next step is KOORA</a>.';
-    statusEl.className = 'email-status ok';
-    sendBtn.disabled = false;
-    sendBtn.textContent = 'Sent ✓';
-  }, function() {
-    statusEl.textContent = 'There was a problem sending the email. Please try again, or use the Download PDF button.';
-    statusEl.className = 'email-status err';
-    sendBtn.disabled = false;
-    sendBtn.textContent = origBtnText;
+    }).then(function() {
+      statusEl.innerHTML = 'Your results are unlocked below and on their way to <strong>' + escapeHTML(email) + '</strong>. ' +
+        'When you are ready to interrupt the pattern, ' +
+        '<a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener">your next step is KOORA</a>.';
+      statusEl.className = 'email-status ok';
+      sendBtn.textContent = 'Sent ✓';
+    }, function() {
+      // Results are already unlocked; only the email copy failed.
+      statusEl.textContent = 'Your results are unlocked below. We could not email a copy just now — please use the Download PDF button to keep one.';
+      statusEl.className = 'email-status ok';
+      sendBtn.textContent = 'Unlocked ✓';
+    });
   });
 }
 

@@ -35,3 +35,24 @@ jobs:
 
       - name: Validate HTML structure
         run: npx --yes html-validate index.html
+
+  e2e:
+    name: End-to-end smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright
+        run: npm install --no-save @playwright/test@^1.49.0
+
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run smoke test
+        run: npx playwright test

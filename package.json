@@ -4,6 +4,7 @@
   "private": true,
   "description": "The Emotional Sovereignty Screen — a 4C reflex quiz funnel (static site + Cloudflare Pages Function).",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test test/*.test.js",
+    "test:e2e": "playwright test"
   }
 }
