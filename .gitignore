@@ -1,0 +1,7 @@
+node_modules/
+package-lock.json
+.cloudflare-pages-upload/
+playwright-report/
+test-results/
+*.log
+.DS_Store

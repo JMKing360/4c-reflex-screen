@@ -1,0 +1,15 @@
+# Cloudflare Pages redirects
+# https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# Sends the apex marketing short-paths to the 4C assessment app (this site).
+# These apply to requests SERVED BY this Pages project, which includes
+# houseofmastery.co only if the apex is served by this project.
+#
+# NOTE: /4ckoora here is the apex SHORT-LINK to the 4C assessment app — it is
+# intentionally distinct from the in-page "Reserve Your Place in KOORA" button,
+# which points to the KOORA sales page at www.houseofmastery.co/4ckoora.
+# Paths are case-sensitive; trailing-slash variants are listed explicitly.
+/4c        https://4c.houseofmastery.co/  301
+/4c/       https://4c.houseofmastery.co/  301
+/4ckoora   https://4c.houseofmastery.co/  301
+/4ckoora/  https://4c.houseofmastery.co/  301

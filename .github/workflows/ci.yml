@@ -1,0 +1,58 @@
+name: CI
+
+# Quality gate: runs unit tests and syntax checks on every PR and on pushes to
+# the working branches, so regressions in the scoring logic or the Pages
+# Function are caught before they reach production.
+
+on:
+  push:
+    branches:
+      - main
+      - 'claude/**'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Test and validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Syntax-check the Pages Function
+        run: node --check functions/api/ghl.js
+
+      - name: Validate HTML structure
+        run: npx --yes html-validate index.html
+
+  e2e:
+    name: End-to-end smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright
+        run: npm install --no-save @playwright/test@^1.49.0
+
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run smoke test
+        run: npx playwright test
