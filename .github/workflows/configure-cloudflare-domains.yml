@@ -1,0 +1,162 @@
+name: Configure Cloudflare domain and redirects
+
+# Attaches the custom domain 4c.houseofmastery.co to the Pages project and
+# creates a zone-level Redirect Rule so that:
+#   houseofmastery.co/4c        -> https://4c.houseofmastery.co/
+#   houseofmastery.co/4ckoora   -> https://4c.houseofmastery.co/
+#
+# The script is idempotent: it checks for existing resources before creating
+# them and updates the managed redirect rule in place, so it is safe to re-run.
+#
+# Required CLOUDFLARE_API_TOKEN permissions:
+#   - Account > Cloudflare Pages > Edit
+#   - Zone    > DNS > Edit
+#   - Zone    > Zone > Read
+#   - Zone    > Dynamic Redirect > Edit   (a.k.a. Zone Rulesets)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/configure-cloudflare-domains.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-domains
+  cancel-in-progress: false
+
+jobs:
+  configure:
+    name: Configure domain and redirects
+    runs-on: ubuntu-latest
+    if: ${{ vars.CLOUDFLARE_PROJECT_NAME != '' }}
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+      ROOT_DOMAIN: houseofmastery.co
+      APP_HOST: 4c.houseofmastery.co
+      APP_SUBDOMAIN: "4c"
+      TARGET_URL: https://4c.houseofmastery.co/
+    steps:
+      - name: Apply Cloudflare configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          API="https://api.cloudflare.com/client/v4"
+
+          # Wrapper around curl that returns the raw response body and fails the
+          # step (with a readable message) whenever Cloudflare reports an error.
+          cf() {
+            local method="$1" path="$2"
+            shift 2
+            local resp
+            resp=$(curl -sS -X "$method" "${API}${path}" \
+              -H "Authorization: Bearer ${CF_API_TOKEN}" \
+              -H "Content-Type: application/json" "$@")
+            if [ "$(echo "$resp" | jq -r '.success')" != "true" ]; then
+              echo "Cloudflare API call failed: $method $path" >&2
+              echo "$resp" | jq '.errors' >&2 || echo "$resp" >&2
+              return 1
+            fi
+            echo "$resp"
+          }
+
+          echo "::group::Resolve zone id for ${ROOT_DOMAIN}"
+          ZONE_ID=$(cf GET "/zones?name=${ROOT_DOMAIN}" | jq -r '.result[0].id // empty')
+          if [ -z "$ZONE_ID" ]; then
+            echo "Zone ${ROOT_DOMAIN} not found in this Cloudflare account." >&2
+            exit 1
+          fi
+          echo "Zone id: ${ZONE_ID}"
+          echo "::endgroup::"
+
+          echo "::group::Resolve Pages project pages.dev hostname"
+          PAGES_HOST=$(cf GET "/accounts/${CF_ACCOUNT_ID}/pages/projects/${PROJECT_NAME}" \
+            | jq -r '.result.subdomain // empty')
+          if [ -z "$PAGES_HOST" ]; then
+            PAGES_HOST="${PROJECT_NAME}.pages.dev"
+          fi
+          echo "Pages hostname: ${PAGES_HOST}"
+          echo "::endgroup::"
+
+          echo "::group::Ensure DNS CNAME ${APP_HOST} -> ${PAGES_HOST}"
+          EXISTING_DNS=$(cf GET "/zones/${ZONE_ID}/dns_records?name=${APP_HOST}" \
+            | jq -r '.result[0].id // empty')
+          if [ -n "$EXISTING_DNS" ]; then
+            echo "DNS record already exists (${EXISTING_DNS}); leaving it untouched."
+          else
+            cf POST "/zones/${ZONE_ID}/dns_records" --data "$(jq -n \
+              --arg name "$APP_SUBDOMAIN" \
+              --arg content "$PAGES_HOST" \
+              '{type:"CNAME", name:$name, content:$content, proxied:true, comment:"4c.houseofmastery.co -> Pages (managed by GitHub Actions)"}')" \
+              > /dev/null
+            echo "Created CNAME ${APP_HOST} -> ${PAGES_HOST}"
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Ensure Pages custom domain ${APP_HOST}"
+          HAS_DOMAIN=$(cf GET "/accounts/${CF_ACCOUNT_ID}/pages/projects/${PROJECT_NAME}/domains" \
+            | jq -r --arg d "$APP_HOST" '.result[]?.name | select(. == $d)' | head -n1)
+          if [ -n "$HAS_DOMAIN" ]; then
+            echo "Custom domain ${APP_HOST} already attached to ${PROJECT_NAME}."
+          else
+            cf POST "/accounts/${CF_ACCOUNT_ID}/pages/projects/${PROJECT_NAME}/domains" \
+              --data "$(jq -n --arg name "$APP_HOST" '{name:$name}')" > /dev/null
+            echo "Attached custom domain ${APP_HOST} to ${PROJECT_NAME}."
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Ensure redirect rule for /4c and /4ckoora"
+          RULE_DESC="4c redirects (managed by GitHub Actions)"
+          EXPRESSION='(lower(http.host) in {"houseofmastery.co" "www.houseofmastery.co"} and lower(http.request.uri.path) in {"/4c" "/4c/" "/4ckoora" "/4ckoora/"})'
+
+          # Build the single redirect rule.
+          RULE=$(jq -n \
+            --arg desc "$RULE_DESC" \
+            --arg expr "$EXPRESSION" \
+            --arg target "$TARGET_URL" \
+            '{
+              action: "redirect",
+              description: $desc,
+              enabled: true,
+              expression: $expr,
+              action_parameters: {
+                from_value: {
+                  status_code: 301,
+                  target_url: { value: $target },
+                  preserve_query_string: true
+                }
+              }
+            }')
+
+          # Fetch the existing dynamic-redirect entrypoint ruleset (may not exist).
+          ENTRYPOINT=$(curl -sS -X GET \
+            "${API}/zones/${ZONE_ID}/rulesets/phases/http_request_dynamic_redirect/entrypoint" \
+            -H "Authorization: Bearer ${CF_API_TOKEN}" \
+            -H "Content-Type: application/json")
+
+          if [ "$(echo "$ENTRYPOINT" | jq -r '.success')" = "true" ]; then
+            RULESET_ID=$(echo "$ENTRYPOINT" | jq -r '.result.id')
+            # Keep all rules except a previous copy of ours, then append the fresh one.
+            NEW_RULES=$(echo "$ENTRYPOINT" | jq \
+              --arg desc "$RULE_DESC" --argjson rule "$RULE" \
+              '[ (.result.rules // [])[] | select(.description != $desc) ] + [ $rule ]')
+            cf PUT "/zones/${ZONE_ID}/rulesets/${RULESET_ID}" \
+              --data "$(jq -n --argjson rules "$NEW_RULES" '{rules:$rules}')" > /dev/null
+            echo "Updated existing dynamic-redirect ruleset ${RULESET_ID}."
+          else
+            cf POST "/zones/${ZONE_ID}/rulesets" \
+              --data "$(jq -n --argjson rule "$RULE" \
+                '{name:"Redirect rules", kind:"zone", phase:"http_request_dynamic_redirect", rules:[$rule]}')" \
+              > /dev/null
+            echo "Created dynamic-redirect ruleset with the 4c redirect."
+          fi
+          echo "::endgroup::"
+
+          echo "Done. 4c.houseofmastery.co is configured and /4c + /4ckoora redirect to it."
