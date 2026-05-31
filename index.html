@@ -2,18 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Emotional Sovereignty Screen · House of Mastery</title>
 <meta name="description" content="A 30-question screen that shows you which of the four reflexes is running you, what it is costing you, and the three moves that interrupt it.">
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="canonical" href="https://4c.houseofmastery.co/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="House of Mastery">
+<meta property="og:title" content="The Emotional Sovereignty Screen">
+<meta property="og:description" content="Find out which of the four reflexes is running you, what it is costing you, and the three moves that interrupt it. Under twelve minutes.">
+<meta property="og:url" content="https://4c.houseofmastery.co/">
+<meta property="og:image" content="https://4c.houseofmastery.co/og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Emotional Sovereignty Screen">
+<meta name="twitter:description" content="Find out which of the four reflexes is running you, what it is costing you, and the three moves that interrupt it.">
+<meta name="twitter:image" content="https://4c.houseofmastery.co/og-image.svg">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- EmailJS is deferred (only needed when the user submits); jsPDF is lazy-loaded on demand in downloadPDF(). -->
+<script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 /* ── RESET ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
 html, body {
   height: 100%;
   font-size: 16px;
@@ -27,7 +48,9 @@ html, body {
   --serif:  'Source Serif 4', Georgia, serif;
   --sans:   'Plus Jakarta Sans', system-ui, sans-serif;
   --navy:   #0D1F3C;
+  --navy-a: #16294A;
   --gold:   #C9973A;
+  --gold-ink: #97701C;
   --ink:    #111111;
   --body:   #2C2C2C;
   --mid:    #666666;
@@ -143,7 +166,7 @@ html, body {
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   display: block;
   margin-bottom: 20px;
 }
@@ -242,7 +265,7 @@ html, body {
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   display: block;
   margin-bottom: 18px;
 }
@@ -252,7 +275,7 @@ html, body {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   margin-bottom: 14px;
 }
 .q-text {
@@ -468,6 +491,51 @@ html, body {
 .score-row-val.active { color: var(--amber); }
 .score-row-val.loud   { color: var(--red); }
 
+/* ── START-STOP BLOCK ───────────────────────────────── */
+.startstop-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  margin-bottom: 28px;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--gold);
+  border-radius: 4px;
+}
+.startstop-label {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--navy);
+  flex: 0 0 110px;
+  padding-top: 2px;
+}
+.startstop-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.startstop-score {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold-ink);
+}
+.startstop-text {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--body);
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .startstop-row { flex-direction: column; gap: 6px; }
+  .startstop-label { flex-basis: auto; }
+}
+
 /* ── REFLEX CARDS ───────────────────────────────────── */
 .reflex-cards { margin-bottom: 36px; }
 .reflex-card {
@@ -522,7 +590,7 @@ html, body {
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   margin-bottom: 10px;
   margin-top: 20px;
 }
@@ -562,7 +630,7 @@ html, body {
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   display: block;
   margin-bottom: 8px;
 }
@@ -657,7 +725,7 @@ html, body {
   font-weight: 700;
   letter-spacing: 0.20em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   display: block;
   margin-bottom: 14px;
 }
@@ -875,14 +943,14 @@ html, body {
 </head>
 <body>
 
-<div id="progress-bar"></div>
+<div id="progress-bar" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
 
 <nav id="top-nav">
   <a href="https://www.houseofmastery.co" class="nav-brand">House of Mastery</a>
-  <span class="nav-counter" id="navCounter"></span>
+  <span class="nav-counter" id="navCounter" aria-live="polite"></span>
 </nav>
 
-<div id="viewport">
+<main id="viewport">
   <div id="slides">
 
     <!-- ══════════════════════════════════════════════
@@ -913,13 +981,13 @@ html, body {
       <div class="slide-inner">
         <span class="q-domain" id="qDomain"></span>
         <p class="q-frame">In the past 7 days...</p>
-        <p class="q-text" id="qText"></p>
+        <p class="q-text" id="qText" tabindex="-1"></p>
         <div class="options-stack" id="optionsStack"></div>
         <div class="q-nav">
           <button class="btn-navy" id="qNextBtn" onclick="nextQuestion()">Next &rarr;</button>
           <button class="btn-back" id="qBackBtn" onclick="prevQuestion()" style="display:none">&#8592; Back</button>
         </div>
-        <p class="q-error" id="qError">Please choose an option before continuing.</p>
+        <p class="q-error" id="qError" role="alert">Please choose an option before continuing.</p>
       </div>
     </div>
 
@@ -942,10 +1010,11 @@ html, body {
           <p class="email-block-title">Send this to yourself</p>
           <p class="email-block-body">Your full results, your cost statement, and your three strategies — sent to your inbox. A copy goes to your coach automatically.</p>
           <div class="email-row">
-            <input class="email-input" type="email" id="emailInput" placeholder="Your email address">
+            <label class="visually-hidden" for="emailInput">Your email address</label>
+            <input class="email-input" type="email" id="emailInput" placeholder="Your email address" autocomplete="email">
             <button class="btn-navy" id="btnSendEmail" onclick="sendEmail()">Send Results</button>
           </div>
-          <p class="email-status" id="emailStatus"></p>
+          <p class="email-status" id="emailStatus" role="status" aria-live="polite"></p>
         </div>
 
         <div class="actions-row">
@@ -973,24 +1042,75 @@ html, body {
     </div>
 
   </div><!-- /slides -->
-</div><!-- /viewport -->
+</main><!-- /viewport -->
 
 <script>
+/* ── CONFIG ─────────────────────────────────────────── */
+var EMAILJS_PUBLIC_KEY = 'FEEOw8NA0cwBM4Vum';
+var EMAILJS_SERVICE_ID = 'service_76loif8';
+var EMAILJS_TEMPLATE_ID = 'template_3j2uhtd';
+var JSPDF_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+
+/* EmailJS loads with `defer`, so it is not guaranteed ready while this inline
+   script runs. Initialise it as soon as it is available. */
 var EMAILJS_READY = false;
-try {
-  if (typeof emailjs !== 'undefined') {
-    emailjs.init('FEEOw8NA0cwBM4Vum');
-    EMAILJS_READY = true;
+function initEmailJS() {
+  if (EMAILJS_READY) return true;
+  try {
+    if (typeof emailjs !== 'undefined') {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+      EMAILJS_READY = true;
+    }
+  } catch (e) {
+    console.warn('EmailJS unavailable; email send will be disabled.');
   }
-} catch(e) {
-  console.warn('EmailJS unavailable; email send will be disabled.');
+  return EMAILJS_READY;
 }
-var JSPDF_READY = (typeof window.jspdf !== 'undefined');
+window.addEventListener('load', initEmailJS);
+
+/* jsPDF is lazy-loaded on first use so it does not block initial render. */
+var _jspdfPromise = null;
+function loadJsPDF() {
+  if (typeof window.jspdf !== 'undefined') return Promise.resolve(true);
+  if (_jspdfPromise) return _jspdfPromise;
+  _jspdfPromise = new Promise(function(resolve, reject) {
+    var s = document.createElement('script');
+    s.src = JSPDF_CDN;
+    s.onload = function(){ resolve(true); };
+    s.onerror = function(){ _jspdfPromise = null; reject(new Error('jsPDF failed to load')); };
+    document.head.appendChild(s);
+  });
+  return _jspdfPromise;
+}
+
+/* Escape user-supplied text before interpolating into innerHTML. */
+function escapeHTML(str) {
+  return String(str == null ? '' : str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* Capture UTM / click-id attribution once at load for the GHL payload. */
+var ATTRIBUTION = (function() {
+  try {
+    var p = new URLSearchParams(window.location.search);
+    var out = {};
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','gclid','fbclid'].forEach(function(k) {
+      var v = p.get(k);
+      if (v) out[k] = v;
+    });
+    return out;
+  } catch (e) { return {}; }
+})();
 
 var answers = {};
 var currentQ = 1;
 var TOTAL = 30;
 var participantName = '';
+var _ghlLeadSent = false;
 
 var QUESTIONS = [
   { n:1,  domain:'The Complaining Reflex',   text:'I can easily list the reasons why something will not work before I think of how it could.' },
@@ -1152,7 +1272,9 @@ function showSlide(id) {
 }
 
 function setProgress(pct) {
-  document.getElementById('progress-bar').style.width = pct + '%';
+  var bar = document.getElementById('progress-bar');
+  bar.style.width = pct + '%';
+  bar.setAttribute('aria-valuenow', Math.round(pct));
 }
 
 function setCounter(text) {
@@ -1179,6 +1301,15 @@ function startAssessment() {
 function retakeAssessment() {
   answers = {};
   currentQ = 1;
+  _ghlLeadSent = false;
+  window._assessmentComplete = false;
+  // Clear stale lead-capture UI from the previous run.
+  var emailInput = document.getElementById('emailInput');
+  if (emailInput) emailInput.value = '';
+  var statusEl = document.getElementById('emailStatus');
+  if (statusEl) { statusEl.textContent = ''; statusEl.className = 'email-status'; statusEl.style.display = 'none'; }
+  var sendBtn = document.getElementById('btnSendEmail');
+  if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send Results'; }
   showSlide('slide-welcome');
   setProgress(0);
   setCounter('');
@@ -1207,6 +1338,12 @@ function renderQuestion(n) {
   var pct = Math.round(((n - 1) / TOTAL) * 90);
   setProgress(pct);
   setCounter(n + ' of ' + TOTAL);
+
+  // Move focus to the new question so screen-reader / keyboard users follow along.
+  var qText = document.getElementById('qText');
+  if (qText && typeof qText.focus === 'function') {
+    try { qText.focus({ preventScroll: false }); } catch (e) { qText.focus(); }
+  }
 }
 
 function selectOption(n, score) {
@@ -1291,7 +1428,7 @@ function buildResults() {
     quiet:  'Here is your pattern profile.'
   };
   document.getElementById('resultsHeadline').textContent = headlines[primaryLevel];
-  document.getElementById('resultsSub').innerHTML = 'Result for <strong>' + name + '</strong>';
+  document.getElementById('resultsSub').innerHTML = 'Result for <strong>' + escapeHTML(name) + '</strong>';
 
   // Score table
   var table = document.getElementById('scoreTable');
@@ -1377,27 +1514,104 @@ function buildResults() {
       '<p>These are the headline answers. The full architecture is <strong>The Daily Return</strong>, your daily operating system inside KOORA. Three Movements. Ninety seconds at sunrise. Ninety seconds at sunset. And the 24-Hour Return that catches you when you fall.</p>' +
     '</div>' +
     '</div>';
+
+  // Capture the completed quiz to the CRM immediately — no email required.
+  // Email entry later enriches the same lead.
+  captureLead(null, 'assessment_completed');
 }
 
 
 /* ── HIGHLEVEL / GHL SUBMISSION ─────────────────────── */
+// Build the shared lead payload. `email` is optional — the completed quiz is
+// captured without it, and a later email submit enriches the same lead.
+function buildLeadPayload(email, eventType) {
+  var scores = {};
+  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
+  var costScore = getCostScore();
+  var rhythmScore = getRhythmScore();
+  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
+  var pd = REFLEX_DATA[primary];
+  var pl = getLevel(scores[primary], 16);
+
+  var trafficSummary = REFLEX_ORDER.map(function(r) {
+    var lvl = getLevel(scores[r], 16);
+    return r.charAt(0).toUpperCase() + r.slice(1) + ': ' + scores[r] + '/16 (' + getLevelLabel(lvl) + ')';
+  }).join('\n') +
+    '\nCost of Pattern: ' + costScore + '/40' +
+    '\nStart-Stop Pattern: ' + rhythmScore + '/16';
+
+  var contact = { name: participantName };
+  if (email) contact.email = email;
+
+  return {
+    assessment_source: 'koora_4c_reflex_screen',
+    assessment_name: 'KOORA 4C Reflex Screen',
+    event_type: eventType || 'assessment_completed',
+    contact: contact,
+    tags: ['assessment-koora-4c', 'source-cloudflare-pages', 'ghl-webhook'],
+    result: {
+      primary_reflex_key: primary,
+      primary_reflex: pd.name,
+      primary_level: getLevelLabel(pl),
+      primary_score: scores[primary],
+      cost_score: costScore,
+      rhythm_score: rhythmScore,
+      traffic_summary: trafficSummary
+    },
+    scores: scores,
+    answers: answers,
+    result_details: {
+      what_it_is: pd.whatItIs,
+      what_it_actually_is: pd.whatItActuallyIs,
+      cost_statement: pd.cost,
+      strategies: pd.strategies,
+      layered_strategy: pd.layered
+    },
+    attribution: ATTRIBUTION,
+    urls: {
+      summit_url: 'https://www.houseofmastery.co/4ckoora'
+    },
+    source_url: window.location.href,
+    submitted_at: new Date().toISOString()
+  };
+}
+
+// POST to the Pages Function. Resolves to true only on a confirmed forward,
+// so callers can react to silent failures (misconfigured webhook, etc.).
 function submitToGHL(payload) {
   return fetch('/api/ghl', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
     keepalive: true
+  }).then(function(res) {
+    return res.json().catch(function(){ return {}; }).then(function(data) {
+      var ok = res.ok && data && data.ok !== false && data.forwarded !== false;
+      if (!ok) console.warn('GHL submission not forwarded', res.status, data);
+      return ok;
+    });
   }).catch(function(error) {
     console.warn('GHL submission failed', error);
+    return false;
   });
 }
+
+// Capture the lead (with or without email). Dedupes the email-less completion
+// event so a retake/refresh does not create duplicate "completed" records.
+function captureLead(email, eventType) {
+  if (!email && _ghlLeadSent) return Promise.resolve(true);
+  if (!email) _ghlLeadSent = true;
+  return submitToGHL(buildLeadPayload(email, eventType));
+}
+
 /* ── EMAIL ──────────────────────────────────────────── */
 function sendEmail() {
   var name = participantName;
   var email = document.getElementById('emailInput').value.trim();
   var statusEl = document.getElementById('emailStatus');
   var sendBtn = document.getElementById('btnSendEmail');
-  if (!email || !email.includes('@') || !email.includes('.')) {
+  // RFC-pragmatic check: non-empty local part, @, domain with a dot.
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     statusEl.textContent = 'Please enter a valid email address.';
     statusEl.className = 'email-status err';
     statusEl.style.display = 'block';
@@ -1422,42 +1636,13 @@ function sendEmail() {
     return (i+1) + '. ' + st.title + '\n' + st.body;
   }).join('\n\n');
 
-  var ghlPayload = {
-    assessment_source: 'koora_4c_reflex_screen',
-    assessment_name: 'KOORA 4C Reflex Screen',
-    event_type: 'assessment_completed',
-    contact: {
-      name: name,
-      email: email
-    },
-    tags: ['assessment-koora-4c', 'source-cloudflare-pages', 'ghl-webhook'],
-    result: {
-      primary_reflex_key: primary,
-      primary_reflex: pd.name,
-      primary_level: getLevelLabel(pl),
-      primary_score: scores[primary],
-      cost_score: costScore,
-      rhythm_score: rhythmScore,
-      traffic_summary: trafficSummary
-    },
-    scores: scores,
-    answers: answers,
-    result_details: {
-      what_it_is: pd.whatItIs,
-      what_it_actually_is: pd.whatItActuallyIs,
-      cost_statement: pd.cost,
-      strategies: pd.strategies,
-      layered_strategy: pd.layered
-    },
-    urls: {
-      summit_url: 'https://www.houseofmastery.co/4ckoora'
-    },
-    source_url: window.location.href,
-    submitted_at: new Date().toISOString()
-  };
-  submitToGHL(ghlPayload);
-  if (!EMAILJS_READY) {
-    statusEl.textContent = 'Your results have been received. Email delivery is temporarily unavailable, but your assessment has been captured.';
+  // Enrich the CRM lead with the email and show a clear next step.
+  captureLead(email, 'email_submitted').then(function(ok) {
+    if (!ok) console.warn('Lead email enrichment was not forwarded to the CRM.');
+  });
+
+  if (!initEmailJS()) {
+    statusEl.textContent = 'Your results have been received. Email delivery is temporarily unavailable, but your assessment has been captured. Use the Download PDF button to keep a copy.';
     statusEl.className = 'email-status ok';
     statusEl.style.display = 'block';
     return;
@@ -1468,10 +1653,9 @@ function sendEmail() {
   sendBtn.disabled = true;
   var origBtnText = sendBtn.textContent;
   sendBtn.textContent = 'Sending...';
-  emailjs.send('service_76loif8', 'template_3j2uhtd', {
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
     to_name:         name,
     to_email:        email,
-    cc_email:        'mogiremd@gmail.com',
     primary_reflex:  pd.name,
     primary_level:   getLevelLabel(pl) + ' (' + scores[primary] + '/16)',
     archetype_desc:  pd.whatItIs + '\n\n' + pd.whatItActuallyIs,
@@ -1481,10 +1665,12 @@ function sendEmail() {
     layered_html:    pd.layered,
     summit_url:      'https://www.houseofmastery.co/4ckoora'
   }).then(function() {
-    statusEl.textContent = 'Your results have been sent to ' + email + '.';
+    statusEl.innerHTML = 'Your results are on their way to <strong>' + escapeHTML(email) + '</strong>. ' +
+      'Check your inbox in the next few minutes. When you are ready to interrupt the pattern, ' +
+      '<a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener">your next step is KOORA</a>.';
     statusEl.className = 'email-status ok';
     sendBtn.disabled = false;
-    sendBtn.textContent = origBtnText;
+    sendBtn.textContent = 'Sent ✓';
   }, function() {
     statusEl.textContent = 'There was a problem sending the email. Please try again, or use the Download PDF button.';
     statusEl.className = 'email-status err';
@@ -1495,10 +1681,19 @@ function sendEmail() {
 
 /* ── PDF ────────────────────────────────────────────── */
 function downloadPDF() {
-  if (!JSPDF_READY || typeof window.jspdf === 'undefined') {
-    alert('PDF download is temporarily unavailable. Please try the email option instead, or refresh the page.');
-    return;
-  }
+  var btn = document.getElementById('btnDownloadPDF');
+  var orig = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'Preparing PDF...'; }
+  loadJsPDF().then(function() {
+    renderPDF();
+    if (btn) { btn.disabled = false; btn.textContent = orig; }
+  }).catch(function() {
+    if (btn) { btn.disabled = false; btn.textContent = orig; }
+    alert('PDF download is temporarily unavailable. Please try the email option instead, or check your connection.');
+  });
+}
+
+function renderPDF() {
   var name = participantName;
   var scores = {};
   REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
