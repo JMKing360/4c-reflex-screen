@@ -39,6 +39,17 @@ test('_headers enforces the no-break CSP directives', () => {
   assert.doesNotMatch(csp, /default-src/, 'enforced CSP must not include default-src (would break external resources)');
 });
 
+test('CSP violations are wired to the reporting endpoint', () => {
+  const h = read('_headers');
+  assert.match(h, /Reporting-Endpoints:\s*csp-endpoint="\/api\/csp-report"/, 'Reporting-Endpoints header missing');
+  const ro = h.match(/Content-Security-Policy-Report-Only:\s*(.+)$/m);
+  assert.ok(ro, 'Report-Only CSP missing');
+  assert.match(ro[1], /report-to csp-endpoint/, 'report-to directive missing');
+  assert.match(ro[1], /report-uri \/api\/csp-report/, 'report-uri fallback missing');
+  // The endpoint must exist and be syntactically loadable as a module.
+  assert.ok(fs.existsSync(path.join(ROOT, 'functions/api/csp-report.js')), 'csp-report function missing');
+});
+
 test('Report-Only CSP allowlist covers every external origin the app uses', () => {
   const h = read('_headers');
   const ro = h.match(/Content-Security-Policy-Report-Only:\s*(.+)$/m);
