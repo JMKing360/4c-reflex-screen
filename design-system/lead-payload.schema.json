@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://houseofmastery.co/schemas/assessment-lead.json",
+  "title": "House of Mastery Assessment Lead Payload",
+  "description": "Canonical payload POSTed from any House of Mastery assessment to the /api/ghl Pages Function, which enriches and forwards it to HighLevel. Reuse this contract across assessments so one CRM workflow ingests them all.",
+  "type": "object",
+  "required": ["assessment_source", "event_type", "contact"],
+  "properties": {
+    "assessment_source": {
+      "type": "string",
+      "description": "Stable machine id of the assessment, e.g. 'koora_4c_reflex_screen'."
+    },
+    "assessment_name": {
+      "type": "string",
+      "description": "Human-readable assessment name."
+    },
+    "event_type": {
+      "type": "string",
+      "enum": ["assessment_completed", "email_submitted"],
+      "description": "Lifecycle event. 'assessment_completed' fires on results (name only); 'email_submitted' enriches with the email."
+    },
+    "contact": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "email": { "type": "string", "format": "email", "maxLength": 320 }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "CRM segmentation tags."
+    },
+    "result": {
+      "type": "object",
+      "description": "Primary result summary.",
+      "properties": {
+        "primary_reflex_key": { "type": "string" },
+        "primary_reflex": { "type": "string" },
+        "primary_level": { "type": "string", "enum": ["Quiet", "Active", "Loud"] },
+        "primary_score": { "type": "number" },
+        "cost_score": { "type": "number" },
+        "rhythm_score": { "type": "number" },
+        "traffic_summary": { "type": "string" }
+      }
+    },
+    "scores": {
+      "type": "object",
+      "description": "Per-dimension raw scores, keyed by dimension id.",
+      "additionalProperties": { "type": "number" }
+    },
+    "answers": {
+      "type": "object",
+      "description": "Raw answers keyed by question number.",
+      "additionalProperties": { "type": "number" }
+    },
+    "result_details": {
+      "type": "object",
+      "description": "Full narrative for the primary result.",
+      "properties": {
+        "what_it_is": { "type": "string" },
+        "what_it_actually_is": { "type": "string" },
+        "cost_statement": { "type": "string" },
+        "strategies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "body": { "type": "string" }
+            }
+          }
+        },
+        "layered_strategy": { "type": "string" }
+      }
+    },
+    "attribution": {
+      "type": "object",
+      "description": "UTM / click-id attribution captured at load.",
+      "properties": {
+        "utm_source": { "type": "string" },
+        "utm_medium": { "type": "string" },
+        "utm_campaign": { "type": "string" },
+        "utm_content": { "type": "string" },
+        "utm_term": { "type": "string" },
+        "gclid": { "type": "string" },
+        "fbclid": { "type": "string" }
+      }
+    },
+    "consent": {
+      "type": "boolean",
+      "description": "True when the user ticked the consent box before submitting an email."
+    },
+    "turnstile_token": {
+      "type": "string",
+      "description": "Cloudflare Turnstile token, verified server-side when TURNSTILE_SECRET is configured."
+    },
+    "urls": {
+      "type": "object",
+      "properties": { "summit_url": { "type": "string", "format": "uri" } }
+    },
+    "source_url": { "type": "string", "format": "uri" },
+    "submitted_at": { "type": "string", "format": "date-time" }
+  }
+}
