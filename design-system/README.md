@@ -1,9 +1,15 @@
 # House of Mastery — Shared Design System
 
-A source-of-truth bundle extracted from `4c-reflex-screen` (the KOORA / 4C
-Finisher assessment) so other House of Mastery properties — `hom2026`,
-`FINISHER-KOORA-ASSESSMENT-`, and future assessments — can inherit a consistent
-schema, aesthetic, flow, and infrastructure instead of re-deriving them.
+A reuse bundle for House of Mastery properties. The **canonical brand standard**
+is the `koora-design-system.css` in the `FINISHER-KOORA-ASSESSMENT-` repository
+(navy `#163558`, gold `#9E7340`, warm blue-grey paper, no black). `tokens.css`
+here mirrors that canonical palette; `4c-reflex-screen` has been aligned to it.
+Other properties (`hom2026`, future assessments) should inherit from the same
+source so the ecosystem stays visually unified.
+
+Copy conventions inherited from the Finisher standard: **no em-dashes in
+user-facing copy** (use a comma, semicolon, or " - "), and the author credential
+is **Dr. Job Mogire, MD, FACP, FACC**.
 
 ## Contents
 
