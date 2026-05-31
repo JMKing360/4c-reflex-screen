@@ -1,18 +1,27 @@
 name: Configure Cloudflare domain
 
-# Attaches the custom domain 4c.houseofmastery.co to the Pages project:
-# ensures a proxied DNS CNAME and registers it as a Pages custom domain.
+# Repoints 4c.houseofmastery.co from the existing "boardroom" forward to the
+# Pages project. It:
+#   1. Delinks the boardroom redirect — removes any Page Rule or Redirect Rule
+#      that forwards 4c.houseofmastery.co to houseofmastery.co/for-boardrooms.
+#   2. Reconciles the 4c DNS record to a proxied CNAME at the Pages host
+#      (updating it in place if it already points somewhere else).
+#   3. Registers 4c.houseofmastery.co as a Pages custom domain.
 #
 # The /4c and /4ckoora path redirects are handled by the repo-root _redirects
 # file (deployed with the site), so no zone-level rule is needed here.
 #
-# The script is idempotent: it checks for existing resources before creating
-# them, so it is safe to re-run.
+# The script is idempotent: it reconciles to the desired state, so it is safe
+# to re-run.
 #
 # Required CLOUDFLARE_API_TOKEN permissions:
 #   - Account > Cloudflare Pages > Edit
 #   - Zone    > DNS > Edit
 #   - Zone    > Zone > Read
+#   - Zone    > Page Rules > Edit          (to remove a forwarding Page Rule)
+#   - Zone    > Dynamic Redirect > Edit    (to remove a Redirect Rule, if used)
+# The Page Rules / Dynamic Redirect steps are best-effort: if the token lacks
+# those scopes the step warns and continues rather than failing the run.
 
 on:
   workflow_dispatch:
@@ -84,18 +93,80 @@ jobs:
           echo "Pages hostname: ${PAGES_HOST}"
           echo "::endgroup::"
 
-          echo "::group::Ensure DNS CNAME ${APP_HOST} -> ${PAGES_HOST}"
-          EXISTING_DNS=$(cf GET "/zones/${ZONE_ID}/dns_records?name=${APP_HOST}" \
-            | jq -r '.result[0].id // empty')
-          if [ -n "$EXISTING_DNS" ]; then
-            echo "DNS record already exists (${EXISTING_DNS}); leaving it untouched."
+          # best_effort runs a cf() call but, on failure (e.g. missing token
+          # scope), warns and continues instead of aborting the whole run.
+          best_effort() {
+            if ! cf "$@" > /dev/null; then
+              echo "::warning::Skipped (call failed — likely a missing token scope): cf $1 $2"
+            fi
+          }
+
+          echo "::group::Delink boardroom forward (Page Rules)"
+          # Find Page Rules whose target URL forwards the 4c host anywhere
+          # (e.g. to houseofmastery.co/for-boardrooms) and delete them.
+          PAGE_RULES=$(curl -sS -X GET "${API}/zones/${ZONE_ID}/pagerules" \
+            -H "Authorization: Bearer ${CF_API_TOKEN}" -H "Content-Type: application/json")
+          if [ "$(echo "$PAGE_RULES" | jq -r '.success')" = "true" ]; then
+            MATCHING=$(echo "$PAGE_RULES" | jq -r --arg host "$APP_HOST" \
+              '.result[] | select(any(.targets[]?.constraint.value; test($host))) | .id')
+            if [ -n "$MATCHING" ]; then
+              for id in $MATCHING; do
+                echo "Removing Page Rule ${id} that targets ${APP_HOST}."
+                best_effort DELETE "/zones/${ZONE_ID}/pagerules/${id}"
+              done
+            else
+              echo "No Page Rule targets ${APP_HOST}."
+            fi
           else
-            cf POST "/zones/${ZONE_ID}/dns_records" --data "$(jq -n \
-              --arg name "$APP_SUBDOMAIN" \
-              --arg content "$PAGES_HOST" \
-              '{type:"CNAME", name:$name, content:$content, proxied:true, comment:"4c.houseofmastery.co -> Pages (managed by GitHub Actions)"}')" \
-              > /dev/null
+            echo "::warning::Could not list Page Rules (likely a missing token scope); skipping."
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Delink boardroom forward (Redirect Rules)"
+          # Remove any dynamic Redirect Rule that matches the 4c host. We rewrite
+          # the ruleset keeping every rule whose expression does NOT mention the host.
+          ENTRYPOINT=$(curl -sS -X GET \
+            "${API}/zones/${ZONE_ID}/rulesets/phases/http_request_dynamic_redirect/entrypoint" \
+            -H "Authorization: Bearer ${CF_API_TOKEN}" -H "Content-Type: application/json")
+          if [ "$(echo "$ENTRYPOINT" | jq -r '.success')" = "true" ]; then
+            RULESET_ID=$(echo "$ENTRYPOINT" | jq -r '.result.id')
+            HAS_MATCH=$(echo "$ENTRYPOINT" | jq -r --arg host "$APP_HOST" \
+              '[ (.result.rules // [])[] | select((.expression // "") | contains($host)) ] | length')
+            if [ "${HAS_MATCH:-0}" -gt 0 ]; then
+              KEPT=$(echo "$ENTRYPOINT" | jq --arg host "$APP_HOST" \
+                '[ (.result.rules // [])[] | select(((.expression // "") | contains($host)) | not) ]')
+              echo "Removing ${HAS_MATCH} Redirect Rule(s) that match ${APP_HOST}."
+              best_effort PUT "/zones/${ZONE_ID}/rulesets/${RULESET_ID}" \
+                --data "$(jq -n --argjson rules "$KEPT" '{rules:$rules}')"
+            else
+              echo "No Redirect Rule matches ${APP_HOST}."
+            fi
+          else
+            echo "No dynamic Redirect ruleset present (or not readable); nothing to remove."
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Reconcile DNS ${APP_HOST} -> ${PAGES_HOST} (proxied CNAME)"
+          DNS_RECORD=$(cf GET "/zones/${ZONE_ID}/dns_records?name=${APP_HOST}")
+          DNS_ID=$(echo "$DNS_RECORD" | jq -r '.result[0].id // empty')
+          DESIRED=$(jq -n \
+            --arg name "$APP_SUBDOMAIN" \
+            --arg content "$PAGES_HOST" \
+            '{type:"CNAME", name:$name, content:$content, proxied:true, comment:"4c.houseofmastery.co -> Pages (managed by GitHub Actions)"}')
+          if [ -z "$DNS_ID" ]; then
+            cf POST "/zones/${ZONE_ID}/dns_records" --data "$DESIRED" > /dev/null
             echo "Created CNAME ${APP_HOST} -> ${PAGES_HOST}"
+          else
+            CUR_TYPE=$(echo "$DNS_RECORD" | jq -r '.result[0].type')
+            CUR_CONTENT=$(echo "$DNS_RECORD" | jq -r '.result[0].content')
+            CUR_PROXIED=$(echo "$DNS_RECORD" | jq -r '.result[0].proxied')
+            if [ "$CUR_TYPE" = "CNAME" ] && [ "$CUR_CONTENT" = "$PAGES_HOST" ] && [ "$CUR_PROXIED" = "true" ]; then
+              echo "DNS already correct: proxied CNAME -> ${PAGES_HOST}."
+            else
+              echo "Repointing existing record ${DNS_ID} (was ${CUR_TYPE} -> ${CUR_CONTENT}, proxied=${CUR_PROXIED})."
+              cf PUT "/zones/${ZONE_ID}/dns_records/${DNS_ID}" --data "$DESIRED" > /dev/null
+              echo "Updated CNAME ${APP_HOST} -> ${PAGES_HOST}"
+            fi
           fi
           echo "::endgroup::"
 
@@ -111,4 +182,4 @@ jobs:
           fi
           echo "::endgroup::"
 
-          echo "Done. 4c.houseofmastery.co is attached; /4c and /4ckoora redirects are served by the _redirects file."
+          echo "Done. 4c.houseofmastery.co is delinked from the boardroom forward and points at the Pages project; /4c and /4ckoora redirects are served by the _redirects file."
