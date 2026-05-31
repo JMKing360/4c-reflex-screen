@@ -1,18 +1,18 @@
-name: Configure Cloudflare domain and redirects
+name: Configure Cloudflare domain
 
-# Attaches the custom domain 4c.houseofmastery.co to the Pages project and
-# creates a zone-level Redirect Rule so that:
-#   houseofmastery.co/4c        -> https://4c.houseofmastery.co/
-#   houseofmastery.co/4ckoora   -> https://4c.houseofmastery.co/
+# Attaches the custom domain 4c.houseofmastery.co to the Pages project:
+# ensures a proxied DNS CNAME and registers it as a Pages custom domain.
+#
+# The /4c and /4ckoora path redirects are handled by the repo-root _redirects
+# file (deployed with the site), so no zone-level rule is needed here.
 #
 # The script is idempotent: it checks for existing resources before creating
-# them and updates the managed redirect rule in place, so it is safe to re-run.
+# them, so it is safe to re-run.
 #
 # Required CLOUDFLARE_API_TOKEN permissions:
 #   - Account > Cloudflare Pages > Edit
 #   - Zone    > DNS > Edit
 #   - Zone    > Zone > Read
-#   - Zone    > Dynamic Redirect > Edit   (a.k.a. Zone Rulesets)
 
 on:
   workflow_dispatch:
@@ -31,7 +31,7 @@ concurrency:
 
 jobs:
   configure:
-    name: Configure domain and redirects
+    name: Configure domain
     runs-on: ubuntu-latest
     if: ${{ vars.CLOUDFLARE_PROJECT_NAME != '' }}
     env:
@@ -41,7 +41,6 @@ jobs:
       ROOT_DOMAIN: houseofmastery.co
       APP_HOST: 4c.houseofmastery.co
       APP_SUBDOMAIN: "4c"
-      TARGET_URL: https://4c.houseofmastery.co/
     steps:
       - name: Apply Cloudflare configuration
         shell: bash
@@ -112,51 +111,4 @@ jobs:
           fi
           echo "::endgroup::"
 
-          echo "::group::Ensure redirect rule for /4c and /4ckoora"
-          RULE_DESC="4c redirects (managed by GitHub Actions)"
-          EXPRESSION='(lower(http.host) in {"houseofmastery.co" "www.houseofmastery.co"} and lower(http.request.uri.path) in {"/4c" "/4c/" "/4ckoora" "/4ckoora/"})'
-
-          # Build the single redirect rule.
-          RULE=$(jq -n \
-            --arg desc "$RULE_DESC" \
-            --arg expr "$EXPRESSION" \
-            --arg target "$TARGET_URL" \
-            '{
-              action: "redirect",
-              description: $desc,
-              enabled: true,
-              expression: $expr,
-              action_parameters: {
-                from_value: {
-                  status_code: 301,
-                  target_url: { value: $target },
-                  preserve_query_string: true
-                }
-              }
-            }')
-
-          # Fetch the existing dynamic-redirect entrypoint ruleset (may not exist).
-          ENTRYPOINT=$(curl -sS -X GET \
-            "${API}/zones/${ZONE_ID}/rulesets/phases/http_request_dynamic_redirect/entrypoint" \
-            -H "Authorization: Bearer ${CF_API_TOKEN}" \
-            -H "Content-Type: application/json")
-
-          if [ "$(echo "$ENTRYPOINT" | jq -r '.success')" = "true" ]; then
-            RULESET_ID=$(echo "$ENTRYPOINT" | jq -r '.result.id')
-            # Keep all rules except a previous copy of ours, then append the fresh one.
-            NEW_RULES=$(echo "$ENTRYPOINT" | jq \
-              --arg desc "$RULE_DESC" --argjson rule "$RULE" \
-              '[ (.result.rules // [])[] | select(.description != $desc) ] + [ $rule ]')
-            cf PUT "/zones/${ZONE_ID}/rulesets/${RULESET_ID}" \
-              --data "$(jq -n --argjson rules "$NEW_RULES" '{rules:$rules}')" > /dev/null
-            echo "Updated existing dynamic-redirect ruleset ${RULESET_ID}."
-          else
-            cf POST "/zones/${ZONE_ID}/rulesets" \
-              --data "$(jq -n --argjson rule "$RULE" \
-                '{name:"Redirect rules", kind:"zone", phase:"http_request_dynamic_redirect", rules:[$rule]}')" \
-              > /dev/null
-            echo "Created dynamic-redirect ruleset with the 4c redirect."
-          fi
-          echo "::endgroup::"
-
-          echo "Done. 4c.houseofmastery.co is configured and /4c + /4ckoora redirect to it."
+          echo "Done. 4c.houseofmastery.co is attached; /4c and /4ckoora redirects are served by the _redirects file."

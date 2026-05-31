@@ -1,0 +1,8 @@
+# Cloudflare Pages redirects
+# https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# Sends the apex marketing paths to the canonical app host.
+# Note: these only apply to requests SERVED BY this Pages project, which
+# includes houseofmastery.co only if the apex is served by this project.
+/4c        https://4c.houseofmastery.co/  301
+/4ckoora   https://4c.houseofmastery.co/  301
