@@ -22,3 +22,20 @@ Cloudflare Pages project: `houseofmastery`. Default upload directory variable: `
 When modifying Cloudflare deployment behavior, keep private credentials in GitHub secrets. Public client-side keys, such as a Cloudflare Turnstile **site key**, may be committed only when they are intended to be public. Turnstile **secret keys**, API tokens, webhook secrets, database URLs, and service credentials must remain in GitHub secrets or Cloudflare-managed environment variables.
 
 <!-- MANUS-CLOUDFLARE-AUTOMATION:END -->
+
+## Review & Merge Policy
+
+Standing order: when work is reviewed by the Integration Director across **two
+review passes** and both passes **approve** (no merge-blockers), proceed to
+**merge the pull request autonomously** — no separate manual confirmation is
+required from the user.
+
+Conditions that must hold before an autonomous merge:
+- The change was developed on a feature branch with an open pull request
+  (never push directly to `main`).
+- Both Director review passes returned APPROVE with no outstanding
+  merge-blocking findings.
+- CI is green on the head commit (unit tests, html-validate, and the
+  Playwright end-to-end smoke test).
+
+If any of these is not met, do not merge — report status and wait for input.

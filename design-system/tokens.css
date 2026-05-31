@@ -1,0 +1,55 @@
+/* ============================================================================
+   House of Mastery — Design Tokens
+   Source of truth for the KOORA / 4C Finisher aesthetic. Extracted verbatim
+   from 4c-reflex-screen/index.html so other House of Mastery properties
+   (e.g. hom2026) can inherit an identical palette, type, and level language.
+
+   Usage: link this file, then reference the custom properties below.
+   ============================================================================ */
+
+:root {
+  /* Typefaces — serif for display/italic, sans for UI. */
+  --serif:  'Source Serif 4', Georgia, serif;
+  --sans:   'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Brand */
+  --navy:     #0D1F3C;  /* primary brand / dark surfaces */
+  --navy-a:   #16294A;  /* accent navy (welcome italic, headings) */
+  --gold:     #C9973A;  /* brand gold — borders, rules, large text, icons */
+  --gold-ink: #97701C;  /* contrast-safe gold for SMALL text on light bg (>=4.5:1) */
+
+  /* Neutrals */
+  --ink:    #111111;  /* strongest text */
+  --body:   #2C2C2C;  /* body copy */
+  --mid:    #666666;  /* secondary text (passes AA on white) */
+  --dim:    #999999;  /* tertiary — use sparingly, fails AA at small sizes */
+  --rule:   #E2E2E2;  /* hairline borders */
+  --cream:  #FAF9F6;  /* page background */
+  --white:  #ffffff;
+
+  /* Level language — quiet / active / loud. The core semantic system:
+     green = quiet (calm), amber = active (watch), red = loud (running you). */
+  --green:    #166534;
+  --amber:    #92400E;
+  --red:      #991B1B;
+  --green-bg: #F0FDF4;
+  --amber-bg: #FFFBEB;
+  --red-bg:   #FEF2F2;
+}
+
+/* Accessibility utility — visually hidden but available to assistive tech. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* Level helpers — map a level to its semantic color / background. */
+.lvl-quiet  { color: var(--green); }
+.lvl-active { color: var(--amber); }
+.lvl-loud   { color: var(--red); }
+.lvl-quiet-bg  { background: var(--green-bg); }
+.lvl-active-bg { background: var(--amber-bg); }
+.lvl-loud-bg   { background: var(--red-bg); }
