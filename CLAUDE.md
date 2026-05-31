@@ -23,6 +23,42 @@ When modifying Cloudflare deployment behavior, keep private credentials in GitHu
 
 <!-- MANUS-CLOUDFLARE-AUTOMATION:END -->
 
+## Security Headers (`_headers`)
+
+`_headers` ships Cloudflare Pages security headers for the live funnel. The
+rollout follows the durable path for a revenue page:
+
+- **Enforced now** (cannot break conversions): HSTS, `nosniff`, `Referrer-Policy`,
+  `Permissions-Policy`, COOP, and the CSP directives `object-src 'none'`,
+  `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'self' https://*.houseofmastery.co`.
+- **Report-Only** (validating before enforcing): the full resource allowlist
+  (`script/style/font/img/connect/frame-src`). Every allowed origin maps to a
+  real dependency in `index.html` / `functions/api/ghl.js` (EmailJS, jsPDF,
+  Turnstile, GA4, Google Fonts). `test/infra.test.js` keeps the allowlist in
+  lockstep with the code and will fail CI if a new external origin is added
+  without being allowed.
+- **To promote to enforcing:** once Report-Only shows no legitimate violations
+  in production, merge the Report-Only allowlist into `Content-Security-Policy`
+  and delete the Report-Only header.
+
+Do not add a restrictive `default-src` to the *enforced* policy — it would block
+the external scripts/styles/fonts the app legitimately loads. Keep inline-script
+allowances (`'unsafe-inline'`) in the Report-Only policy only.
+
+## Finisher Alignment — Deferred Roadmap
+
+`4c-reflex-screen` is aligned to the canonical KOORA Finisher design system
+(palette, copy standards, security headers, PWA). The following Finisher
+capabilities are intentionally **not** adopted yet, each for a durability reason:
+
+- **Resend email / Meta CAPI + Pixel** — require secrets (provider API keys,
+  Meta tokens) and change a live funnel's runtime. Wire only with keys in GitHub
+  secrets and after validating delivery; do not rip out working EmailJS blind.
+- **Vite build** — converting the zero-build single-file app to a bundler trades
+  a working artifact for build fragility; not clearly more durable here.
+- **Six-covenants / ALCARRA instrument** — a product decision about what the
+  assessment measures. Requires explicit sign-off; not an engineering call.
+
 ## Review & Merge Policy
 
 Standing order: when work is reviewed by the Integration Director across **two

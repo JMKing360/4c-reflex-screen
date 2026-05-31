@@ -1,0 +1,38 @@
+# Cloudflare Pages security headers for 4c.houseofmastery.co
+#
+# Rollout strategy (the durable path for a live conversion funnel):
+#   * The directives that CANNOT break the app are ENFORCED immediately below
+#     via Content-Security-Policy (object-src, base-uri, form-action,
+#     frame-ancestors) plus the transport/isolation headers. These give real
+#     clickjacking + injection protection with zero risk to conversions.
+#   * The full resource allowlist (script/style/font/img/connect/frame) ships
+#     as Content-Security-Policy-Report-Only so we validate it against real
+#     traffic before enforcing — a wrong allowlist on a live funnel would
+#     silently kill EmailJS, Turnstile, jsPDF, GA4, or fonts.
+#
+# PROMOTE TO ENFORCING once Report-Only shows no legitimate violations:
+#   fold the Report-Only allowlist into Content-Security-Policy (merge the two
+#   policy strings) and delete the Report-Only header.
+#
+# Allowlist provenance (every origin is referenced in index.html / ghl.js):
+#   cdn.jsdelivr.net          EmailJS browser SDK (static <script>)
+#   cdnjs.cloudflare.com      jsPDF (lazy-loaded in downloadPDF)
+#   challenges.cloudflare.com Turnstile widget (script + iframe)
+#   www.googletagmanager.com  GA4 gtag.js
+#   *.google-analytics.com    GA4 collect endpoints (incl. regional)
+#   api.emailjs.com           EmailJS send (fetch)
+#   fonts.googleapis.com      Google Fonts stylesheet
+#   fonts.gstatic.com         Google Fonts files
+#   'self'                    /api/ghl Pages Function (CRM capture)
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Cross-Origin-Opener-Policy: same-origin
+  Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()
+  Content-Security-Policy: object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://*.houseofmastery.co
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.googletagmanager.com https://*.google-analytics.com; connect-src 'self' https://api.emailjs.com https://www.googletagmanager.com https://*.google-analytics.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://*.houseofmastery.co; upgrade-insecure-requests
+
+/manifest.webmanifest
+  Content-Type: application/manifest+json; charset=utf-8
