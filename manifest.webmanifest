@@ -1,0 +1,22 @@
+{
+  "name": "The Emotional Sovereignty Screen — House of Mastery",
+  "short_name": "Sovereignty Screen",
+  "description": "A 30-question screen that shows you which of the four reflexes is running you, what it is costing you, and the three moves that interrupt it.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "en",
+  "dir": "ltr",
+  "background_color": "#EDF2F9",
+  "theme_color": "#163558",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
