@@ -14,7 +14,9 @@ const ROOT = path.join(__dirname, '..');
 /* ── Load scoring/escape/UTM logic from the inline <script> ─────────── */
 function loadInlineLogic() {
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-  const m = html.match(/<script>([\s\S]*?)<\/script>\s*<\/body>/);
+  // Match the main inline script (the long one before </body>). Tolerant of
+  // whitespace/comments between </script> and </body>.
+  const m = html.match(/<script>([\s\S]+)<\/script>[\s\S]*<\/body>/);
   if (!m) throw new Error('inline script not found in index.html');
   const stubs = `
     var window = { addEventListener: function(){},

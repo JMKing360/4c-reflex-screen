@@ -1045,7 +1045,7 @@ html, body {
         </div>
 
         <!-- LOCKED CONTENT — revealed after email submit (display:none hides from AT) -->
-        <div id="lockedContent" class="locked">
+        <div id="lockedContent" class="locked" tabindex="-1">
           <div class="reflex-cards" id="reflexCards"></div>
           <div id="nowWhatBlock"></div>
 
@@ -1055,22 +1055,22 @@ html, body {
             <button class="btn-navy" id="btnDownloadPDF" type="button" onclick="downloadPDF()">Download PDF Report</button>
             <button class="btn-gold" type="button" onclick="downloadWhatsApp()">Save WhatsApp Image</button>
           </div>
+
+          <div class="learn-more-row">
+            <a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener" class="learn-more-link">Learn more about these patterns &rarr;</a>
+          </div>
+
+          <div class="koora-block">
+            <h3 class="koora-h3">Become a Finisher.<br>Finish what you started.</h3>
+            <p class="koora-p">Seeing the pattern does not break it. The reflex returns. KOORA is the 180-day system that interrupts it — not once, but every day. It runs in three movements: The Seal (30 seconds at sunrise), The Daily Reset (five prompts, five words each), and The Evening Check (three numbers at sunset). Together they install the gap between stimulus and response as a daily practice. That gap is where sovereignty lives.</p>
+            <p class="koora-p">This is not motivation. It is a covenant. The work runs in structured 30-day cycles with a daily operating system, weekly deep dives, and a cohort of people who have decided to stop performing and start returning.</p>
+            <p class="koora-covenant">The covenant is not perfection. The covenant is return.<br>You are permitted to fall. You are not permitted to stop returning.</p>
+            <a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener" class="btn-gold">Reserve Your Place in KOORA</a>
+          </div>
         </div>
 
         <div class="actions-row" style="margin-top:16px;">
           <button class="btn-outline" type="button" onclick="retakeAssessment()">Retake the Screen</button>
-        </div>
-
-        <div class="learn-more-row">
-          <a href="/4CKOORA" class="learn-more-link">Learn more about these patterns &rarr;</a>
-        </div>
-
-        <div class="koora-block">
-          <h3 class="koora-h3">Become a Finisher.<br>Finish what you started.</h3>
-          <p class="koora-p">Seeing the pattern does not break it. The reflex returns. KOORA is the 180-day system that interrupts it — not once, but every day. It runs in three movements: The Seal (30 seconds at sunrise), The Daily Reset (five prompts, five words each), and The Evening Check (three numbers at sunset). Together they install the gap between stimulus and response as a daily practice. That gap is where sovereignty lives.</p>
-          <p class="koora-p">This is not motivation. It is a covenant. The work runs in structured 30-day cycles with a daily operating system, weekly deep dives, and a cohort of people who have decided to stop performing and start returning.</p>
-          <p class="koora-covenant">The covenant is not perfection. The covenant is return.<br>You are permitted to fall. You are not permitted to stop returning.</p>
-          <a href="https://www.houseofmastery.co/4ckoora" target="_blank" class="btn-gold">Reserve Your Place in KOORA</a>
         </div>
 
         <div class="results-footer">
@@ -1090,7 +1090,10 @@ var EMAILJS_TEMPLATE_ID = 'template_3j2uhtd';
 var JSPDF_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
 
 // Cloudflare Turnstile site key (public). Leave '' to disable the widget.
-// The matching secret key must be set as TURNSTILE_SECRET in Cloudflare env.
+// IMPORTANT: enable BOTH sides together. If you set TURNSTILE_SECRET in the
+// Cloudflare env WITHOUT setting this site key, the server will demand a token
+// the client never sends and every lead submission will fail. Set this site
+// key first (or at the same time) as the secret.
 var TURNSTILE_SITE_KEY = '';
 
 // GA4 Measurement ID, e.g. 'G-XXXXXXXXXX'. Leave '' to disable analytics.
@@ -1398,14 +1401,24 @@ function retakeAssessment() {
   answers = {};
   currentQ = 1;
   _ghlLeadSent = false;
+  _resultsUnlocked = false;
   window._assessmentComplete = false;
+  // Re-lock the gated content so the gate is enforced on the next run.
+  var locked = document.getElementById('lockedContent');
+  if (locked) { locked.classList.remove('unlocked'); }
+  var gateTitle = document.getElementById('gateTitle');
+  if (gateTitle) gateTitle.textContent = 'Unlock your full results';
+  var gateBody = document.getElementById('gateBody');
+  if (gateBody) gateBody.textContent = 'You have seen the scores. Enter your email to unlock your cost statement and your three strategies — and we will send a copy to your inbox to keep.';
   // Clear stale lead-capture UI from the previous run.
   var emailInput = document.getElementById('emailInput');
   if (emailInput) emailInput.value = '';
+  var consent = document.getElementById('consentCheck');
+  if (consent) consent.checked = false;
   var statusEl = document.getElementById('emailStatus');
   if (statusEl) { statusEl.textContent = ''; statusEl.className = 'email-status'; statusEl.style.display = 'none'; }
   var sendBtn = document.getElementById('btnSendEmail');
-  if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Send Results'; }
+  if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Unlock My Results'; }
   showSlide('slide-welcome');
   setProgress(0);
   setCounter('');
@@ -1509,6 +1522,9 @@ function getLevelLabel(level) {
 
 /* ── BUILD RESULTS ──────────────────────────────────── */
 function buildResults() {
+  // Guard against double-invocation (auto-advance + Next/Enter on the last
+  // question) so quiz_complete and the lead capture fire only once.
+  if (window._assessmentComplete) return;
   window._assessmentComplete = true;
   var name = participantName;
   var scores = {};
@@ -1721,13 +1737,17 @@ function unlockResults(email) {
   _resultsUnlocked = true;
   var locked = document.getElementById('lockedContent');
   locked.classList.add('unlocked');
-  locked.setAttribute('aria-hidden', 'false');
   document.getElementById('gateTitle').textContent = 'Your results are unlocked';
   document.getElementById('gateBody').innerHTML =
     'Scroll down for your cost statement and your three strategies. ' +
     (email ? 'A copy is on its way to <strong>' + escapeHTML(email) + '</strong>. ' : '') +
     'When you are ready to interrupt the pattern, ' +
     '<a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener">your next step is KOORA</a>.';
+  // Move focus into the newly revealed content so screen-reader / keyboard
+  // users are taken to it rather than left at the gate.
+  if (locked && typeof locked.focus === 'function') {
+    try { locked.focus({ preventScroll: false }); } catch (e) { locked.focus(); }
+  }
   track('results_unlocked');
 }
 

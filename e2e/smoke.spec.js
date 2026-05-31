@@ -23,10 +23,14 @@ test('welcome → 30 questions → gated results → unlock', async ({ page }) =
   await expect(question).toBeVisible();
   for (let i = 0; i < 30; i++) {
     await expect(page.locator('#qText')).not.toHaveText('');
+    const counterBefore = i < 29 ? await page.locator('#navCounter').textContent() : null;
     // Pick the second option ("Sometimes") each time.
     await page.locator('#optionsStack .opt-btn').nth(1).click();
-    // brief settle for the auto-advance timer
-    await page.waitForTimeout(120);
+    if (i < 29) {
+      // Wait for the auto-advance to actually move to the next question
+      // instead of racing a fixed timeout.
+      await expect(page.locator('#navCounter')).not.toHaveText(counterBefore || '', { timeout: 5000 });
+    }
   }
 
   // Results: scores + teaser visible, but locked content hidden.

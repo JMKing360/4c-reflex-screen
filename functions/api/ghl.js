@@ -107,6 +107,9 @@ export async function onRequestPost({ request, env }) {
   // Verify the Cloudflare Turnstile token when a secret is configured. When no
   // secret is set the check is skipped (Turnstile disabled), so the endpoint
   // keeps working until you turn it on.
+  // WARNING: only set TURNSTILE_SECRET once the client TURNSTILE_SITE_KEY is
+  // also set (index.html). Enabling the secret alone makes the client send no
+  // token and every submission fails the check below.
   if (env.TURNSTILE_SECRET) {
     const token = payload.turnstile_token;
     if (!token) {
