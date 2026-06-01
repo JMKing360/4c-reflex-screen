@@ -52,7 +52,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 /* 12 / 15 / 18 / 24 / 40 — five sizes, no overlap */
 
 /* ─── SCREENS ─── */
-.s{display:none;opacity:0;min-height:100dvh;min-height:100vh;flex-direction:column}
+.s{display:none;opacity:0;min-height:100vh;min-height:100dvh;flex-direction:column}
 .s.on{display:flex;animation:up 500ms var(--ease) forwards}
 .s.off{animation:dn 350ms var(--ease) forwards}
 @keyframes up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
@@ -61,7 +61,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 @keyframes breathe{0%,100%{opacity:.2}50%{opacity:.85}}
 
 /* ─── ARRIVAL ─── */
-.arr{justify-content:center;align-items:center;text-align:center;padding:80px 28px}
+.arr{text-align:center}
+.arr-hero{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:80px 28px}
+.home-footer{background:var(--ink);color:#fff;padding:48px 28px 56px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
+.hom-logo{height:46px;width:auto;filter:brightness(0) invert(1)}
+.hom-tag{font-family:var(--font);font-style:italic;font-size:15px;line-height:1.65;color:rgba(255,255,255,0.72);max-width:330px}
 .arr-brand{font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--warmth);margin-bottom:64px;opacity:0;animation:rise 600ms var(--ease) 100ms forwards}
 .arr-title{font-size:40px;font-weight:700;line-height:1.12;letter-spacing:-0.5px;color:var(--ink);margin-bottom:24px;max-width:440px;opacity:0;animation:rise 600ms var(--ease) 300ms forwards}
 .arr-sub{font-size:18px;font-weight:400;line-height:1.6;color:var(--secondary);max-width:400px;margin-bottom:64px;opacity:0;animation:rise 600ms var(--ease) 500ms forwards}
@@ -99,8 +103,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 
 /* ─── JOURNEY ─── */
 .journey{padding:40px 28px 64px}
+/* Progress bar stays pinned at the top; the question fills and vertically
+   centres in the space below it. Safe against clipping because .s uses
+   min-height (not a fixed height): tall content grows the screen and scrolls. */
+#jc{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center}
 .prog{margin-bottom:56px}
-.prog-top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--secondary);margin-bottom:10px}
 .prog-bar{height:3px;background:var(--line-light);border-radius:2px}
 .prog-fill{height:100%;background:var(--warmth);border-radius:2px;transition:width 400ms var(--ease);width:0%}
 
@@ -189,11 +196,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 <div class="w">
 
   <div class="s arr on" id="s0">
-    <div class="arr-brand">House of Mastery</div>
-    <h1 class="arr-title">The 4C Personal Task Assessment</h1>
-    <p class="arr-sub">A map of where your power goes when you are not watching.</p>
-    <p class="arr-meta">30 questions. 7 minutes. One clear insight.</p>
-    <button class="b" onclick="go('s1')" style="opacity:0;animation:rise 500ms var(--ease) 800ms forwards">Begin</button>
+    <div class="arr-hero">
+      <div class="arr-brand">House of Mastery</div>
+      <h1 class="arr-title">The 4C Personal Task Assessment</h1>
+      <p class="arr-sub">A map of where your power goes when you are not watching.</p>
+      <p class="arr-meta">30 questions. 7 minutes. One clear insight.</p>
+      <button class="b" onclick="go('s1')" style="opacity:0;animation:rise 500ms var(--ease) 800ms forwards">Begin</button>
+    </div>
+    <footer class="home-footer">
+      <img class="hom-logo" src="/hom-logo.png" alt="House of Mastery" width="142" height="46">
+      <p class="hom-tag">What you think, what you feel, what you choose, what you do… is your business.</p>
+    </footer>
   </div>
 
   <div class="s intake" id="s1">
@@ -224,7 +237,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
   </div>
 
   <div class="s journey" id="s2">
-    <div class="prog"><div class="prog-top"><span id="pCh"></span><span id="pCt"></span></div><div class="prog-bar"><div class="prog-fill" id="pF"></div></div></div>
+    <div class="prog"><div class="prog-bar"><div class="prog-fill" id="pF"></div></div></div>
     <div id="jc"></div>
   </div>
 
@@ -347,17 +360,17 @@ function sR(b,v){document.querySelectorAll('.rb').forEach(x=>x.classList.remove(
 function begin(){u.co=document.getElementById('co').value;u.ct=document.getElementById('ct').value.trim();u.ge=document.getElementById('ge').value;u.ag=document.getElementById('ag').value;u.pf=document.getElementById('pf').value;u.sr=document.getElementById('sr').value;u.cwa=document.getElementById('cwa').checked?1:0;u.cem=document.getElementById('cem').checked?1:0;ci=0;cc=-1;go('s2');setTimeout(showI,500)}
 
 function showI(){
+  window.scrollTo({top:0,behavior:'instant'});
   const it=IT[ci],ch=CHS[it.ch];
   document.getElementById('pF').style.width=(ci/30*100)+'%';
-  document.getElementById('pCh').textContent=ch.l;
-  document.getElementById('pCt').textContent=(ci+1)+' of 30';
   if(it.ch!==cc){cc=it.ch;
     document.getElementById('jc').innerHTML=`<div class="opener"><div class="opener-badge" style="background:${ch.bg};color:${ch.c}">${ch.l}</div><p class="opener-text">${ch.r}</p><button class="b b-outline" onclick="renderQ()"><span>${ch.btn}</span><svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`;
     return;}
   renderQ();
 }
 function renderQ(){
-  const it=IT[ci],s=it.ch<4?'In the last 48 hours':'';
+  window.scrollTo({top:0,behavior:'instant'});
+  const it=IT[ci],s=it.ch<5?'In the past 30 days':'';
   const opts=it.opts?it.opts.map((l,i)=>({v:i,l})):RS;
   let h=`<div class="qc" id="qc"><div class="q-stem">${s}</div><p class="q-text">${it.t}</p><div class="opts">`;
   opts.forEach(r=>{h+=`<button class="opt" onclick="sel(${r.v})"><span class="opt-dot"></span>${r.l}</button>`});
