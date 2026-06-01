@@ -136,6 +136,10 @@ body{font-family:var(--font);background:linear-gradient(180deg,#FFFFFF 0%,var(--
 .opt.sel{border-color:var(--ink);background:var(--ink);color:#fff;font-weight:500}
 .opt-dot{width:10px;height:10px;border:2px solid var(--line);border-radius:50%;margin-right:16px;flex-shrink:0;transition:all 200ms}
 .opt.sel .opt-dot{background:var(--warmth);border-color:var(--warmth)}
+.opt-tx{display:flex;flex-direction:column;gap:3px;min-width:0}
+.opt-l{font-size:15px}
+.opt-g{font-size:12px;font-weight:400;color:var(--tertiary);line-height:1.4}
+.opt.sel .opt-g{color:rgba(255,255,255,0.62)}
 
 /* ─── PROCESSING ─── */
 .processing{justify-content:center;align-items:flex-start;text-align:left;padding:80px 28px}
@@ -669,7 +673,7 @@ const IT=[
   {ch:5,kind:'wellbeing',t:'Lately, how much is this pattern affecting your sleep, mood, work, or relationships?',opts:['Not at all','A little','Noticeably','A lot']},
   {ch:5,kind:'context',t:'Where does this show up most for you right now?',opts:['Work','Family','Money','Faith','Health','Online']}
 ];
-const RS=[{v:0,l:'Not at all'},{v:1,l:'Once or twice'},{v:2,l:'Several times'},{v:3,l:'Repeatedly'}];
+const RS=[{v:0,l:'Not at all',g:'This genuinely did not happen'},{v:1,l:'Once or twice',g:'Rare. I can recall a specific moment'},{v:2,l:'Several times',g:'A few times across the month'},{v:3,l:'Repeatedly',g:'This was a real pattern for me'}];
 const CN=['Complaining','Criticizing','Comparing','Competing'],CI=['complain','criticize','compare','compete'],DN=['Think','Feel','Choose','Do'],DI=['think','feel','choose','do'];
 
 /* ── PERSONALIZATION: written from inside, not above ── */
@@ -783,11 +787,11 @@ function showI(){
 }
 function renderQ(){
   window.scrollTo({top:0,behavior:'instant'});
-  const it=IT[ci],s=it.ch<5?'In the past 30 days':'';
+  const it=IT[ci],s=it.ch<5?'In the past 30 days, thinking of moments that actually happened':'';
   const opts=it.opts?it.opts.map((l,i)=>({v:i,l})):RS;
   const note=it.kind?'<div class="q-note">Not scored. This shapes your result and stays private.</div>':'';
   let h=`<div class="qc" id="qc"><div class="q-stem">${s}</div>${note}<p class="q-text">${it.t}</p><div class="opts">`;
-  opts.forEach(r=>{h+=`<button class="opt" onclick="sel(${r.v})"><span class="opt-dot"></span>${r.l}</button>`});
+  opts.forEach(r=>{h+=`<button class="opt" onclick="sel(${r.v})"><span class="opt-dot"></span><span class="opt-tx"><span class="opt-l">${r.l}</span>${r.g?`<span class="opt-g">${r.g}</span>`:''}</span></button>`});
   h+='</div></div>';document.getElementById('jc').innerHTML=h;
   requestAnimationFrame(()=>document.getElementById('qc').classList.add('vis'));
 }
