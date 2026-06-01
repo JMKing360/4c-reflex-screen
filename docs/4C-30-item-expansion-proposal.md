@@ -1,8 +1,9 @@
 # The 4C Personal Task Assessment — 30-Item Expansion (Design Proposal)
 
-**Status:** Proposal for owner sign-off. **Nothing in this document is live.**
-The live assessment on `4c.houseofmastery.co` remains the validated 20-item
-version until you approve the items below.
+**Status:** ✅ Approved by the owner and **implemented** (the live assessment is
+now the 30-item version described here). This document remains the design record.
+The validation steps in §6 (real psychometrician + clinician review, pilot) are
+still recommended before any "validated/measures" language is used publicly.
 
 **Context:** KOORA, week one of each month — **the 4Cs: the emotional reflexes
 of escape** (Complaining, Criticizing, Comparing, Competing). The assessment's

@@ -1,11 +1,12 @@
 // End-to-end smoke test for the 4C Personal Task Assessment: drive the full
-// flow (arrival → intake → 20 items across 5 chapters → processing → reveal)
+// flow (arrival → intake → 30 items across 6 chapters → processing → reveal)
 // and assert the personalized result renders and the lead is captured.
-// Intercepts /api/ghl so no real CRM call is made.
+// Intercepts /api/ghl so no real CRM call is made. (The secondary Apps Script
+// Sheet call stays off behind the PASTE_ guard, so there is nothing else to stub.)
 const { test, expect } = require('@playwright/test');
 
-test('arrival → intake → 20 items → personalized reveal → lead captured', async ({ page }) => {
-  test.setTimeout(60000); // 20 items + chapter openers + 3.5s processing + staggered reveal
+test('arrival → intake → 30 items → personalized reveal → lead captured', async ({ page }) => {
+  test.setTimeout(90000); // 30 items + chapter openers + 3.5s processing + staggered reveal
   // Capture the lead payload the app POSTs to the Pages Function.
   let captured = null;
   await page.route('**/api/ghl', async (route) => {
@@ -32,11 +33,11 @@ test('arrival → intake → 20 items → personalized reveal → lead captured'
   await expect(page.locator('#st2')).toBeVisible();
   await page.click('text=Start the assessment');
 
-  // Journey: 5 chapter openers + 20 questions. Each chapter starts with an
-  // opener ("Continue"); every item then shows four options.
+  // Journey: 6 chapter openers + 30 items (incl. 2 non-scored closing items).
+  // Each chapter starts with an opener; every item then shows its options.
   await expect(page.locator('#s2')).toBeVisible();
   let answered = 0;
-  while (answered < 20) {
+  while (answered < 30) {
     // Each step shows either a chapter opener ("Continue") or the question's
     // four options. Wait for whichever lands, then advance.
     await expect(page.locator('#jc .opener button, #jc .opt').first()).toBeVisible({ timeout: 6000 });
