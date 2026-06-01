@@ -1,5 +1,6 @@
 // Cloudflare Pages Function: POST /api/ghl
-// Validates a quiz lead payload and forwards it to the HighLevel (GHL) webhook.
+// Validates a quiz lead payload and forwards it to the 4C Apps Script webhook.
+// Keep the /api/ghl path for backwards compatibility with the static frontend.
 
 const MAX_BODY_BYTES = 64 * 1024; // 64 KB hard cap on inbound payloads.
 
@@ -89,12 +90,12 @@ export async function onRequestPost({ request, env }) {
   // endpoint no longer gates on Cloudflare Turnstile. (Re-add a verification
   // step here if a captcha is introduced on the client.)
 
-  const webhookUrl = env.GHL_WEBHOOK_URL || env.HIGHLEVEL_WEBHOOK_URL;
+  const webhookUrl = env.APPS_SCRIPT_WEBHOOK_URL || env.FOUR_C_WEBHOOK_URL || env.GHL_WEBHOOK_URL || env.HIGHLEVEL_WEBHOOK_URL;
 
   if (!webhookUrl) {
     // Fail loudly: a missing webhook means leads are being lost, so surface it
     // as a server error rather than a misleading success.
-    console.error('GHL_WEBHOOK_URL is not configured; lead was not forwarded.');
+    console.error('APPS_SCRIPT_WEBHOOK_URL is not configured; lead was not forwarded.');
     return jsonResponse({
       ok: false,
       forwarded: false,
@@ -122,18 +123,18 @@ export async function onRequestPost({ request, env }) {
       body: JSON.stringify(forwardedPayload)
     });
   } catch (error) {
-    console.error('Unable to reach HighLevel webhook', error);
-    return jsonResponse({ ok: false, forwarded: false, error: 'Unable to reach HighLevel webhook.' }, 502, headers);
+    console.error('Unable to reach Apps Script webhook', error);
+    return jsonResponse({ ok: false, forwarded: false, error: 'Unable to reach assessment webhook.' }, 502, headers);
   }
 
   if (!ghlResponse.ok) {
     const responseText = await ghlResponse.text().catch(() => '');
-    console.error('HighLevel webhook returned', ghlResponse.status, responseText.slice(0, 200));
+    console.error('Assessment webhook returned', ghlResponse.status, responseText.slice(0, 200));
     return jsonResponse({
       ok: false,
       forwarded: false,
       status: ghlResponse.status,
-      error: responseText.slice(0, 500) || 'HighLevel webhook returned an error.'
+      error: responseText.slice(0, 500) || 'Assessment webhook returned an error.'
     }, 502, headers);
   }
 
