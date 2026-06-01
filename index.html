@@ -33,7 +33,7 @@
   --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --ease:cubic-bezier(0.25,0.1,0.25,1);
   --r:14px;
-  /* House of Mastery surfaces & ink ramp — no black text */
+  /* House of Mastery surfaces & ink ramp, no black text */
   --bg:#F6F8FB;--surface:#EDF2F9;--paper:#FFFFFF;
   --navy:#163558;--navy-deep:#102844;
   --ink:#102844;--secondary:#40546B;--tertiary:#6A7888;
@@ -150,12 +150,14 @@ body{font-family:var(--font);background:linear-gradient(180deg,#FFFFFF 0%,var(--
 .r-title{font-size:24px;font-weight:700;letter-spacing:-0.3px;color:var(--ink);margin-bottom:10px}
 .r-name{font-size:15px;font-weight:500;color:var(--secondary)}
 .rl{opacity:0;transform:translateY(32px);margin-bottom:48px}
+.rl:has(.prac),.rl:has(.alc),.rl:has(.cta-card),.rl:has(.pdf-note){margin-bottom:32px}
 .rl.vis{opacity:1;transform:translateY(0);transition:all 600ms var(--ease)}
 
 .lbl{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--warmth);margin-bottom:18px}
 
 /* Prose card */
 .prose-card{padding:0}
+.prose-card.distress{background:var(--return-s);border:1px solid rgba(46,125,50,.14);border-radius:var(--r);padding:28px 24px}
 .prose-text{font-size:17px;font-weight:500;line-height:1.78;color:var(--secondary)}
 
 /* Profile summary */
@@ -169,12 +171,13 @@ body{font-family:var(--font);background:linear-gradient(180deg,#FFFFFF 0%,var(--
 /* Practice: the single dark anchor */
 .prac{background:linear-gradient(145deg,var(--navy),var(--navy-deep));border-radius:var(--r);padding:44px 28px;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 12px 32px rgba(16,40,68,0.14)}
 .prac .lbl{color:var(--tertiary)}
+.prac-lead{font-size:15px;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:20px}
 .prac-name{font-size:24px;font-weight:600;color:#fff;margin-bottom:20px;letter-spacing:-0.2px}
 .prac-q{font-size:18px;font-weight:500;color:rgba(255,255,255,0.8);line-height:1.55;margin-bottom:24px}
 .prac-e{font-size:15px;color:rgba(255,255,255,0.45);line-height:1.65}
 
 /* Growth: hairline pull-quote, no fill */
-.growth{padding:2px 0 2px 20px;border-left:2px solid var(--warmth)}
+.growth{padding:10px 0 10px 24px;border-left:3px solid var(--warmth)}
 .growth-text{font-size:18px;line-height:1.7;color:var(--ink)}
 .growth-text em{color:var(--warmth);font-style:normal;font-weight:600}
 
@@ -204,11 +207,15 @@ body{font-family:var(--font);background:linear-gradient(180deg,#FFFFFF 0%,var(--
 .alc-score{font-size:13px;font-weight:800;color:var(--gold-ink);font-variant-numeric:tabular-nums;white-space:nowrap}
 .alc-bar{height:6px;background:var(--line-light);border-radius:999px;overflow:hidden;margin-bottom:12px}
 .alc-fill{height:100%;background:linear-gradient(90deg,var(--warmth),var(--navy));border-radius:999px}
-.alc-copy{font-size:14px;font-weight:500;line-height:1.68;color:var(--secondary)}
-.alc-copy strong{color:var(--ink);font-weight:800}
+.alc-copy{display:grid;grid-template-columns:74px 1fr;gap:5px 12px;font-size:13px;line-height:1.6;color:var(--secondary)}
+.alc-copy strong{color:var(--tertiary);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
 .pdf-note{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px 24px;text-align:left}
 .pdf-note-title{font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px}
 .pdf-note-text{font-size:15px;font-weight:500;line-height:1.7;color:var(--secondary)}
+.howscore{margin-top:18px;border-top:1px solid var(--line-light);padding-top:16px}
+.howscore summary{font-size:13px;font-weight:600;color:var(--secondary);cursor:pointer;list-style:none}
+.howscore summary::-webkit-details-marker{display:none}
+.howscore p{font-size:13px;line-height:1.7;color:var(--tertiary);margin-top:12px}
 .req-note{font-size:13px;font-weight:700;line-height:1.5;color:var(--gold-ink);margin-top:-20px;margin-bottom:28px}
 #xc{display:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -818,36 +825,40 @@ function buildR(){
   let h='';
 
   // Layer 0: gentle lead-in when this is weighing heavily (wellbeing = "A lot")
-  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card" style="background:var(--return-s)"><p class="prose-text">Before anything else: you told us this is affecting you a lot right now. Read what follows gently. It’s a mirror, not a verdict.</p></div></div>`;
+  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card distress"><p class="prose-text">Before anything else: you told us this is affecting you a lot right now. Read what follows gently. It’s a mirror, not a verdict.</p></div></div>`;
 
-  // Layer 1: The letter (prose, not dashboard)
-  h+=`<div class="rl" data-d="200"><div class="prose-card"><div class="lbl">Where your power goes</div><p class="prose-text">${DR[cId]}</p></div></div>`;
+  // Layer 1: The letter (prose, not dashboard). Co-dominant when the top two are within 2 points.
+  if(Math.abs(res.cS[res.dc]-res.cS[res.sc])<=2)
+    h+=`<div class="rl" data-d="200"><div class="prose-card"><div class="lbl">Where your power goes</div><p class="prose-text">Your scores for ${CN[res.dc]} and ${CN[res.sc]} are nearly equal. This is a dual pattern, not a single dominant. Read both below; the one that stings more is where to start.</p><p class="prose-text" style="margin-top:18px">${DR[cId]}</p><p class="prose-text" style="margin-top:18px">${DR[CI[res.sc]]}</p></div></div>`;
+  else
+    h+=`<div class="rl" data-d="200"><div class="prose-card"><div class="lbl">Where your power goes</div><p class="prose-text">${DR[cId]}</p></div></div>`;
 
   // Layer 2: Where it starts and how far it runs
   h+=`<div class="rl" data-d="700"><div class="prose-card"><div class="lbl">Where it starts in you</div><p class="prose-text">${DM[dId]} ${HZ[hk]}</p></div></div>`;
 
   // Layer 3: How quickly you come back
-  h+=`<div class="rl" data-d="1200"><div class="prose-card"><div class="lbl">How quickly you come back</div><p class="prose-text">${CP[res.cp]} ${RT[res.rL]}</p></div></div>`;
+  h+=`<div class="rl" data-d="1200"><div class="prose-card"><div class="lbl">How quickly you come back</div><p class="prose-text">${CP[res.cp]} ${RT[res.rL]}</p><p class="prose-text" style="font-size:13px;color:var(--tertiary);margin-top:12px">This is a snapshot of one month, not a verdict on who you are. Patterns shift, and noticing is already part of the shift.</p></div></div>`;
 
   // Layer 4: Profile summary (compact)
-  h+=`<div class="rl" data-d="1700"><div class="profile">${pR('Where you go',CN[res.dc])}${pR('Where it starts',DN[res.dd])}${pR('Return speed',cap(res.rL)+' ('+res.rS+'/24)')}${res.ctx?pR('Watch it first in',res.ctx):''}</div></div>`;
+  h+=`<div class="rl" data-d="1700"><div class="profile">${pR('Where you go',CN[res.dc])}${pR('Where it starts',DN[res.dd])}${pR('Return speed',cap(res.rL)+' ('+res.rS+'/24)')}${res.ctx?pR('Watch it first in',res.ctx):''}</div><details class="howscore"><summary>How your score was calculated</summary><p>Your results come from 28 scored questions: 5 per reflex (4 matrix plus 1 signature) give each a score of 0 to 15, and the highest is your dominant pattern. Domain scores (Think, Feel, Choose, Do) show where it starts in you. Eight return questions score your recovery speed (0 to 24). Two closing questions shaped your results privately and were never scored. No question is weighted; every answer counts equally.</p></details></div>`;
 
   // Layer 5: Practice
-  h+=`<div class="rl" data-d="2200"><div class="prac"><div class="lbl">Your one practice</div><div class="prac-name">${pr.n}</div><div class="prac-q">${pr.q}</div><div class="prac-e">${pr.e}</div></div></div>`;
+  h+=`<div class="rl" data-d="2200"><div class="prac"><div class="lbl">Your one practice</div><p class="prac-lead">The pattern is ${CN[res.dc].toLowerCase()}, and yours has been running long enough that you do not always feel it start.</p><div class="prac-name">${pr.n}</div><div class="prac-q">${pr.q}</div><div class="prac-e">${pr.e}</div></div></div>`;
 
   // Layer 6: Growth sentence
   h+=`<div class="rl" data-d="2700"><div class="growth"><div class="lbl">Your growth sentence</div><p class="growth-text">When I\u2019m not watching, my power leaks toward <em>${CN[res.dc].toLowerCase()}</em>. It starts in what I <em>${DN[res.dd].toLowerCase()}</em>. I\u2019m learning to catch it and come back through <em>${pr.n.toLowerCase()}</em>.</p></div></div>`;
 
   // Layer 7: ALCARRA screen, inferred from the same 4C answer pattern.
-  const alcRows=(res.alc||[]).map(a=>`<div class="alc-item"><div class="alc-head"><div class="alc-name">${a.k}</div><div class="alc-score">${a.score}/100 · ${a.level}</div></div><div class="alc-bar"><div class="alc-fill" style="width:${a.score}%"></div></div><p class="alc-copy"><strong>Promise:</strong> ${a.p} <strong>Practice:</strong> ${a.pr} <strong>Evidence:</strong> ${a.ev}</p></div>`).join('');
+  const alcRows=(res.alc||[]).map(a=>`<div class="alc-item"><div class="alc-head"><div class="alc-name">${a.k}</div><div class="alc-score">${a.score}/100 · ${a.level}</div></div><div class="alc-bar"><div class="alc-fill" style="width:${a.score}%"></div></div><div class="alc-copy"><strong>Promise</strong><span>${a.p}</span><strong>Practice</strong><span>${a.pr}</span><strong>Evidence</strong><span>${a.ev}</span></div></div>`).join('');
   h+=`<div class="rl" data-d="3200"><div class="alc"><div class="lbl">ALCARRA screen</div><p class="alc-intro">This second screen shows the commitments that help you return. The scores are not a label. They are inferred from your 4C pattern and your return answers, then translated into seven commitments you can practice.</p><div class="alc-list">${alcRows}</div></div></div>`;
 
-  // Layer 8: CTA — a gentler next step when this is weighing heavily, otherwise the offer
+  // Layer 8: CTA. A gentler next step when this is weighing heavily, otherwise the offer
   if(res.wb>=3)h+=`<div class="rl" data-d="3900"><div class="cta-card"><div class="lbl">A gentler next step</div><div class="cta-title">Be kind to yourself here</div><p class="cta-body">You said this pattern is affecting you a lot right now. Noticing it is a real first step. It is not the whole job. If it is weighing on your sleep, mood, work, or relationships, consider talking with someone you trust or a licensed professional. There is no pressure to do anything more today.</p></div></div>`;
   else h+=`<div class="rl" data-d="3900"><div class="cta-card"><div class="lbl">Go deeper</div><div class="cta-title">The 10-Day 4C Challenge</div><p class="cta-body">You just saw where your power goes. The question is whether seeing it changes anything. Ten days. One pattern. One practice.</p><div class="cta-price">KSh 2,000</div><div class="cta-note">One-time. 10 days.</div><ul class="cta-list"><li>Daily guided observation via WhatsApp</li><li>Structured daily pulse check</li><li>Day 10 re-assessment to measure what shifted</li><li>Your return practice, coached for 10 days</li><li>Closed cohort of committed participants</li></ul><button class="b b-accent" onclick="openL('PAYMENT_LINK')">Join the next cohort</button><p class="cta-date">Next cohort starts ${nds}</p></div></div>`;
 
   // Layer 9: Bridge + email-only PDF note. The PDF link is not exposed on the results page.
-  h+=`<div class="rl" data-d="4600"><div class="bridge"><p class="bridge-text">If the same pattern keeps running despite your best effort, the cause may be deeper than behavior. That is a different kind of work, and it has its own time.</p><p class="bridge-close">Progress is noticing sooner.</p><p class="bridge-text" style="font-size:12px;color:var(--tertiary);margin-top:20px">This is a self-reflection tool, not a medical or psychological diagnosis.</p></div><div class="pdf-note"><div class="pdf-note-title">Your PDF report is in your email.</div><p class="pdf-note-text">We have sent the download link to ${u.em}. The full report is delivered by email only, using the details you provided.</p></div><div class="actions"><button class="b-text" onclick="retake()">Take again</button></div></div>`;
+  h+=`<div class="rl" data-d="4600"><div class="bridge"><p class="bridge-text">If the same pattern keeps running despite your best effort, the cause may be deeper than behavior. That is a different kind of work, and it has its own time.</p><p class="bridge-close">Progress is noticing sooner.</p><p class="bridge-text" style="font-size:12px;color:var(--tertiary);margin-top:20px">This is a self-reflection tool, not a medical or psychological diagnosis.</p></div></div>`;
+  h+=`<div class="rl" data-d="4800"><div class="pdf-note"><div class="pdf-note-title">Your PDF report is in your email.</div><p class="pdf-note-text">We have sent the download link to ${u.em}. The full report is delivered by email only, using the details you provided.</p></div><div class="actions"><button class="b-text" onclick="retake()">Take again</button></div></div>`;
 
   el.innerHTML=h;
 }
@@ -870,7 +881,7 @@ function dlCard(){
   cx.font='600 28px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#FFF';cx.fillText(pr.n,w/2,y+88);
   cx.font='500 20px "Plus Jakarta Sans",sans-serif';cx.fillStyle='rgba(255,255,255,0.7)';wt(cx,pr.q,w/2,y+130,bw-80,28);
   y+=bh+56;cx.font='400 20px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#102844';
-  wt(cx,`When I'm not watching, my power leaks toward ${CN[res.dc].toLowerCase()}. It starts in what I ${DN[res.dd].toLowerCase()}. I'm learning to catch it and come back through ${pr.n.toLowerCase()}.`,w/2,y,w-p*2-60,30);
+  wt(cx,`When I'm not watching, my power leaks toward ${CN[res.dc].toLowerCase()}. It starts in what I ${DN[res.dd].toLowerCase()}. I'm learning to catch it and come back through ${pr.n.toLowerCase()}.`,w/2,Math.max(y,Math.round(h*0.64)),w-p*2-60,30);
   cx.fillStyle='#E8EEF6';cx.fillRect(p+80,h-110,w-p*2-160,1);
   cx.font='500 15px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#9E7340';cx.fillText('houseofmastery.co/4c',w/2,h-70);
   cx.fillStyle='#102844';cx.fillRect(0,h-4,w,4);
