@@ -76,8 +76,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .arr-meta{font-size:15px;font-weight:500;color:var(--tertiary);margin-bottom:16px;opacity:0;animation:rise 600ms var(--ease) 650ms forwards}
 
 /* ─── UNIFIED BUTTON SYSTEM ─── */
-.b{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 36px;font-family:var(--font);font-size:15px;font-weight:600;color:#fff;background:var(--ink);border:1.5px solid var(--ink);border-radius:var(--r);cursor:pointer;transition:all 200ms var(--ease);min-width:200px;-webkit-tap-highlight-color:transparent}
-.b:hover{background:#333;border-color:#333}.b:active{transform:scale(0.97)}.b:disabled{opacity:.3;cursor:not-allowed}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 36px;font-family:var(--font);font-size:15px;font-weight:600;color:#fff;background:var(--ink);border:1.5px solid var(--ink);border-radius:var(--r);cursor:pointer;transition:transform 140ms cubic-bezier(0.34,1.56,0.64,1),background 200ms var(--ease),border-color 200ms var(--ease);min-width:200px;-webkit-tap-highlight-color:transparent}
+.b:hover{background:#333;border-color:#333}.b:active{transform:scale(0.96)}.b:disabled{opacity:.3;cursor:not-allowed}
 .b-accent{background:var(--accent);border-color:var(--accent)}.b-accent:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
 .b-outline{background:transparent;color:var(--ink);border-color:var(--line)}.b-outline:hover{border-color:var(--ink);background:transparent}
 .b-text{background:none;border:none;color:var(--secondary);min-width:auto;padding:12px 20px;font-weight:500;font-size:14px}.b-text:hover{color:var(--ink)}
@@ -93,8 +93,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .dot.on{background:var(--warmth)}
 .fg{margin-bottom:22px}
 .fl{display:block;font-size:12px;font-weight:600;color:var(--secondary);margin-bottom:8px}
-.fi{width:100%;padding:14px 16px;font-family:var(--font);font-size:15px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);outline:none;transition:border-color 200ms}
+.fi{width:100%;padding:14px 16px;font-family:var(--font);font-size:16px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);outline:none;transition:border-color 200ms}
 .fi:focus{border-color:var(--accent)}.fi::placeholder{color:var(--tertiary)}
+.fi-name{border:none;border-bottom:1.5px solid var(--line);border-radius:0;padding:16px 4px;font-size:24px;font-weight:600;text-align:center}
 .fi-sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2386868B' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .divider{height:1px;background:var(--line-light);margin:32px 0}
@@ -112,8 +113,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
    min-height (not a fixed height): tall content grows the screen and scrolls. */
 #jc{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center}
 .prog{margin-bottom:56px}
-.prog-bar{height:3px;background:var(--line-light);border-radius:2px}
-.prog-fill{height:100%;background:var(--warmth);border-radius:2px;transition:width 400ms var(--ease);width:0%}
+.prog-bar{height:3px;background:var(--line-light);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--warmth);border-radius:2px;transition:width 500ms cubic-bezier(0.34,1.4,0.64,1);width:0%}
 
 .opener{text-align:center;padding:80px 0 48px;opacity:0;animation:rise 500ms var(--ease) forwards}
 .opener-badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:6px 16px;border-radius:var(--r);margin-bottom:32px}
@@ -124,6 +125,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .qc.vis{opacity:1;transform:translateY(0)}
 .qc.ex{opacity:0;transform:translateY(-12px);transition:all 250ms var(--ease)}
 .q-stem{font-size:12px;font-weight:600;color:var(--secondary);margin-bottom:16px}
+.q-note{font-size:12px;font-weight:600;letter-spacing:.3px;color:var(--tertiary);margin-bottom:14px}
 .q-text{font-size:24px;font-weight:500;line-height:1.45;color:var(--ink);margin-bottom:40px;letter-spacing:-0.2px}
 .opts{display:flex;flex-direction:column;gap:10px}
 .opt{display:flex;align-items:center;width:100%;padding:18px 20px;font-family:var(--font);font-size:15px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;transition:all 200ms var(--ease)}
@@ -136,9 +138,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 /* ─── PROCESSING ─── */
 .processing{justify-content:center;align-items:center;text-align:center;padding:80px 28px}
 .p-text{font-size:24px;font-weight:500;color:var(--ink);opacity:0;animation:rise 500ms var(--ease) 200ms forwards}
-.p-dots{margin-top:40px;display:flex;gap:8px;justify-content:center;opacity:0;animation:rise 500ms var(--ease) 400ms forwards}
-.p-dot{width:6px;height:6px;border-radius:50%;background:var(--warmth);animation:breathe 1.4s var(--ease) infinite}
-.p-dot:nth-child(2){animation-delay:250ms}.p-dot:nth-child(3){animation-delay:500ms}
+@keyframes orb{0%,100%{transform:scale(.82);opacity:.45}50%{transform:scale(1);opacity:1}}
+.p-orb{width:56px;height:56px;border-radius:50%;background:var(--warmth);margin-top:44px;animation:orb 1.8s ease-in-out infinite}
 
 /* ─── REVEAL ─── */
 .reveal{padding:72px 28px 128px}
@@ -161,10 +162,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .pr:last-child{border-bottom:none}
 .pr:first-child{padding-top:0}
 .pr-l{font-size:15px;color:var(--secondary)}
-.pr-v{font-size:15px;font-weight:600;color:var(--ink);text-align:right}
+.pr-v{font-size:15px;font-weight:600;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
 
 /* Practice: the single dark anchor */
-.prac{background:var(--ink);border-radius:var(--r);padding:44px 28px;text-align:center}
+.prac{background:var(--ink);border-radius:var(--r);padding:44px 28px;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),0 12px 32px rgba(16,16,16,0.14)}
 .prac .lbl{color:var(--tertiary)}
 .prac-name{font-size:24px;font-weight:600;color:#fff;margin-bottom:20px;letter-spacing:-0.2px}
 .prac-q{font-size:18px;font-weight:500;color:rgba(255,255,255,0.8);line-height:1.55;margin-bottom:24px}
@@ -179,7 +180,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .cta-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:44px 28px;text-align:center}
 .cta-title{font-size:24px;font-weight:700;color:var(--ink);margin-bottom:12px;letter-spacing:-0.3px}
 .cta-body{font-size:15px;color:var(--secondary);line-height:1.65;margin-bottom:12px}
-.cta-price{font-size:40px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-1px}
+.cta-price{font-size:40px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-1px;font-variant-numeric:tabular-nums}
 .cta-note{font-size:15px;color:var(--tertiary);margin-bottom:28px}
 .cta-list{text-align:left;margin:28px 0;padding:0;list-style:none}
 .cta-list li{font-size:15px;color:var(--secondary);padding:8px 0 8px 20px;position:relative;line-height:1.5}
@@ -218,7 +219,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
   <div class="s intake" id="s1">
     <h2 class="i-title">Before we begin</h2>
     <p class="i-sub">Just your name to start. Your results stay private.</p>
-    <div class="fg"><label class="fl">Full name</label><input class="fi" id="fn" type="text" placeholder="Your full name" autocomplete="name"></div>
+    <div class="fg"><label class="fl">Full name</label><input class="fi fi-name" id="fn" type="text" placeholder="Your full name" autocomplete="name" autocapitalize="words"></div>
     <div style="margin-top:36px;text-align:center"><button class="b" id="bs2" disabled onclick="startAssessment()">Begin the assessment</button></div>
   </div>
 
@@ -229,14 +230,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 
   <div class="s processing" id="s3">
     <p class="p-text">Finding where your power goes</p>
-    <div class="p-dots"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div></div>
+    <div class="p-orb"></div>
   </div>
 
   <div class="s intake" id="sg">
     <h2 class="i-title">Your 4C profile is ready</h2>
     <p class="i-sub">Enter your email and phone to unlock your results. We’ll also send your profile and growth resources.</p>
-    <div class="fg"><label class="fl">Email</label><input class="fi" id="em" type="email" placeholder="you@example.com" autocomplete="email"></div>
-    <div class="row2"><div class="fg"><label class="fl">Country</label><select class="fi fi-sel" id="co"><option value="">Select</option><option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select></div><div class="fg"><label class="fl">Phone (WhatsApp)</label><input class="fi" id="ph" type="tel" placeholder="+254 7XX XXX XXX" autocomplete="tel"></div></div>
+    <div class="fg"><label class="fl">Email</label><input class="fi" id="em" type="email" inputmode="email" placeholder="you@example.com" autocomplete="email"></div>
+    <div class="row2"><div class="fg"><label class="fl">Country</label><select class="fi fi-sel" id="co"><option value="">Select</option><option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select></div><div class="fg"><label class="fl">Phone (WhatsApp)</label><input class="fi" id="ph" type="tel" inputmode="tel" placeholder="+254 7XX XXX XXX" autocomplete="tel"></div></div>
     <div class="divider"></div>
     <p class="i-sub" style="margin-bottom:20px">Optional. Helps us tailor what we send you.</p>
     <div class="row2"><div class="fg"><label class="fl">City</label><input class="fi" id="ct" type="text" placeholder="e.g. Nairobi"></div><div class="fg"><label class="fl">Gender</label><select class="fi fi-sel" id="ge"><option value="">Select</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div></div>
@@ -385,12 +386,13 @@ function renderQ(){
   window.scrollTo({top:0,behavior:'instant'});
   const it=IT[ci],s=it.ch<5?'In the past 30 days':'';
   const opts=it.opts?it.opts.map((l,i)=>({v:i,l})):RS;
-  let h=`<div class="qc" id="qc"><div class="q-stem">${s}</div><p class="q-text">${it.t}</p><div class="opts">`;
+  const note=it.kind?'<div class="q-note">Not scored. This shapes your result and stays private.</div>':'';
+  let h=`<div class="qc" id="qc"><div class="q-stem">${s}</div>${note}<p class="q-text">${it.t}</p><div class="opts">`;
   opts.forEach(r=>{h+=`<button class="opt" onclick="sel(${r.v})"><span class="opt-dot"></span>${r.l}</button>`});
   h+='</div></div>';document.getElementById('jc').innerHTML=h;
   requestAnimationFrame(()=>document.getElementById('qc').classList.add('vis'));
 }
-function sel(v){ans[ci]=v;const bs=document.querySelectorAll('.opt');bs.forEach((b,i)=>{if(i===v)b.classList.add('sel');b.style.pointerEvents='none'});setTimeout(()=>{const c=document.getElementById('qc');c.classList.remove('vis');c.classList.add('ex');setTimeout(()=>{ci++;ci>=30?proc():showI()},250)},350)}
+function sel(v){if(navigator.vibrate)navigator.vibrate(8);ans[ci]=v;const bs=document.querySelectorAll('.opt');bs.forEach((b,i)=>{if(i===v)b.classList.add('sel');b.style.pointerEvents='none'});setTimeout(()=>{const c=document.getElementById('qc');c.classList.remove('vis');c.classList.add('ex');setTimeout(()=>{ci++;ci>=30?proc():showI()},250)},350)}
 // Last answer → calculate, then show the gate (results are built/sent only after the gate).
 function proc(){document.getElementById('pF').style.width='100%';go('s3');setTimeout(()=>{compute();go('sg')},3500)}
 
