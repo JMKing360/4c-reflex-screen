@@ -210,30 +210,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
   </div>
 
   <div class="s intake" id="s1">
-    <div class="st on" id="st1">
-      <div class="dots"><div class="dot on"></div><div class="dot"></div></div>
-      <h2 class="i-title">Before we begin</h2>
-      <p class="i-sub">Your responses are private. This helps us personalize your results.</p>
-      <div class="fg"><label class="fl">First name</label><input class="fi" id="fn" type="text" placeholder="First name"></div>
-      <div class="fg"><label class="fl">Last name</label><input class="fi" id="ln" type="text" placeholder="Last name"></div>
-      <div class="fg"><label class="fl">Email</label><input class="fi" id="em" type="email" placeholder="you@example.com"></div>
-      <div class="fg"><label class="fl">WhatsApp</label><input class="fi" id="ph" type="tel" placeholder="+254 7XX XXX XXX"></div>
-      <div style="margin-top:36px;text-align:center"><button class="b" id="bs2" disabled onclick="goS2()">Continue</button></div>
-    </div>
-    <div class="st" id="st2">
-      <div class="dots"><div class="dot on"></div><div class="dot on"></div></div>
-      <h2 class="i-title">A little about you</h2>
-      <p class="i-sub">This helps us understand who is taking the assessment.</p>
-      <div class="row2"><div class="fg"><label class="fl">Country</label><select class="fi fi-sel" id="co"><option value="">Select</option><option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select></div><div class="fg"><label class="fl">City</label><input class="fi" id="ct" type="text" placeholder="e.g. Nairobi"></div></div>
-      <div class="row2"><div class="fg"><label class="fl">Gender</label><select class="fi fi-sel" id="ge"><option value="">Select</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div><div class="fg"><label class="fl">Age range</label><select class="fi fi-sel" id="ag"><option value="">Select</option><option>18-25</option><option>26-35</option><option>36-45</option><option>46-55</option><option>56+</option></select></div></div>
-      <div class="fg"><label class="fl">Professional field</label><select class="fi fi-sel" id="pf"><option value="">Select</option><option>Healthcare / Medicine</option><option>Business / Finance</option><option>Technology / Engineering</option><option>Education / Academia</option><option>Law / Policy</option><option>Creative / Media</option><option>Government / Public Service</option><option>Ministry / Non-profit</option><option>Entrepreneurship</option><option>Student</option><option>Other</option></select></div>
-      <div class="fg"><label class="fl">How did you find this?</label><select class="fi fi-sel" id="sr"><option value="">Select</option><option>WhatsApp share</option><option>Instagram</option><option>LinkedIn</option><option>YouTube</option><option>Friend or colleague</option><option>Dr. Job Mogire event</option><option>House of Mastery member</option><option>Google search</option><option>Other</option></select></div>
-      <div class="divider"></div>
-      <div class="fg"><label class="fl">Which statement feels most true right now?</label><div class="ro"><button class="rb" onclick="sR(this,'Awareness')">I know something needs to change but I don't know where to start</button><button class="rb" onclick="sR(this,'Ready for structure')">I've been working on myself but I keep hitting the same wall</button><button class="rb" onclick="sR(this,'Prodigal Winner')">I'm successful by most measures but something feels off</button><button class="rb" onclick="sR(this,'Referral')">Someone I trust recommended this and I'm curious</button></div></div>
-      <div class="consent"><input type="checkbox" id="cwa" checked><label for="cwa">Send my results and growth resources via WhatsApp</label></div>
-      <div class="consent"><input type="checkbox" id="cem" checked><label for="cem">Send insights and program updates via email</label></div>
-      <div style="margin-top:40px;text-align:center"><button class="b" onclick="begin()">Start the assessment</button><div style="margin-top:12px"><button class="b-text" onclick="begin()">Skip and start</button></div></div>
-    </div>
+    <h2 class="i-title">Before we begin</h2>
+    <p class="i-sub">Just your name to start. Your results stay private.</p>
+    <div class="fg"><label class="fl">Full name</label><input class="fi" id="fn" type="text" placeholder="Your full name" autocomplete="name"></div>
+    <div style="margin-top:36px;text-align:center"><button class="b" id="bs2" disabled onclick="startAssessment()">Begin the assessment</button></div>
   </div>
 
   <div class="s journey" id="s2">
@@ -244,6 +224,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
   <div class="s processing" id="s3">
     <p class="p-text">Finding where your power goes</p>
     <div class="p-dots"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div></div>
+  </div>
+
+  <div class="s intake" id="sg">
+    <h2 class="i-title">Your 4C profile is ready</h2>
+    <p class="i-sub">Enter your email and phone to unlock your results — we’ll also send your profile and growth resources.</p>
+    <div class="fg"><label class="fl">Email</label><input class="fi" id="em" type="email" placeholder="you@example.com" autocomplete="email"></div>
+    <div class="row2"><div class="fg"><label class="fl">Country</label><select class="fi fi-sel" id="co"><option value="">Select</option><option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select></div><div class="fg"><label class="fl">Phone (WhatsApp)</label><input class="fi" id="ph" type="tel" placeholder="+254 7XX XXX XXX" autocomplete="tel"></div></div>
+    <div class="divider"></div>
+    <p class="i-sub" style="margin-bottom:20px">Optional — helps us tailor what we send you.</p>
+    <div class="row2"><div class="fg"><label class="fl">City</label><input class="fi" id="ct" type="text" placeholder="e.g. Nairobi"></div><div class="fg"><label class="fl">Gender</label><select class="fi fi-sel" id="ge"><option value="">Select</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div></div>
+    <div class="row2"><div class="fg"><label class="fl">Age range</label><select class="fi fi-sel" id="ag"><option value="">Select</option><option>18-25</option><option>26-35</option><option>36-45</option><option>46-55</option><option>56+</option></select></div><div class="fg"><label class="fl">Professional field</label><select class="fi fi-sel" id="pf"><option value="">Select</option><option>Healthcare / Medicine</option><option>Business / Finance</option><option>Technology / Engineering</option><option>Education / Academia</option><option>Law / Policy</option><option>Creative / Media</option><option>Government / Public Service</option><option>Ministry / Non-profit</option><option>Entrepreneurship</option><option>Student</option><option>Other</option></select></div></div>
+    <div class="fg"><label class="fl">How did you find this?</label><select class="fi fi-sel" id="sr"><option value="">Select</option><option>WhatsApp share</option><option>Instagram</option><option>LinkedIn</option><option>YouTube</option><option>Friend or colleague</option><option>Dr. Job Mogire event</option><option>House of Mastery member</option><option>Google search</option><option>Other</option></select></div>
+    <div class="fg"><label class="fl">Which statement feels most true right now?</label><div class="ro"><button class="rb" onclick="sR(this,'Awareness')">I know something needs to change but I don't know where to start</button><button class="rb" onclick="sR(this,'Ready for structure')">I've been working on myself but I keep hitting the same wall</button><button class="rb" onclick="sR(this,'Prodigal Winner')">I'm successful by most measures but something feels off</button><button class="rb" onclick="sR(this,'Referral')">Someone I trust recommended this and I'm curious</button></div></div>
+    <div class="consent"><input type="checkbox" id="cwa" checked><label for="cwa">Send my results and growth resources via WhatsApp</label></div>
+    <div class="consent"><input type="checkbox" id="cem" checked><label for="cem">Send insights and program updates via email</label></div>
+    <div style="margin-top:40px;text-align:center"><button class="b" id="bReveal" disabled onclick="release()">Reveal my results</button></div>
   </div>
 
   <div class="s reveal" id="s4">
@@ -354,10 +350,21 @@ const PR={
 let ans=new Array(30).fill(-1),ci=0,cc=-1,res={},u={fn:'',ln:'',em:'',ph:'',co:'',ct:'',ge:'',ag:'',pf:'',sr:'',rd:'',cwa:1,cem:1};
 
 function go(id){const c=document.querySelector('.s.on');if(c){c.classList.add('off');setTimeout(()=>{c.classList.remove('on','off');document.getElementById(id).classList.add('on');window.scrollTo({top:0,behavior:'instant'})},350)}else document.getElementById(id).classList.add('on')}
-['fn','em','ph'].forEach(i=>document.getElementById(i).addEventListener('input',()=>{document.getElementById('bs2').disabled=!(document.getElementById('fn').value.trim()&&document.getElementById('em').value.trim()&&document.getElementById('ph').value.trim())}));
-function goS2(){u.fn=document.getElementById('fn').value.trim();u.ln=document.getElementById('ln').value.trim();u.em=document.getElementById('em').value.trim();u.ph=document.getElementById('ph').value.trim();document.getElementById('st1').classList.remove('on');document.getElementById('st2').classList.add('on');window.scrollTo({top:0,behavior:'instant'})}
+// Start: just the full name gates the Begin button.
+document.getElementById('fn').addEventListener('input',()=>{document.getElementById('bs2').disabled=!document.getElementById('fn').value.trim()});
+// End gate: email + phone gate the Reveal button (the unlock for results).
+['em','ph'].forEach(i=>document.getElementById(i).addEventListener('input',()=>{document.getElementById('bReveal').disabled=!(document.getElementById('em').value.trim()&&document.getElementById('ph').value.trim())}));
+function startAssessment(){u.fn=document.getElementById('fn').value.trim();ci=0;cc=-1;go('s2');setTimeout(showI,500)}
 function sR(b,v){document.querySelectorAll('.rb').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');u.rd=v}
-function begin(){u.co=document.getElementById('co').value;u.ct=document.getElementById('ct').value.trim();u.ge=document.getElementById('ge').value;u.ag=document.getElementById('ag').value;u.pf=document.getElementById('pf').value;u.sr=document.getElementById('sr').value;u.cwa=document.getElementById('cwa').checked?1:0;u.cem=document.getElementById('cem').checked?1:0;ci=0;cc=-1;go('s2');setTimeout(showI,500)}
+// Gate → release: capture email/phone (+ optional detail), then reveal + submit the lead.
+function release(){
+  u.em=document.getElementById('em').value.trim();u.ph=document.getElementById('ph').value.trim();
+  if(!(u.em&&u.ph))return;
+  u.co=document.getElementById('co').value;u.ct=document.getElementById('ct').value.trim();u.ge=document.getElementById('ge').value;u.ag=document.getElementById('ag').value;u.pf=document.getElementById('pf').value;u.sr=document.getElementById('sr').value;u.cwa=document.getElementById('cwa').checked?1:0;u.cem=document.getElementById('cem').checked?1:0;
+  buildR();go('s4');
+  document.querySelectorAll('.rl').forEach(l=>{setTimeout(()=>l.classList.add('vis'),parseInt(l.dataset.d)||0)});
+  submit();
+}
 
 function showI(){
   window.scrollTo({top:0,behavior:'instant'});
@@ -378,7 +385,8 @@ function renderQ(){
   requestAnimationFrame(()=>document.getElementById('qc').classList.add('vis'));
 }
 function sel(v){ans[ci]=v;const bs=document.querySelectorAll('.opt');bs.forEach((b,i)=>{if(i===v)b.classList.add('sel');b.style.pointerEvents='none'});setTimeout(()=>{const c=document.getElementById('qc');c.classList.remove('vis');c.classList.add('ex');setTimeout(()=>{ci++;ci>=30?proc():showI()},250)},350)}
-function proc(){document.getElementById('pF').style.width='100%';go('s3');setTimeout(()=>{compute();buildR();go('s4');document.querySelectorAll('.rl').forEach(l=>{setTimeout(()=>l.classList.add('vis'),parseInt(l.dataset.d)||0)});submit()},3500)}
+// Last answer → calculate, then show the gate (results are built/sent only after the gate).
+function proc(){document.getElementById('pF').style.width='100%';go('s3');setTimeout(()=>{compute();go('sg')},3500)}
 
 // Data-driven scoring so item order/count can change without breaking the math:
 //  • cS[c] = 4 matrix + 1 signature item per reflex (0–15)
