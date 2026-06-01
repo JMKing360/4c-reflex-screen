@@ -2,2084 +2,441 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Emotional Sovereignty Screen · House of Mastery</title>
-<meta name="description" content="A 30-question screen that shows you which of the four reflexes is running you, what it is costing you, and the three moves that interrupt it.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The 4C Personal Task Assessment | House of Mastery</title>
+<meta name="description" content="Discover where your power goes when you are not watching.">
 <link rel="canonical" href="https://4c.houseofmastery.co/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/favicon.svg">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#163558">
+<meta name="theme-color" content="#1D1D1F">
 
 <!-- Open Graph / social sharing -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="House of Mastery">
-<meta property="og:title" content="The Emotional Sovereignty Screen">
-<meta property="og:description" content="Find out which of the four reflexes is running you, what it is costing you, and the three moves that interrupt it. Under twelve minutes.">
+<meta property="og:title" content="The 4C Personal Task Assessment">
+<meta property="og:description" content="20 questions. 5 minutes. One clear insight into your pattern.">
 <meta property="og:url" content="https://4c.houseofmastery.co/">
 <meta property="og:image" content="https://4c.houseofmastery.co/og-image.svg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Emotional Sovereignty Screen">
-<meta name="twitter:description" content="Find out which of the four reflexes is running you, what it is costing you, and the three moves that interrupt it.">
+<meta name="twitter:title" content="The 4C Personal Task Assessment">
+<meta name="twitter:description" content="20 questions. 5 minutes. One clear insight into your pattern.">
 <meta name="twitter:image" content="https://4c.houseofmastery.co/og-image.svg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- EmailJS is deferred (only needed when the user submits); jsPDF is lazy-loaded on demand in downloadPDF(). -->
-<script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── RESET ─────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-.visually-hidden {
-  position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0);
-  white-space: nowrap; border: 0;
+:root{
+  --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --warmth:#8C7A2E;
+  --accent:#0066CC;--accent-hover:#0055AA;--accent-soft:#EBF4FF;
+  --bg:#FFFFFF;--surface:#F5F5F7;
+  --ink:#1D1D1F;--secondary:#6E6E73;--tertiary:#86868B;
+  --line:#D2D2D7;--line-light:#E8E8ED;
+  --r:12px;
+  --complain:#BF3B22;--complain-s:#FEF0ED;
+  --criticize:#9E7410;--criticize-s:#FDF6E3;
+  --compare:#1D6BAD;--compare-s:#EDF5FC;
+  --compete:#6D3CC4;--compete-s:#F1EDFC;
+  --return-c:#0D7355;--return-s:#E7F7F1;
+  --ease:cubic-bezier(0.25,0.1,0.25,1);
 }
-html, body {
-  height: 100%;
-  font-size: 16px;
-  -webkit-text-size-adjust: 100%;
-  -webkit-font-smoothing: antialiased;
-  overflow: hidden;
-}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 
-/* ── TOKENS ─────────────────────────────────────────────
-   Aligned to the canonical KOORA · House of Mastery design system
-   (koora-design-system.css from FINISHER-KOORA-ASSESSMENT-): navy-forward,
-   warm blue-grey paper, gold anchor, no black anywhere. Variable names are
-   kept stable so existing references remap automatically. */
-:root {
-  --serif:  'Source Serif 4', Georgia, serif;
-  --sans:   'Plus Jakarta Sans', system-ui, sans-serif;
-  --navy:   #163558;   /* canonical brand navy */
-  --navy-a: #0E2748;   /* stabilizing deep navy (dark strips/hero) */
-  --gold:   #9E7340;   /* canonical gold anchor */
-  --gold-ink: #7A5828; /* deeper gold for small text / pressed (contrast-safe) */
-  --ink:    #102844;   /* deepest text — deep navy, never black */
-  --body:   #26415C;   /* body copy */
-  --mid:    #556579;   /* secondary copy */
-  --dim:    #5E6C7C;   /* labels / muted */
-  --rule:   #D7E2EF;   /* hairline borders (blue-grey) */
-  --cream:  #EDF2F9;   /* warm blue-grey paper canvas */
-  --white:  #ffffff;
-  --green:  #2E7D32;
-  --amber:  #9A5B00;
-  --red:    #B22222;
-  --green-bg: #E8F1E6;
-  --amber-bg: #F6EEDD;
-  --red-bg:   #F7E7E5;
-}
+.w{max-width:540px;margin:0 auto;padding:0 28px}
 
-/* ── PROGRESS BAR ───────────────────────────────────── */
-#progress-bar {
-  position: fixed;
-  top: 0; left: 0;
-  height: 3px;
-  background: var(--gold);
-  width: 0%;
-  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
-  z-index: 1000;
-}
+/* ─── TYPE SCALE ─── */
+/* 12 / 15 / 18 / 24 / 40 — five sizes, no overlap */
 
-/* ── TOP NAV ────────────────────────────────────────── */
-#top-nav {
-  position: fixed;
-  top: 3px; left: 0; right: 0;
-  height: 52px;
-  background: var(--cream);
-  border-bottom: 1px solid var(--rule);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  z-index: 100;
-}
-.nav-brand {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink);
-  text-decoration: none;
-}
-.nav-counter {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--dim);
-  letter-spacing: 0.06em;
-}
+/* ─── SCREENS ─── */
+.s{display:none;opacity:0;min-height:100dvh;min-height:100vh;flex-direction:column}
+.s.on{display:flex;animation:up 500ms var(--ease) forwards}
+.s.off{animation:dn 350ms var(--ease) forwards}
+@keyframes up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dn{from{opacity:1}to{opacity:0;transform:translateY(-14px)}}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes breathe{0%,100%{opacity:.2}50%{opacity:.85}}
 
-/* ── VIEWPORT WRAPPER ───────────────────────────────── */
-#viewport {
-  position: fixed;
-  top: 55px; left: 0; right: 0; bottom: 0;
-  overflow: hidden;
-}
+/* ─── ARRIVAL ─── */
+.arr{justify-content:center;align-items:center;text-align:center;padding:80px 28px}
+.arr-brand{font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--warmth);margin-bottom:64px;opacity:0;animation:rise 600ms var(--ease) 100ms forwards}
+.arr-title{font-size:40px;font-weight:700;line-height:1.12;letter-spacing:-0.5px;color:var(--ink);margin-bottom:24px;max-width:440px;opacity:0;animation:rise 600ms var(--ease) 300ms forwards}
+.arr-sub{font-size:18px;font-weight:400;line-height:1.6;color:var(--secondary);max-width:400px;margin-bottom:64px;opacity:0;animation:rise 600ms var(--ease) 500ms forwards}
+.arr-meta{font-size:15px;font-weight:500;color:var(--tertiary);margin-bottom:16px;opacity:0;animation:rise 600ms var(--ease) 650ms forwards}
 
-/* ── SLIDES CONTAINER ───────────────────────────────── */
-#slides {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-}
+/* ─── UNIFIED BUTTON SYSTEM ─── */
+.b{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 36px;font-family:var(--font);font-size:15px;font-weight:600;color:#fff;background:var(--ink);border:1.5px solid var(--ink);border-radius:var(--r);cursor:pointer;transition:all 200ms var(--ease);min-width:200px;-webkit-tap-highlight-color:transparent}
+.b:hover{background:#333;border-color:#333}.b:active{transform:scale(0.97)}.b:disabled{opacity:.3;cursor:not-allowed}
+.b-accent{background:var(--accent);border-color:var(--accent)}.b-accent:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.b-outline{background:transparent;color:var(--ink);border-color:var(--line)}.b-outline:hover{border-color:var(--ink);background:transparent}
+.b-text{background:none;border:none;color:var(--secondary);min-width:auto;padding:12px 20px;font-weight:500;font-size:14px}.b-text:hover{color:var(--ink)}
+.b svg{width:14px;height:14px}
 
-/* ── SLIDE ──────────────────────────────────────────── */
-.slide {
-  min-height: calc(100vh - 55px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 28px 28px;
-  opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.45s cubic-bezier(0.4,0,0.2,1);
-  pointer-events: none;
-  position: absolute;
-  top: 0; left: 0; right: 0;
-}
-.slide.active {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: all;
-  position: relative;
-}
-.slide.exit-up {
-  opacity: 0;
-  transform: translateY(-32px);
-  pointer-events: none;
-  position: absolute;
-  top: 0; left: 0; right: 0;
-}
+/* ─── INTAKE ─── */
+.intake{justify-content:center;padding:56px 28px}
+.st{display:none}.st.on{display:block;animation:rise 400ms var(--ease) forwards}
+.i-title{font-size:24px;font-weight:700;letter-spacing:-0.3px;color:var(--ink);margin-bottom:8px}
+.i-sub{font-size:15px;color:var(--secondary);line-height:1.65;margin-bottom:40px}
+.dots{display:flex;gap:6px;margin-bottom:32px}
+.dot{width:28px;height:3px;border-radius:2px;background:var(--line-light)}
+.dot.on{background:var(--warmth)}
+.fg{margin-bottom:22px}
+.fl{display:block;font-size:12px;font-weight:600;color:var(--secondary);margin-bottom:8px}
+.fi{width:100%;padding:14px 16px;font-family:var(--font);font-size:15px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);outline:none;transition:border-color 200ms}
+.fi:focus{border-color:var(--accent)}.fi::placeholder{color:var(--tertiary)}
+.fi-sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2386868B' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.divider{height:1px;background:var(--line-light);margin:32px 0}
+.ro{display:flex;flex-direction:column;gap:10px}
+.rb{display:block;width:100%;padding:16px 18px;font-family:var(--font);font-size:15px;line-height:1.55;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;transition:all 200ms var(--ease)}
+.rb:hover{border-color:var(--accent);background:var(--accent-soft)}
+.rb.sel{border-color:var(--ink);background:var(--ink);color:#fff;font-weight:500}
+.consent{display:flex;align-items:flex-start;gap:12px;margin-top:20px;font-size:15px;color:var(--secondary);line-height:1.5}
+.consent input{margin-top:3px;accent-color:var(--accent);width:18px;height:18px;flex-shrink:0}
 
-/* ── SLIDE INNER ────────────────────────────────────── */
-.slide-inner {
-  width: 100%;
-  max-width: 620px;
-  margin: 0 auto;
-}
+/* ─── JOURNEY ─── */
+.journey{padding:40px 28px 64px}
+.prog{margin-bottom:56px}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--secondary);margin-bottom:10px}
+.prog-bar{height:3px;background:var(--line-light);border-radius:2px}
+.prog-fill{height:100%;background:var(--warmth);border-radius:2px;transition:width 400ms var(--ease);width:0%}
 
-/* ── WELCOME SLIDE ──────────────────────────────────── */
-.welcome-eyebrow {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--gold-ink);
-  display: block;
-  margin-bottom: 20px;
-}
-.welcome-h1 {
-  font-family: var(--serif);
-  font-size: clamp(28px, 5vw, 44px);
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.14;
-  margin-bottom: 28px;
-  letter-spacing: -0.02em;
-}
-.welcome-italic {
-  font-family: var(--serif);
-  font-size: clamp(22px, 3.8vw, 36px);
-  font-weight: 700;
-  font-style: italic;
-  color: var(--navy-a);
-  line-height: 1.18;
-  letter-spacing: -0.02em;
-  margin-bottom: 24px;
-}
-.welcome-body {
-  font-family: var(--sans);
-  font-size: 17px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.76;
-  margin-bottom: 18px;
-}
-.intro-pillars {
-  background: #FAFAFA;
-  border-left: 3px solid var(--gold);
-  padding: 14px 18px;
-  margin: 24px 0 20px;
-  border-radius: 0 5px 5px 0;
-}
-.intro-pillars p {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.65;
-  margin: 0;
-}
-.intro-pillars strong {
-  color: var(--ink);
-  font-weight: 700;
-}
-.welcome-rule {
-  height: 1px;
-  background: var(--rule);
-  margin: 36px 0;
-}
-.welcome-instruction {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--mid);
-  line-height: 1.70;
-  margin-bottom: 28px;
-}
-.name-label {
-  display: block;
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--mid);
-  margin-bottom: 10px;
-}
-.name-input {
-  width: 100%;
-  max-width: 320px;
-  padding: 14px 16px;
-  font-family: var(--sans);
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--ink);
-  background: var(--white);
-  border: 1.5px solid var(--rule);
-  border-radius: 6px;
-  outline: none;
-  display: block;
-  margin-bottom: 20px;
-  transition: border-color 0.2s;
-}
-.name-input:focus { border-color: var(--gold); }
-.name-input::placeholder { color: #C0C0C0; }
+.opener{text-align:center;padding:80px 0 48px;opacity:0;animation:rise 500ms var(--ease) forwards}
+.opener-badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:6px 16px;border-radius:var(--r);margin-bottom:32px}
+.opener-text{font-size:24px;font-weight:500;line-height:1.45;color:var(--ink);max-width:400px;margin:0 auto;letter-spacing:-0.2px}
+.opener .b-outline{margin-top:40px;opacity:0;animation:rise 400ms var(--ease) 500ms forwards}
 
-/* ── QUESTION SLIDE ─────────────────────────────────── */
-.q-domain {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold-ink);
-  display: block;
-  margin-bottom: 18px;
-}
-.q-frame {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--gold-ink);
-  margin-bottom: 14px;
-}
-.q-text {
-  font-family: var(--serif);
-  font-size: clamp(20px, 3.5vw, 28px);
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1.36;
-  margin-bottom: 40px;
-  letter-spacing: -0.01em;
-}
-.options-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 36px;
-}
-.opt-btn {
-  width: 100%;
-  padding: 16px 20px;
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--white);
-  border: 1.5px solid var(--rule);
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: left;
-  transition: border-color 0.18s, background 0.18s, color 0.18s;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  line-height: 1.4;
-}
-.opt-btn:hover {
-  border-color: var(--gold);
-  background: #FFFDF7;
-}
-.opt-btn.selected {
-  border-color: var(--navy);
-  background: var(--navy);
-  color: #ffffff;
-}
-.opt-btn.selected .opt-key { color: var(--gold); }
-.opt-key {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--dim);
-  min-width: 18px;
-  flex-shrink: 0;
-}
-.q-nav {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.q-error {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--red);
-  margin-top: 12px;
-  display: none;
-}
+.qc{opacity:0;transform:translateY(24px);transition:all 400ms var(--ease)}
+.qc.vis{opacity:1;transform:translateY(0)}
+.qc.ex{opacity:0;transform:translateY(-12px);transition:all 250ms var(--ease)}
+.q-stem{font-size:12px;font-weight:600;color:var(--secondary);margin-bottom:16px}
+.q-text{font-size:24px;font-weight:500;line-height:1.45;color:var(--ink);margin-bottom:40px;letter-spacing:-0.2px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;width:100%;padding:18px 20px;font-family:var(--font);font-size:15px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);cursor:pointer;text-align:left;transition:all 200ms var(--ease)}
+.opt:hover{border-color:var(--secondary);background:var(--surface)}
+.opt:active{transform:scale(0.99)}
+.opt.sel{border-color:var(--ink);background:var(--ink);color:#fff;font-weight:500}
+.opt-dot{width:10px;height:10px;border:2px solid var(--line);border-radius:50%;margin-right:16px;flex-shrink:0;transition:all 200ms}
+.opt.sel .opt-dot{background:var(--warmth);border-color:var(--warmth)}
 
-/* ── BUTTONS ────────────────────────────────────────── */
-.btn-navy {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  background: var(--navy);
-  color: #ffffff;
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  text-decoration: none;
-}
-.btn-navy:hover { opacity: 0.88; }
-.btn-gold {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  background: var(--gold);
-  color: #ffffff;
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  text-decoration: none;
-}
-.btn-gold:hover { opacity: 0.88; }
-.btn-outline {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 13px 24px;
-  background: transparent;
-  color: var(--mid);
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  border: 1.5px solid var(--rule);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-  text-decoration: none;
-}
-.btn-outline:hover { border-color: var(--navy); color: var(--navy); }
-.btn-back {
-  background: none;
-  border: none;
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--dim);
-  cursor: pointer;
-  padding: 8px 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.btn-back:hover { color: var(--ink); }
+/* ─── PROCESSING ─── */
+.processing{justify-content:center;align-items:center;text-align:center;padding:80px 28px}
+.p-text{font-size:24px;font-weight:500;color:var(--ink);opacity:0;animation:rise 500ms var(--ease) 200ms forwards}
+.p-dots{margin-top:40px;display:flex;gap:8px;justify-content:center;opacity:0;animation:rise 500ms var(--ease) 400ms forwards}
+.p-dot{width:6px;height:6px;border-radius:50%;background:var(--warmth);animation:breathe 1.4s var(--ease) infinite}
+.p-dot:nth-child(2){animation-delay:250ms}.p-dot:nth-child(3){animation-delay:500ms}
 
-/* ── RESULTS SLIDE ──────────────────────────────────── */
-#slide-results {
-  min-height: auto;
-  padding: 36px 28px 64px;
-  align-items: flex-start;
-}
-.results-h1 {
-  font-family: var(--serif);
-  font-size: clamp(28px, 4.5vw, 40px);
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.16;
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
-}
-.results-sub {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--mid);
-  margin-bottom: 40px;
-}
-.results-rule {
-  height: 1px;
-  background: var(--rule);
-  margin: 44px 0;
-}
+/* ─── REVEAL ─── */
+.reveal{padding:64px 28px 120px}
+.r-header{text-align:center;margin-bottom:64px}
+.r-brand{font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--warmth);margin-bottom:24px}
+.r-title{font-size:24px;font-weight:700;letter-spacing:-0.3px;color:var(--ink);margin-bottom:8px}
+.r-name{font-size:15px;font-weight:500;color:var(--secondary)}
+.rl{opacity:0;transform:translateY(32px);margin-bottom:40px}
+.rl.vis{opacity:1;transform:translateY(0);transition:all 600ms var(--ease)}
 
-/* ── SCORE TABLE ────────────────────────────────────── */
-.score-table {
-  background: var(--white);
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  padding: 24px 28px;
-  margin-bottom: 36px;
-}
-.score-row {
-  display: grid;
-  grid-template-columns: 110px 1fr 100px;
-  gap: 12px;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--rule);
-}
-.score-row:last-child { border-bottom: none; }
-.score-row-name {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--ink);
-  letter-spacing: 0.02em;
-}
-.score-bar-track {
-  height: 6px;
-  background: #EBEBEB;
-  border-radius: 3px;
-  overflow: hidden;
-}
-.score-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
-}
-.score-bar-fill.quiet  { background: var(--green); }
-.score-bar-fill.active { background: #D97706; }
-.score-bar-fill.loud   { background: var(--red); }
-.score-row-val {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  text-align: right;
-  letter-spacing: 0.02em;
-}
-.score-row-val.quiet  { color: var(--green); }
-.score-row-val.active { color: var(--amber); }
-.score-row-val.loud   { color: var(--red); }
+.lbl{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--warmth);margin-bottom:20px}
 
-/* ── START-STOP BLOCK ───────────────────────────────── */
-.startstop-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 18px 20px;
-  margin-bottom: 28px;
-  background: var(--cream);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--gold);
-  border-radius: 4px;
-}
-.startstop-label {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--navy);
-  flex: 0 0 110px;
-  padding-top: 2px;
-}
-.startstop-content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.startstop-score {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--gold-ink);
-}
-.startstop-text {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.6;
-}
-@media (max-width: 600px) {
-  .startstop-row { flex-direction: column; gap: 6px; }
-  .startstop-label { flex-basis: auto; }
-}
+/* Prose card */
+.prose-card{background:var(--surface);border-radius:var(--r);padding:32px 24px}
+.prose-text{font-size:18px;font-weight:400;line-height:1.75;color:var(--ink)}
 
-/* ── REFLEX CARDS ───────────────────────────────────── */
-.reflex-cards { margin-bottom: 36px; }
-.reflex-card {
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 16px;
-  background: var(--white);
-}
-.reflex-card.loud   { border-top: 3px solid #DC2626; }
-.reflex-card.active { border-top: 3px solid #D97706; }
-.reflex-card.quiet  { border-top: 3px solid var(--green); }
-.reflex-card-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 18px 22px;
-  border-bottom: 1px solid var(--rule);
-}
-.r-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.r-dot.quiet  { background: var(--green); }
-.r-dot.active { background: #D97706; }
-.r-dot.loud   { background: var(--red); }
-.reflex-card-head h3 {
-  font-family: var(--serif);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--ink);
-  flex: 1;
-}
-.r-tag {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 4px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-.r-tag.quiet  { background: var(--green-bg); color: var(--green); }
-.r-tag.active { background: #FEF3C7; color: var(--amber); }
-.r-tag.loud   { background: var(--red-bg);   color: var(--red); }
-.reflex-card-body { padding: 22px 22px 26px; }
-.card-label {
-  display: block;
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold-ink);
-  margin-bottom: 10px;
-  margin-top: 20px;
-}
-.card-label:first-child { margin-top: 0; }
-.card-text {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.72;
-  margin-bottom: 10px;
-}
-.underneath-block {
-  background: var(--cream);
-  border-left: 3px solid var(--gold);
-  padding: 14px 16px;
-  border-radius: 0 5px 5px 0;
-  margin: 14px 0;
-}
-.underneath-block p {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--mid);
-  line-height: 1.68;
-}
-.breaks-block {
-  background: var(--navy);
-  padding: 18px 20px;
-  border-radius: 5px;
-  margin: 22px 0;
-  color: var(--white);
-}
-.breaks-label {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold-ink);
-  display: block;
-  margin-bottom: 8px;
-}
-.breaks-component {
-  font-family: var(--serif);
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 8px;
-  line-height: 1.2;
-}
-.breaks-desc {
-  font-family: var(--sans);
-  font-size: 14px;
-  color: rgba(255,255,255,0.85);
-  line-height: 1.6;
-  margin: 0;
-}
-.cost-block {
-  background: #FEF9EE;
-  border-left: 3px solid var(--gold);
-  padding: 14px 16px;
-  border-radius: 0 5px 5px 0;
-  margin: 14px 0;
-}
-.cost-block p {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.72;
-}
-.cost-block p strong { color: var(--navy); font-weight: 700; }
-.strategies { margin-top: 4px; }
-.strategy-row {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 12px;
-  padding: 14px 0;
-  border-top: 1px solid var(--rule);
-}
-.strategy-row:first-child { border-top: none; }
-.s-num {
-  font-family: var(--serif);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--gold);
-  line-height: 1;
-  padding-top: 2px;
-}
-.s-title {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 6px;
-}
-.s-body {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.68;
-}
-.layered-block {
-  background: #F0F4FF;
-  border-left: 3px solid var(--navy);
-  padding: 16px 18px;
-  border-radius: 0 5px 5px 0;
-  margin-top: 16px;
-}
-.layered-block p {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.68;
-}
-.layered-block p strong { color: var(--navy); font-weight: 700; }
-.quiet-note {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--mid);
-  line-height: 1.65;
-}
+/* Profile summary */
+.profile{background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);padding:28px 24px}
+.pr{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line-light)}
+.pr:last-child{border-bottom:none}
+.pr-l{font-size:15px;color:var(--secondary)}
+.pr-v{font-size:15px;font-weight:600;color:var(--ink);text-align:right}
 
-/* ── NOW WHAT ───────────────────────────────────────── */
-.nw-eyebrow {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.20em;
-  text-transform: uppercase;
-  color: var(--gold-ink);
-  display: block;
-  margin-bottom: 14px;
-}
-.nw-bridge {
-  margin-top: 28px;
-  padding: 20px 22px;
-  background: #FAFAFA;
-  border-left: 3px solid var(--gold);
-  border-radius: 0 5px 5px 0;
-}
-.nw-bridge p {
-  font-family: var(--sans);
-  font-size: 14.5px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.65;
-  margin: 0;
-}
-.nw-bridge strong {
-  color: var(--ink);
-  font-weight: 700;
-}
-.now-what-block {
-  background: var(--white);
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  padding: 36px 28px;
-  margin-bottom: 36px;
-}
-.nw-h3 {
-  font-family: var(--serif);
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.28;
-  margin-bottom: 8px;
-}
-.nw-intro {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--mid);
-  line-height: 1.68;
-  margin-bottom: 24px;
-}
-.qa-item { padding: 18px 0; border-top: 1px solid var(--rule); }
-.qa-q {
-  font-family: var(--serif);
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1.38;
-  margin-bottom: 10px;
-}
-.qa-a {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.72;
-}
-.qa-a p { margin-bottom: 8px; }
-.qa-a p:last-child { margin-bottom: 0; }
-.qa-a strong { color: var(--ink); font-weight: 700; }
+/* Practice */
+.prac{background:var(--ink);border-radius:var(--r);padding:40px 24px;text-align:center}
+.prac .lbl{color:var(--tertiary)}
+.prac-name{font-size:24px;font-weight:600;color:#fff;margin-bottom:20px;letter-spacing:-0.2px}
+.prac-q{font-size:18px;font-weight:500;color:rgba(255,255,255,0.8);line-height:1.55;margin-bottom:24px}
+.prac-e{font-size:15px;color:rgba(255,255,255,0.45);line-height:1.65}
 
-/* ── EMAIL SECTION ──────────────────────────────────── */
-.email-block {
-  background: var(--white);
-  border: 1px solid var(--rule);
-  border-radius: 8px;
-  padding: 28px;
-  margin-bottom: 20px;
-}
-.email-block-title {
-  font-family: var(--serif);
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 6px;
-}
-.email-block-body {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--mid);
-  line-height: 1.65;
-  margin-bottom: 16px;
-}
-.email-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.email-input {
-  flex: 1;
-  min-width: 200px;
-  padding: 13px 15px;
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ink);
-  background: var(--white);
-  border: 1.5px solid var(--rule);
-  border-radius: 5px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.email-input:focus { border-color: var(--gold); }
-.email-input::placeholder { color: #C0C0C0; }
-.email-status {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  margin-top: 10px;
-  display: none;
-}
-.email-status.ok  { color: var(--green); display: block; }
-.email-status.err { color: var(--red);   display: block; }
-.results-teaser {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--body);
-  line-height: 1.7;
-  margin-bottom: 24px;
-}
-.consent-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  margin-top: 14px;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--mid);
-  line-height: 1.5;
-  cursor: pointer;
-}
-.consent-row input { margin-top: 2px; flex: 0 0 auto; }
-.consent-row a { color: var(--gold-ink); }
-.locked { display: none; }
-.locked.unlocked { display: block; }
+/* Growth */
+.growth{background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);padding:32px 24px}
+.growth-text{font-size:18px;line-height:1.65;color:var(--ink)}
+.growth-text em{color:var(--warmth);font-style:normal;font-weight:600}
 
-/* ── ACTIONS ────────────────────────────────────────── */
-.actions-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 36px;
-}
+/* CTA */
+.cta-card{background:var(--surface);border-radius:var(--r);padding:40px 24px;text-align:center}
+.cta-title{font-size:24px;font-weight:700;color:var(--ink);margin-bottom:12px;letter-spacing:-0.3px}
+.cta-body{font-size:15px;color:var(--secondary);line-height:1.65;margin-bottom:12px}
+.cta-price{font-size:40px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-1px}
+.cta-note{font-size:15px;color:var(--tertiary);margin-bottom:28px}
+.cta-list{text-align:left;margin:28px 0;padding:0;list-style:none}
+.cta-list li{font-size:15px;color:var(--secondary);padding:8px 0 8px 20px;position:relative;line-height:1.5}
+.cta-list li::before{content:'';position:absolute;left:0;top:15px;width:6px;height:6px;border-radius:50%;background:var(--warmth)}
+.cta-date{font-size:15px;font-weight:500;color:var(--tertiary);margin-top:16px}
 
-/* ── LEARN MORE ─────────────────────────────────────── */
-.learn-more-row {
-  text-align: center;
-  margin-bottom: 36px;
-}
-.learn-more-link {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--mid);
-  text-decoration: none;
-  border-bottom: 1px solid var(--rule);
-  padding-bottom: 2px;
-  transition: color 0.2s, border-color 0.2s;
-}
-.learn-more-link:hover { color: var(--navy); border-color: var(--navy); }
+/* Bridge */
+.bridge{background:var(--surface);border-radius:var(--r);padding:36px 24px;text-align:center}
+.bridge-text{font-size:15px;line-height:1.7;color:var(--secondary);margin-bottom:28px}
+.bridge-close{font-size:18px;font-weight:600;color:var(--ink);line-height:1.6}
 
-/* ── KOORA CTA ──────────────────────────────────────── */
-.koora-block {
-  background: var(--navy);
-  border-radius: 10px;
-  padding: 40px 32px;
-  text-align: center;
-  margin-bottom: 56px;
-}
-.koora-h3 {
-  font-family: var(--serif);
-  font-size: 26px;
-  font-weight: 700;
-  color: #ffffff;
-  line-height: 1.26;
-  margin-bottom: 14px;
-}
-.koora-p {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.70);
-  line-height: 1.65;
-  margin-bottom: 16px;
-  max-width: 460px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.koora-covenant {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.85);
-  line-height: 1.60;
-  margin-bottom: 28px;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* ── FOOTER ─────────────────────────────────────────── */
-.results-footer {
-  border-top: 1px solid var(--rule);
-  padding: 24px 0 8px;
-  text-align: center;
-}
-.results-footer p {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--dim);
-  line-height: 1.6;
-}
-
-/* ── MOBILE ─────────────────────────────────────────── */
-@media (max-width: 600px) {
-  #top-nav { padding: 0 18px; }
-  .slide { padding: 28px 18px; }
-  #slide-results { padding: 36px 18px 60px; }
-  .score-row { grid-template-columns: 80px 1fr 80px; gap: 8px; }
-  .score-row-name { font-size: 11px; }
-  .score-row-val { font-size: 10px; }
-  .now-what-block { padding: 24px 18px; }
-  .koora-block { padding: 30px 20px; }
-  .email-block { padding: 20px 16px; }
-  .actions-row { flex-direction: column; }
-  .actions-row .btn-navy,
-  .actions-row .btn-gold,
-  .actions-row .btn-outline { width: 100%; justify-content: center; }
-}
+.actions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:24px}
+#xc{display:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(min-width:600px){.w{padding:0 48px}.arr-title{font-size:48px}.opener-text,.q-text{font-size:26px}}
 </style>
 </head>
 <body>
+<div class="w">
 
-<div id="progress-bar" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+  <div class="s arr on" id="s0">
+    <div class="arr-brand">House of Mastery</div>
+    <h1 class="arr-title">The 4C Personal Task Assessment</h1>
+    <p class="arr-sub">A map of where your power goes when you are not watching.</p>
+    <p class="arr-meta">20 questions. 5 minutes. One clear insight.</p>
+    <button class="b" onclick="go('s1')" style="opacity:0;animation:rise 500ms var(--ease) 800ms forwards">Begin</button>
+  </div>
 
-<nav id="top-nav">
-  <a href="https://www.houseofmastery.co" class="nav-brand">House of Mastery</a>
-  <span class="nav-counter" id="navCounter" aria-live="polite"></span>
-</nav>
-
-<main id="viewport">
-  <div id="slides">
-
-    <!-- ══════════════════════════════════════════════
-         SLIDE 0 — WELCOME
-    ══════════════════════════════════════════════ -->
-    <div class="slide active" id="slide-welcome">
-      <div class="slide-inner">
-        <span class="welcome-eyebrow">The Emotional Sovereignty Screen</span>
-        <h1 class="welcome-h1">You are not failing. You are stuck.</h1>
-        <p class="welcome-italic"><em>Stuck at the finish line is not a character flaw. It is a known pattern. It has a name.</em></p>
-        <p class="welcome-body">Somewhere along the way, you violated your own promises enough times that you stopped trusting yourself. Not other people. You. Your own word stopped meaning something to you.</p>
-        <p class="welcome-body">There are four patterns that produce this. One of them is louder than the others right now. This screen takes under twelve minutes. It shows you which one, what it is costing you, and the three moves that begin to interrupt it today.</p>
-        <div class="intro-pillars">
-          <p>Your results will show which of four components each reflex breaks first: <strong>Integrity, Allegiance, Attention,</strong> or <strong>Return.</strong></p>
-        </div>
-        <div class="welcome-rule"></div>
-        <p class="welcome-instruction">Read each statement. Choose the option that is most true for you right now, not who you want to be.</p>
-        <label class="name-label" for="participantName">Your first name</label>
-        <input class="name-input" type="text" id="participantName" placeholder="Enter your first name" autocomplete="given-name">
-        <button class="btn-navy" onclick="startAssessment()">Name What Is Running You</button>
-      </div>
+  <div class="s intake" id="s1">
+    <div class="st on" id="st1">
+      <div class="dots"><div class="dot on"></div><div class="dot"></div></div>
+      <h2 class="i-title">Before we begin</h2>
+      <p class="i-sub">Your responses are private. This helps us personalize your results.</p>
+      <div class="fg"><label class="fl">First name</label><input class="fi" id="fn" type="text" placeholder="First name"></div>
+      <div class="fg"><label class="fl">Last name</label><input class="fi" id="ln" type="text" placeholder="Last name"></div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" id="em" type="email" placeholder="you@example.com"></div>
+      <div class="fg"><label class="fl">WhatsApp</label><input class="fi" id="ph" type="tel" placeholder="+254 7XX XXX XXX"></div>
+      <div style="margin-top:36px;text-align:center"><button class="b" id="bs2" disabled onclick="goS2()">Continue</button></div>
     </div>
-
-    <!-- ══════════════════════════════════════════════
-         SLIDE 1–30 — QUESTIONS (rendered by JS)
-    ══════════════════════════════════════════════ -->
-    <div class="slide" id="slide-question">
-      <div class="slide-inner">
-        <span class="q-domain" id="qDomain"></span>
-        <p class="q-frame">In the past 7 days...</p>
-        <p class="q-text" id="qText" tabindex="-1"></p>
-        <div class="options-stack" id="optionsStack"></div>
-        <div class="q-nav">
-          <button class="btn-navy" id="qNextBtn" onclick="nextQuestion()">Next &rarr;</button>
-          <button class="btn-back" id="qBackBtn" onclick="prevQuestion()" style="display:none">&#8592; Back</button>
-        </div>
-        <p class="q-error" id="qError" role="alert">Please choose an option before continuing.</p>
-      </div>
+    <div class="st" id="st2">
+      <div class="dots"><div class="dot on"></div><div class="dot on"></div></div>
+      <h2 class="i-title">A little about you</h2>
+      <p class="i-sub">This helps us understand who is taking the assessment.</p>
+      <div class="row2"><div class="fg"><label class="fl">Country</label><select class="fi fi-sel" id="co"><option value="">Select</option><option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select></div><div class="fg"><label class="fl">City</label><input class="fi" id="ct" type="text" placeholder="e.g. Nairobi"></div></div>
+      <div class="row2"><div class="fg"><label class="fl">Gender</label><select class="fi fi-sel" id="ge"><option value="">Select</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div><div class="fg"><label class="fl">Age range</label><select class="fi fi-sel" id="ag"><option value="">Select</option><option>18-25</option><option>26-35</option><option>36-45</option><option>46-55</option><option>56+</option></select></div></div>
+      <div class="fg"><label class="fl">Professional field</label><select class="fi fi-sel" id="pf"><option value="">Select</option><option>Healthcare / Medicine</option><option>Business / Finance</option><option>Technology / Engineering</option><option>Education / Academia</option><option>Law / Policy</option><option>Creative / Media</option><option>Government / Public Service</option><option>Ministry / Non-profit</option><option>Entrepreneurship</option><option>Student</option><option>Other</option></select></div>
+      <div class="fg"><label class="fl">How did you find this?</label><select class="fi fi-sel" id="sr"><option value="">Select</option><option>WhatsApp share</option><option>Instagram</option><option>LinkedIn</option><option>YouTube</option><option>Friend or colleague</option><option>Dr. Job Mogire event</option><option>House of Mastery member</option><option>Google search</option><option>Other</option></select></div>
+      <div class="divider"></div>
+      <div class="fg"><label class="fl">Which statement feels most true right now?</label><div class="ro"><button class="rb" onclick="sR(this,'Awareness')">I know something needs to change but I don't know where to start</button><button class="rb" onclick="sR(this,'Ready for structure')">I've been working on myself but I keep hitting the same wall</button><button class="rb" onclick="sR(this,'Prodigal Winner')">I'm successful by most measures but something feels off</button><button class="rb" onclick="sR(this,'Referral')">Someone I trust recommended this and I'm curious</button></div></div>
+      <div class="consent"><input type="checkbox" id="cwa" checked><label for="cwa">Send my results and growth resources via WhatsApp</label></div>
+      <div class="consent"><input type="checkbox" id="cem" checked><label for="cem">Send insights and program updates via email</label></div>
+      <div style="margin-top:40px;text-align:center"><button class="b" onclick="begin()">Start the assessment</button><div style="margin-top:12px"><button class="b-text" onclick="begin()">Skip and start</button></div></div>
     </div>
+  </div>
 
-    <!-- ══════════════════════════════════════════════
-         RESULTS SLIDE
-    ══════════════════════════════════════════════ -->
-    <div class="slide" id="slide-results">
-      <div class="slide-inner">
-        <h1 class="results-h1" id="resultsHeadline">Here is what is running you.</h1>
-        <p class="results-sub" id="resultsSub"></p>
+  <div class="s journey" id="s2">
+    <div class="prog"><div class="prog-top"><span id="pCh"></span><span id="pCt"></span></div><div class="prog-bar"><div class="prog-fill" id="pF"></div></div></div>
+    <div id="jc"></div>
+  </div>
 
-        <div class="score-table" id="scoreTable"></div>
-        <div id="startStopBlock"></div>
-        <p class="results-teaser" id="resultsTeaser"></p>
+  <div class="s processing" id="s3">
+    <p class="p-text">Finding where your power goes</p>
+    <div class="p-dots"><div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div></div>
+  </div>
 
-        <!-- EMAIL GATE — unlocks the cost statement and the three strategies -->
-        <div class="email-block" id="gateBlock">
-          <p class="email-block-title" id="gateTitle">Unlock your full results</p>
-          <p class="email-block-body" id="gateBody">You have seen the scores. Enter your email to unlock your cost statement and your three strategies, and we will send a copy to your inbox to keep.</p>
-          <div class="email-row">
-            <label class="visually-hidden" for="emailInput">Your email address</label>
-            <input class="email-input" type="email" id="emailInput" placeholder="Your email address" autocomplete="email">
-            <button class="btn-navy" id="btnSendEmail" onclick="sendEmail()">Unlock My Results</button>
-          </div>
-          <label class="consent-row">
-            <input type="checkbox" id="consentCheck">
-            <span>I agree to receive my results and occasional emails from House of Mastery. See our <a href="https://www.houseofmastery.co/privacy" target="_blank" rel="noopener">privacy policy</a>. You can unsubscribe anytime.</span>
-          </label>
-          <div id="turnstileHolder" style="margin-top:12px;"></div>
-          <p class="email-status" id="emailStatus" role="status" aria-live="polite"></p>
-        </div>
-
-        <!-- LOCKED CONTENT — revealed after email submit (display:none hides from AT) -->
-        <div id="lockedContent" class="locked" tabindex="-1">
-          <div class="reflex-cards" id="reflexCards"></div>
-          <div id="nowWhatBlock"></div>
-
-          <div class="results-rule"></div>
-
-          <div class="actions-row">
-            <button class="btn-navy" id="btnDownloadPDF" type="button" onclick="downloadPDF()">Download PDF Report</button>
-            <button class="btn-gold" type="button" onclick="downloadWhatsApp()">Save WhatsApp Image</button>
-          </div>
-
-          <div class="learn-more-row">
-            <a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener" class="learn-more-link">Learn more about these patterns &rarr;</a>
-          </div>
-
-          <div class="koora-block">
-            <h3 class="koora-h3">Become a Finisher.<br>Finish what you started.</h3>
-            <p class="koora-p">Seeing the pattern does not break it. The reflex returns. KOORA is the 180-day system that interrupts it, not once, but every day. It runs in three movements: The Seal (30 seconds at sunrise), The Daily Reset (five prompts, five words each), and The Evening Check (three numbers at sunset). Together they install the gap between stimulus and response as a daily practice. That gap is where sovereignty lives.</p>
-            <p class="koora-p">This is not motivation. It is a covenant. The work runs in structured 30-day cycles with a daily operating system, weekly deep dives, and a cohort of people who have decided to stop performing and start returning.</p>
-            <p class="koora-covenant">The covenant is not perfection. The covenant is return.<br>You are permitted to fall. You are not permitted to stop returning.</p>
-            <a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener" class="btn-gold">Reserve Your Place in KOORA</a>
-          </div>
-        </div>
-
-        <div class="actions-row" style="margin-top:16px;">
-          <button class="btn-outline" type="button" onclick="retakeAssessment()">Retake the Screen</button>
-        </div>
-
-        <div class="results-footer">
-          <p>KOORA: The Finisher Protocol &middot; House of Mastery<br>Dr. Job Mogire, MD, FACP, FACC &middot; Cardiologist &middot; Founder</p>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /slides -->
-</main><!-- /viewport -->
+  <div class="s reveal" id="s4">
+    <div class="r-header"><div class="r-brand">House of Mastery</div><h2 class="r-title">Your personal power map</h2><p class="r-name" id="rN"></p></div>
+    <div id="rL"></div>
+  </div>
+</div>
+<canvas id="xc" width="1080" height="1920"></canvas>
 
 <script>
-/* ── CONFIG ─────────────────────────────────────────── */
-var EMAILJS_PUBLIC_KEY = 'FEEOw8NA0cwBM4Vum';
-var EMAILJS_SERVICE_ID = 'service_76loif8';
-var EMAILJS_TEMPLATE_ID = 'template_3j2uhtd';
-var JSPDF_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-
-// Cloudflare Turnstile site key (public). Leave '' to disable the widget.
-// IMPORTANT: enable BOTH sides together. If you set TURNSTILE_SECRET in the
-// Cloudflare env WITHOUT setting this site key, the server will demand a token
-// the client never sends and every lead submission will fail. Set this site
-// key first (or at the same time) as the secret.
-var TURNSTILE_SITE_KEY = '';
-
-// GA4 Measurement ID, e.g. 'G-XXXXXXXXXX'. Leave '' to disable analytics.
-var GA4_MEASUREMENT_ID = '';
-
-/* EmailJS loads with `defer`, so it is not guaranteed ready while this inline
-   script runs. Initialise it as soon as it is available. */
-var EMAILJS_READY = false;
-function initEmailJS() {
-  if (EMAILJS_READY) return true;
-  try {
-    if (typeof emailjs !== 'undefined') {
-      emailjs.init(EMAILJS_PUBLIC_KEY);
-      EMAILJS_READY = true;
-    }
-  } catch (e) {
-    console.warn('EmailJS unavailable; email send will be disabled.');
-  }
-  return EMAILJS_READY;
-}
-window.addEventListener('load', initEmailJS);
-
-/* jsPDF is lazy-loaded on first use so it does not block initial render. */
-var _jspdfPromise = null;
-function loadJsPDF() {
-  if (typeof window.jspdf !== 'undefined') return Promise.resolve(true);
-  if (_jspdfPromise) return _jspdfPromise;
-  _jspdfPromise = new Promise(function(resolve, reject) {
-    var s = document.createElement('script');
-    s.src = JSPDF_CDN;
-    s.onload = function(){ resolve(true); };
-    s.onerror = function(){ _jspdfPromise = null; reject(new Error('jsPDF failed to load')); };
-    document.head.appendChild(s);
-  });
-  return _jspdfPromise;
-}
-
-/* Escape user-supplied text before interpolating into innerHTML. */
-function escapeHTML(str) {
-  return String(str == null ? '' : str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-/* Capture UTM / click-id attribution once at load for the GHL payload. */
-var ATTRIBUTION = (function() {
-  try {
-    var p = new URLSearchParams(window.location.search);
-    var out = {};
-    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','gclid','fbclid'].forEach(function(k) {
-      var v = p.get(k);
-      if (v) out[k] = v;
-    });
-    return out;
-  } catch (e) { return {}; }
-})();
-
-/* ── ANALYTICS (GA4, optional) ──────────────────────── */
-window.dataLayer = window.dataLayer || [];
-function gtag(){ window.dataLayer.push(arguments); }
-(function initGA4() {
-  if (!GA4_MEASUREMENT_ID) return;
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA4_MEASUREMENT_ID);
-  document.head.appendChild(s);
-  gtag('js', new Date());
-  gtag('config', GA4_MEASUREMENT_ID);
-})();
-// Fire a funnel event to GA4 (no-op if GA4 is not configured).
-function track(eventName, params) {
-  try {
-    if (GA4_MEASUREMENT_ID) gtag('event', eventName, params || {});
-    else console.debug('[track]', eventName, params || {});
-  } catch (e) { /* analytics must never break the funnel */ }
-}
-
-/* ── TURNSTILE (Cloudflare, optional) ───────────────── */
-var _turnstileWidgetId = null;
-function initTurnstile() {
-  if (!TURNSTILE_SITE_KEY) return;
-  var s = document.createElement('script');
-  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-  s.async = true; s.defer = true;
-  document.head.appendChild(s);
-}
-// Render an invisible/managed Turnstile widget into the gate and return a
-// promise that resolves to the token (or '' when Turnstile is disabled).
-function getTurnstileToken() {
-  if (!TURNSTILE_SITE_KEY || typeof window.turnstile === 'undefined') return Promise.resolve('');
-  return new Promise(function(resolve) {
-    try {
-      var holder = document.getElementById('turnstileHolder');
-      if (_turnstileWidgetId !== null) {
-        window.turnstile.reset(_turnstileWidgetId);
-      }
-      _turnstileWidgetId = window.turnstile.render(holder, {
-        sitekey: TURNSTILE_SITE_KEY,
-        callback: function(token){ resolve(token); },
-        'error-callback': function(){ resolve(''); },
-        'timeout-callback': function(){ resolve(''); }
-      });
-    } catch (e) { resolve(''); }
-  });
-}
-
-var answers = {};
-var currentQ = 1;
-var TOTAL = 30;
-var participantName = '';
-var _ghlLeadSent = false;
-
-var QUESTIONS = [
-  { n:1,  domain:'The Complaining Reflex',   text:'I can easily list the reasons why something will not work before I think of how it could.' },
-  { n:2,  domain:'The Criticizing Reflex',   text:'My inner voice is harder on me than I would be on anyone I care about.' },
-  { n:3,  domain:'The Comparing Reflex',     text:'I measure my life against someone else\'s pace.' },
-  { n:4,  domain:'The Competing Reflex',     text:'I track who is ahead of me in my field.' },
-  { n:5,  domain:'The Cost of the Reflexes', text:'I feel a lingering sense of anger that I cannot easily trace to a single event.' },
-  { n:6,  domain:'Start-Stop Pattern',      text:'I know what I need to do. Starting is the part that stalls me.' },
-  { n:7,  domain:'The Complaining Reflex',   text:'When faced with a barrier, my first instinct is to explain why it is unfair.' },
-  { n:8,  domain:'The Criticizing Reflex',   text:'I speak to myself in ways I would not speak to someone I respect.' },
-  { n:9,  domain:'The Comparing Reflex',     text:'I scroll through social media and feel smaller than before I started.' },
-  { n:10, domain:'The Competing Reflex',     text:'My sense of worth is tied to whether I am winning.' },
-  { n:11, domain:'The Cost of the Reflexes', text:'I carry regret about things I started but never finished.' },
-  { n:12, domain:'Start-Stop Pattern',      text:'I do well for a few days, then I stop, and starting again takes longer than it should.' },
-  { n:13, domain:'The Complaining Reflex',   text:'I spend more time discussing the problem than executing the solution.' },
-  { n:14, domain:'The Criticizing Reflex',   text:'I rehearse my mistakes longer than I learn from them.' },
-  { n:15, domain:'The Comparing Reflex',     text:'I downgrade my own progress when I see someone else\'s.' },
-  { n:16, domain:'The Competing Reflex',     text:'I do things mostly to be seen doing them.' },
-  { n:17, domain:'The Cost of the Reflexes', text:'I feel guilty when I rest, as if I should always be producing.' },
-  { n:18, domain:'Start-Stop Pattern',      text:'I have a clear sense of what progress looks like, but I rarely measure it.' },
-  { n:19, domain:'The Complaining Reflex',   text:'I feel a sense of relief when I find a valid excuse for why I cannot proceed.' },
-  { n:20, domain:'The Criticizing Reflex',   text:'I see my flaws faster than I see what is working.' },
-  { n:21, domain:'The Comparing Reflex',     text:'I lose track of what I want when I see what they have.' },
-  { n:22, domain:'The Competing Reflex',     text:'I feel unsettled when someone in my circle succeeds at something I have not yet done.' },
-  { n:23, domain:'The Cost of the Reflexes', text:'I experience shame when I fall short of the standard I set for myself.' },
-  { n:24, domain:'Start-Stop Pattern',      text:'I know who I want to be accountable to. I have not made that arrangement yet.' },
-  { n:25, domain:'The Cost of the Reflexes', text:'My relationships suffer because I am often distracted by my own internal pressure.' },
-  { n:26, domain:'The Cost of the Reflexes', text:'I feel disconnected from the people closest to me, even when we are in the same room.' },
-  { n:27, domain:'The Cost of the Reflexes', text:'I resent others who seem to move forward with less effort than I exert.' },
-  { n:28, domain:'The Cost of the Reflexes', text:'I avoid starting new things because the fear of not finishing is too heavy.' },
-  { n:29, domain:'The Cost of the Reflexes', text:'I feel like I am constantly performing a version of myself rather than simply being.' },
-  { n:30, domain:'The Cost of the Reflexes', text:'I am exhausted by the constant need to prove my worth.' }
+const CHS=[
+  {l:'Complaining',c:'var(--complain)',bg:'var(--complain-s)',r:'Sometimes you argue with what is. The argument happens inside. Nobody hears it. You still lose the energy.',btn:'Continue'},
+  {l:'Criticizing',c:'var(--criticize)',bg:'var(--criticize-s)',r:'Sometimes you manage someone else instead of yourself. It feels productive. It feels like high standards. It costs you anyway.',btn:'Continue'},
+  {l:'Comparing',c:'var(--compare)',bg:'var(--compare-s)',r:'Sometimes you measure yourself against someone else\u2019s life. The scoreboard is invisible. The game never ends.',btn:'Continue'},
+  {l:'Competing',c:'var(--compete)',bg:'var(--compete-s)',r:'Sometimes you chase position instead of growth. This one is the hardest to see in yourself.',btn:'Continue'},
+  {l:'Return',c:'var(--return-c)',bg:'var(--return-s)',r:'Now something different. How quickly you notice the leak. And what you do when you catch it.',btn:'Continue'}
 ];
-
-var OPTIONS = [
-  { label:'Rarely or never', score:1 },
-  { label:'Sometimes',       score:2 },
-  { label:'Often',           score:3 },
-  { label:'Most of the time', score:4 }
+const IT=[
+  {ch:0,t:'I replayed what was wrong instead of asking what was mine to do.'},
+  {ch:0,t:'I sat in frustration or resentment without naming it or taking a step forward.'},
+  {ch:0,t:'I delayed acting because the situation felt unfair or the conditions felt wrong.'},
+  {ch:0,t:'I talked about the problem more than about any next step.'},
+  {ch:1,t:'My mind kept scanning what was wrong with another person instead of governing myself.'},
+  {ch:1,t:'I felt irritated or morally superior toward someone.'},
+  {ch:1,t:'I chose to correct or manage someone else\u2019s behavior instead of staying with my own.'},
+  {ch:1,t:'I gave a negative assessment of someone without a genuinely constructive purpose.'},
+  {ch:2,t:'I measured my progress or worth against someone else\u2019s.'},
+  {ch:2,t:'I felt smaller after seeing another person\u2019s results or recognition.'},
+  {ch:2,t:'I adjusted my goals because someone else\u2019s pace made mine feel insufficient.'},
+  {ch:2,t:'I tracked or scrolled through other people\u2019s lives in ways that pulled me out of my own.'},
+  {ch:3,t:'I thought about where I ranked more than about what growth required of me.'},
+  {ch:3,t:'I felt restless when someone near me succeeded, or relieved when they struggled.'},
+  {ch:3,t:'I made a choice mainly to stay ahead or avoid being outdone.'},
+  {ch:3,t:'I performed, one-upped, or positioned myself to win rather than to contribute.'},
+  {ch:4,t:'I noticed fairly quickly when I was leaking power.'},
+  {ch:4,t:'I interrupted the pattern before it became action.'},
+  {ch:4,t:'I redirected my energy back to what was actually mine to handle.'},
+  {ch:4,t:'I used a specific practice to return, instead of just criticizing myself.'}
 ];
+const RS=[{v:0,l:'Not at all'},{v:1,l:'Once or twice'},{v:2,l:'Several times'},{v:3,l:'Repeatedly'}];
+const CN=['Complaining','Criticizing','Comparing','Competing'],CI=['complain','criticize','compare','compete'],DN=['Think','Feel','Choose','Do'],DI=['think','feel','choose','do'];
 
-var OPT_KEYS = ['A','B','C','D'];
-
-var REFLEX_ORDER = ['complaining','criticizing','comparing','competing'];
-
-var REFLEX_DATA = {
-  complaining: {
-    name: 'The Complaining Reflex',
-    questions: [1,7,13,19],
-    whatItIs: 'Your mind goes to what is wrong before it goes to what is working. You name problems with precision. You describe barriers clearly. You can list everything in your way.',
-    whatItActuallyIs: 'Complaining feels like honesty. It is not. It is the rehearsal of powerlessness. Every time you name the problem without moving toward a solution, you train your mind to see obstacles as permanent.',
-    underneath: 'A belief that the circumstances are the reason. The reflex protects you from the discomfort of owning the next move.',
-    breaks: {
-      component: 'Integrity',
-      desc: 'You name problems your actions will not address. The gap between your words and your work widens, and your trust in your own word with it.'
-    },
-    cost: 'The cost is your emotional sovereignty. You surrender your agency to circumstances, leaving behind unkept promises, a slow untraceable anger, and a life defined by what you could not do rather than what you built. Every complaint that goes unanswered with action adds another layer to the weight you are already carrying.',
-    strategies: [
-      { title: 'The two-minute rule on naming problems.', body: 'You are permitted to name what is wrong. You are not permitted to stay there for more than two minutes. After two minutes, the rule is: one thing you can do. Not the whole solution. One thing.' },
-      { title: 'The ratio check.', body: 'At the end of each day, ask yourself how many minutes you spent naming problems versus taking action on them. You do not need a perfect ratio. You need an honest one. The awareness alone changes the pattern.' },
-      { title: 'Replace the complaint with a request or a decision.', body: 'Every complaint contains a hidden request or a hidden decision. "This is not working" becomes "I am going to change this one thing." Practice making the translation out loud.' }
-    ],
-    layered: 'To manage the other reflexes alongside this one: For Criticizing, speak to yourself like a respected colleague. For Comparing, define your own finish line before you look at anyone else\'s. For Competing, do one private act daily that you would never post.'
-  },
-  criticizing: {
-    name: 'The Criticizing Reflex',
-    questions: [2,8,14,20],
-    whatItIs: 'You are harder on yourself than you would ever be on a friend. You rehearse your mistakes. You see the flaw before you see the progress. You believe that if you stop criticizing yourself, you will lose your edge.',
-    whatItActuallyIs: 'Self-criticism is not a standard of excellence. It is a preemptive strike. You are attacking yourself before the world can. It does not make you better. It makes you exhausted.',
-    underneath: 'The fear of being exposed as inadequate. The reflex tries to control the narrative by being the harshest judge in the room.',
-    breaks: {
-      component: 'Allegiance',
-      desc: 'The harshest voice inside you carries the final say. You give your authority to the critic and obey it instead of your own judgment.'
-    },
-    cost: 'The cost is your emotional sovereignty. Your own intelligence is weaponized against you, producing hidden shame that makes finishing impossible and guilt that makes rest feel like a crime. Self-trust erodes with every verdict the inner critic delivers before the evidence is in.',
-    strategies: [
-      { title: 'The colleague standard.', body: 'When the inner voice starts, ask: "Would I speak this way to a colleague I respect?" If the answer is no, you must rephrase the thought. You do not have to be overly positive. You just have to be respectful.' },
-      { title: 'Separate the data from the drama.', body: 'When you make a mistake, extract the data (what happened) and discard the drama (what it means about your worth). "I missed the deadline" is data. "I am undisciplined" is drama. Keep the data. Drop the drama.' },
-      { title: 'The 24-hour statute of limitations.', body: 'You have 24 hours to review a mistake and extract the lesson. After 24 hours, the file is closed. You are no longer permitted to rehearse it.' }
-    ],
-    layered: 'To manage the other reflexes alongside this one: For Complaining, apply the two-minute rule before you name a problem. For Comparing, define your own finish line. For Competing, do one private act daily that belongs to you alone.'
-  },
-  comparing: {
-    name: 'The Comparing Reflex',
-    questions: [3,9,15,21],
-    whatItIs: 'You measure your life against someone else\'s pace. You look at what they have built and feel behind. You downgrade your own progress because it does not look like theirs.',
-    whatItActuallyIs: 'Comparison is the theft of context. You are comparing your internal reality to their curated exterior. It forces you to run a race you never signed up for, on a track you did not choose.',
-    underneath: 'The fear that you are falling behind. The reflex looks outward for a metric because it lacks an internal anchor.',
-    breaks: {
-      component: 'Attention',
-      desc: "Your mind defaults to other people's lives instead of your own. The internal compass loses its north because it keeps pointing at theirs."
-    },
-    cost: 'The cost is your emotional sovereignty. Your identity fractures as you replace your own timeline with someone else\'s. Regret accumulates quietly. You stop knowing what you actually want, and the gap between your life and theirs becomes the only measure you trust.',
-    strategies: [
-      { title: 'Define your own finish line.', body: 'You cannot win a race if you do not know where the finish line is. Write down what a finished, successful year looks like for you, using your own metrics. When you feel the pull to compare, read your own definition.' },
-      { title: 'The curation filter.', body: 'When you look at someone else\'s success, remind yourself: "I am seeing the highlight reel, not the bloopers." You are comparing your behind-the-scenes to their opening night. Stop.' },
-      { title: 'Mute the noise.', body: 'Identify the three people or accounts that trigger the comparing reflex most consistently. Mute them for 30 days. You do not have to unfollow. Just remove them from your daily feed. Notice how your focus shifts.' }
-    ],
-    layered: 'To manage the other reflexes alongside this one: For Complaining, apply the two-minute rule to problems. For Criticizing, speak to yourself like a respected colleague. For Competing, do one private act daily that no one else will see.'
-  },
-  competing: {
-    name: 'The Competing Reflex',
-    questions: [4,10,16,22],
-    whatItIs: 'You track who is ahead. You measure your worth by whether you are winning. You perform what you should be living. You do things to be seen doing them, and the doing feels hollow.',
-    whatItActuallyIs: 'Competition is useful on a court. It is destructive when it becomes the lens for your entire life. The scoreboard is not your soul. When you compete for your own worth, you can never win enough.',
-    underneath: 'The fear that you have no inherent value. If you are not winning, you are nothing. The reflex is trying to prove that you matter. You cannot prove mattering. You can only live it.',
-    breaks: {
-      component: 'Return',
-      desc: 'You leave yourself for the result and only come back after you lose. The win postpones the homecoming. The loss forces it.'
-    },
-    cost: 'The cost is your emotional sovereignty. You become a performer in your own life, self-trust depleted by every hollow win. Relationships grow shallow because you are never fully present. You are exhausted from carrying a version of yourself you never chose, proving a worth that was never in question.',
-    strategies: [
-      { title: 'The private act test.', body: 'When you feel the pull to compete, ask: "If no one ever knew I did this, would I still want to do it?" If the answer is no, you are competing. If yes, you are choosing. Choose more of what you would do in private.' },
-      { title: 'One private act per day.', body: 'Do one thing today that you want for its own sake, with no audience. Do not post it. Do not tell anyone. Let it be yours. This act unearths the self underneath the competitor.' },
-      { title: 'Finish over win.', body: 'At the end of each day, ask: "Did I finish anything today, no matter how small?" Not "did I win." Just: did I close what I opened? That is the only score that matters in the long run.' }
-    ],
-    layered: 'To manage the other reflexes alongside this one: For Complaining, apply the two-minute rule to problems. For Criticizing, speak to yourself like a respected colleague. For Comparing, define your own finish line before you look at anyone else\'s.'
-  }
+/* ── PERSONALIZATION: written from inside, not above ── */
+const DR={
+  complain:'You replay what went wrong. The mental argument runs on repeat \u2014 you keep prosecuting reality for being what it is, and the energy you spend on that prosecution is energy you don\u2019t have for anything else.',
+  criticize:'You notice what other people are doing wrong before you notice what you\u2019re doing at all. The audit runs automatically. You didn\u2019t choose to start it. It\u2019s been running for years.',
+  compare:'You check how others are doing and your sense of your own progress shrinks. The measurement is silent. Nobody knows you\u2019re doing it. But your energy drains anyway.',
+  compete:'You calculate where you stand in every room. When someone near you succeeds, something tightens in your chest before you can congratulate them.'
+};
+const DM={
+  think:'It starts in your head. Before you feel it or do anything about it, the interpretation has already taken root. You\u2019re analyzing, replaying, running scenarios \u2014 and calling it thinking.',
+  feel:'It starts as a feeling. Something shifts in your body before your mind catches up. By the time you name it, the feeling has already changed what you\u2019re willing to do.',
+  choose:'It starts in a decision. Your thinking might be clear, your emotions settled. But at the moment of choice, you bend toward the old pattern without noticing the bend.',
+  do:'It starts in action. You\u2019ve already opened the app, already said the thing, already made the move. The impulse ran the full distance before you knew it was running.'
+};
+const HZ={
+  'complain-think':'You build the case inside your head. The courtroom is internal, the verdict is always the same, and nobody benefits from the ruling.',
+  'complain-feel':'You carry a heaviness that feels like exhaustion. It\u2019s actually the weight of an expectation that was never met.',
+  'complain-choose':'You wait for conditions to be right before you act. Fairness has become a prerequisite for effort.',
+  'complain-do':'You talk about what\u2019s wrong to people who cannot fix it. The complaint has become an introduction.',
+  'criticize-think':'You run a continuous audit of other people. You spot flaws quickly and rarely aim that precision at yourself.',
+  'criticize-feel':'You feel an irritation that disguises itself as standards. It protects you from looking at your own unfinished work.',
+  'criticize-choose':'You patrol someone else\u2019s lane instead of staying in your own. Managing their behavior feels more urgent than managing yours.',
+  'criticize-do':'You give assessments that were never requested. You frame judgment as concern. The packaging changes. The function stays the same.',
+  'compare-think':'You measure your interior against someone else\u2019s exterior. The data is always incomplete. The conclusion is always the same.',
+  'compare-feel':'You feel a hollowness after seeing someone else\u2019s achievement. You call it admiration. It\u2019s closer to a wound.',
+  'compare-choose':'You adjust your goals based on someone else\u2019s timeline. Their pace made yours feel insufficient, so you abandoned your own rhythm.',
+  'compare-do':'You track other people\u2019s lives through feeds and conversations. Your phone is a comparison engine and you use it without thinking.',
+  'compete-think':'You rank everyone in every room. You\u2019re playing a game that nobody else agreed to enter.',
+  'compete-feel':'You feel restless when someone near you succeeds. Sometimes there\u2019s a flash of relief when they stumble, followed immediately by shame.',
+  'compete-choose':'You choose to stay ahead rather than to grow. Every decision is strategic. Few are honest.',
+  'compete-do':'You perform your achievements. You position yourself for visibility. You withhold help because someone else\u2019s success feels like your loss.'
+};
+const CP={
+  internal:'You tend to catch it while it\u2019s still inside you, before it becomes words or action. That awareness is real, even when the struggle continues.',
+  external:'The pattern usually reaches your words and actions before you notice it. Your growth edge is catching it one step earlier \u2014 in what you\u2019re feeling or thinking, before it moves.'
+};
+const RT={
+  weak:'Right now, the pattern usually finishes before you notice it started. The awareness is coming. It\u2019s just not fast enough yet to interrupt the cycle.',
+  emerging:'You\u2019re starting to notice. Sometimes you catch it mid-run. The muscle is forming.',
+  strengthening:'You notice earlier now. The pattern still shows up, but it covers less ground before you step in.',
+  practiced:'You catch it early. The pattern still arrives, but you\u2019ve built the habit of noticing and choosing differently.'
+};
+const PR={
+  think:{n:'The power question',q:'Is this mine to carry, or is this a leak?',e:'When a thought appears, ask this once. If it\u2019s yours, stay with it. If it\u2019s someone else\u2019s business or an argument with reality, let it go.'},
+  feel:{n:'Name the feeling',q:'What am I actually feeling right now?',e:'One word. Not why. Not who caused it. Just the word. Resentment. Envy. Anxiety. Naming it takes the charge out of it.'},
+  choose:{n:'The return question',q:'What is the next faithful choice that actually belongs to me?',e:'Before any decision, run this filter. If the choice is about managing someone else\u2019s perception, you\u2019ve already left your lane.'},
+  do:{n:'The 60-second pause',q:'Pause for 60 seconds before you act.',e:'You\u2019re not resisting the urge. You\u2019re observing it. If after 60 seconds the action still serves you, do it.'}
 };
 
-var NOW_WHAT = {
-  intro: 'These are the questions almost everyone asks once they see their pattern. They are good questions. Here are direct answers.',
-  items: [
-    { q: 'I know I need to change. Where do I start?',
-      a: '<p>Start with the one reflex that scored highest. Not all four. One. The loudest one is the one that is costing you the most right now. Everything else is secondary.</p><p>Your first move is not a plan. It is a single behavior you can do tomorrow before noon. Name it. Write it down. Do it. That is where you start.</p>' },
-    { q: 'How do I actually start, not just decide to?',
-      a: '<p><strong>Decide on the smallest possible version.</strong> Not the full change. The smallest version of it that you could do in under five minutes. If you want to build a writing habit, the start is one sentence. If you want to stop complaining, the start is one two-minute rule, once.</p><p>You will not feel ready. Start before you feel ready. Readiness follows action. It does not precede it.</p>' },
-    { q: 'How do I maintain rhythm, even with the little things?',
-      a: '<p><strong>Rhythm is not motivation. Rhythm is structure.</strong> Motivation disappears. Structure stays.</p><p>The Daily Operating System in KOORA runs in three layers. The Seal is 30 seconds at sunrise, naming the one thing that matters today before the reflexes wake up. The Daily Reset is five prompts, five words each, a mid-day recalibration that interrupts the drift before it becomes the day. The Evening Check is three numbers at sunset, an honest accounting of what ran you, what you chose, and what you return to tomorrow. Pick one layer. Start there.</p>' },
-    { q: 'How do I evaluate my growth and progress?',
-      a: '<p><strong>Track behavior, not feelings.</strong> "Did I do the thing?" is a question you can answer. "Am I growing?" is a question that will always feel uncertain.</p><p>At the end of each week, ask three questions: What did I finish? What did I interrupt? What did I return to after I stopped? Those three answers tell you more about your actual progress than any feeling ever will.</p>' },
-    { q: 'How do I become accountable, and to whom?',
-      a: '<p><strong>Accountability is not someone checking on you. It is someone who will tell you the truth.</strong> You need one person who will ask: "Did you do what you said?" and wait for the real answer. Not someone who will let you off the hook. Not someone who will shame you. Someone who will hold the standard and still be in your corner.</p><p>In KOORA, that is the cohort. On Friday calls, you say what ran you and what you will do next. That is the accountability structure. The covenant is not perfection. The covenant is return. You are permitted to fall. You are not permitted to stop returning.</p>' }
-  ]
-};
+let ans=new Array(20).fill(-1),ci=0,cc=-1,res={},u={fn:'',ln:'',em:'',ph:'',co:'',ct:'',ge:'',ag:'',pf:'',sr:'',rd:'',cwa:1,cem:1};
 
-/* ── SLIDE TRANSITIONS ──────────────────────────────── */
-function showSlide(id) {
-  var current = document.querySelector('.slide.active');
-  var next = document.getElementById(id);
-  if (!next || current === next) return;
+function go(id){const c=document.querySelector('.s.on');if(c){c.classList.add('off');setTimeout(()=>{c.classList.remove('on','off');document.getElementById(id).classList.add('on');window.scrollTo({top:0,behavior:'instant'})},350)}else document.getElementById(id).classList.add('on')}
+['fn','em','ph'].forEach(i=>document.getElementById(i).addEventListener('input',()=>{document.getElementById('bs2').disabled=!(document.getElementById('fn').value.trim()&&document.getElementById('em').value.trim()&&document.getElementById('ph').value.trim())}));
+function goS2(){u.fn=document.getElementById('fn').value.trim();u.ln=document.getElementById('ln').value.trim();u.em=document.getElementById('em').value.trim();u.ph=document.getElementById('ph').value.trim();document.getElementById('st1').classList.remove('on');document.getElementById('st2').classList.add('on');window.scrollTo({top:0,behavior:'instant'})}
+function sR(b,v){document.querySelectorAll('.rb').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');u.rd=v}
+function begin(){u.co=document.getElementById('co').value;u.ct=document.getElementById('ct').value.trim();u.ge=document.getElementById('ge').value;u.ag=document.getElementById('ag').value;u.pf=document.getElementById('pf').value;u.sr=document.getElementById('sr').value;u.cwa=document.getElementById('cwa').checked?1:0;u.cem=document.getElementById('cem').checked?1:0;ci=0;cc=-1;go('s2');setTimeout(showI,500)}
 
-  current.classList.add('exit-up');
-  current.classList.remove('active');
-
-  next.style.display = '';
-  // Force reflow
-  next.getBoundingClientRect();
-  next.classList.add('active');
-
-  setTimeout(function() {
-    current.classList.remove('exit-up');
-  }, 450);
-
-  // Scroll results to top
-  if (id === 'slide-results') {
-    document.getElementById('slides').scrollTop = 0;
-  }
+function showI(){
+  const it=IT[ci],ch=CHS[it.ch];
+  document.getElementById('pF').style.width=(ci/20*100)+'%';
+  document.getElementById('pCh').textContent=ch.l;
+  document.getElementById('pCt').textContent=(ci+1)+' of 20';
+  if(it.ch!==cc){cc=it.ch;
+    document.getElementById('jc').innerHTML=`<div class="opener"><div class="opener-badge" style="background:${ch.bg};color:${ch.c}">${ch.l}</div><p class="opener-text">${ch.r}</p><button class="b b-outline" onclick="renderQ()"><span>${ch.btn}</span><svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`;
+    return;}
+  renderQ();
 }
-
-function setProgress(pct) {
-  var bar = document.getElementById('progress-bar');
-  bar.style.width = pct + '%';
-  bar.setAttribute('aria-valuenow', Math.round(pct));
+function renderQ(){
+  const it=IT[ci],s=it.ch<4?'In the last 48 hours':'';
+  let h=`<div class="qc" id="qc"><div class="q-stem">${s}</div><p class="q-text">${it.t}</p><div class="opts">`;
+  RS.forEach(r=>{h+=`<button class="opt" onclick="sel(${r.v})"><span class="opt-dot"></span>${r.l}</button>`});
+  h+='</div></div>';document.getElementById('jc').innerHTML=h;
+  requestAnimationFrame(()=>document.getElementById('qc').classList.add('vis'));
 }
+function sel(v){ans[ci]=v;const bs=document.querySelectorAll('.opt');bs.forEach((b,i)=>{if(i===v)b.classList.add('sel');b.style.pointerEvents='none'});setTimeout(()=>{const c=document.getElementById('qc');c.classList.remove('vis');c.classList.add('ex');setTimeout(()=>{ci++;ci>=20?proc():showI()},250)},350)}
+function proc(){document.getElementById('pF').style.width='100%';go('s3');setTimeout(()=>{compute();buildR();go('s4');document.querySelectorAll('.rl').forEach(l=>{setTimeout(()=>l.classList.add('vis'),parseInt(l.dataset.d)||0)});submit()},3500)}
 
-function setCounter(text) {
-  document.getElementById('navCounter').textContent = text;
+function compute(){const cS=[0,0,0,0],dS=[0,0,0,0];for(let c=0;c<4;c++)for(let d=0;d<4;d++)cS[c]+=ans[c*4+d];for(let d=0;d<4;d++)for(let c=0;c<4;c++)dS[d]+=ans[c*4+d];const dc=cS.indexOf(Math.max(...cS)),so=cS.map((s,i)=>({s,i})).sort((a,b)=>b.s-a.s),sc=so[1].i,dd=dS.indexOf(Math.max(...dS));let hi=0,hv=-1;for(let i=0;i<16;i++)if(ans[i]>hv){hv=ans[i];hi=i}const hc=Math.floor(hi/4),hd=hi%4,iS=dS[0]+dS[1],eS=dS[2]+dS[3],cp=iS>=eS?'internal':'external',rS=ans[16]+ans[17]+ans[18]+ans[19];let rL='weak';if(rS>=4)rL='emerging';if(rS>=8)rL='strengthening';if(rS>=11)rL='practiced';res={cS,dS,dc,sc,dd,hc,hd,cp,rS,rL}}
+
+function buildR(){
+  document.getElementById('rN').textContent=u.fn+(u.ln?' '+u.ln:'');
+  const el=document.getElementById('rL'),cId=CI[res.dc],dId=DI[res.dd],hk=CI[res.hc]+'-'+DI[res.hd],pr=PR[dId],cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+  const now=new Date();let nm=new Date(now.getFullYear(),now.getMonth()+1,1);while(nm.getDay()!==1)nm.setDate(nm.getDate()+1);const nds=nm.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const pR=(l,v)=>`<div class="pr"><span class="pr-l">${l}</span><span class="pr-v">${v}</span></div>`;
+  let h='';
+
+  // Layer 1: The letter (prose, not dashboard)
+  h+=`<div class="rl" data-d="200"><div class="prose-card"><div class="lbl">Where your power goes</div><p class="prose-text">${DR[cId]}</p></div></div>`;
+
+  // Layer 2: Where it starts and how far it runs
+  h+=`<div class="rl" data-d="700"><div class="prose-card"><div class="lbl">Where it starts in you</div><p class="prose-text">${DM[dId]} ${HZ[hk]}</p></div></div>`;
+
+  // Layer 3: How quickly you come back
+  h+=`<div class="rl" data-d="1200"><div class="prose-card"><div class="lbl">How quickly you come back</div><p class="prose-text">${CP[res.cp]} ${RT[res.rL]}</p></div></div>`;
+
+  // Layer 4: Profile summary (compact)
+  h+=`<div class="rl" data-d="1700"><div class="profile">${pR('Where you go',CN[res.dc])}${pR('Where it starts',DN[res.dd])}${pR('Return speed',cap(res.rL)+' ('+res.rS+'/12)')}</div></div>`;
+
+  // Layer 5: Practice
+  h+=`<div class="rl" data-d="2200"><div class="prac"><div class="lbl">Your one practice</div><div class="prac-name">${pr.n}</div><div class="prac-q">${pr.q}</div><div class="prac-e">${pr.e}</div></div></div>`;
+
+  // Layer 6: Growth sentence
+  h+=`<div class="rl" data-d="2700"><div class="growth"><div class="lbl">Your growth sentence</div><p class="growth-text">When I\u2019m not watching, my power leaks toward <em>${CN[res.dc].toLowerCase()}</em>. It starts in what I <em>${DN[res.dd].toLowerCase()}</em>. I\u2019m learning to catch it and come back through <em>${pr.n.toLowerCase()}</em>.</p></div></div>`;
+
+  // Layer 7: CTA
+  h+=`<div class="rl" data-d="3200"><div class="cta-card"><div class="lbl">Go deeper</div><div class="cta-title">The 10-Day 4C Challenge</div><p class="cta-body">You just saw where your power goes. The question is whether seeing it changes anything. Ten days. One pattern. One practice.</p><div class="cta-price">KSh 2,000</div><div class="cta-note">One-time. 10 days.</div><ul class="cta-list"><li>Daily guided observation via WhatsApp</li><li>Structured daily pulse check</li><li>Day 10 re-assessment to measure what shifted</li><li>Your return practice, coached for 10 days</li><li>Closed cohort of committed participants</li></ul><button class="b b-accent" onclick="openL('PAYMENT_LINK')">Join the next cohort</button><p class="cta-date">Next cohort starts ${nds}</p></div></div>`;
+
+  // Layer 8: Bridge + actions
+  h+=`<div class="rl" data-d="3700"><div class="bridge"><p class="bridge-text">If the same pattern keeps running despite your best effort, the cause may be deeper than behavior. That\u2019s a different kind of work, and it has its own time.</p><p class="bridge-close">Progress is noticing sooner.</p></div><div class="actions"><button class="b" onclick="dlCard()">Save my profile</button><button class="b-text" onclick="retake()">Take again</button></div></div>`;
+
+  el.innerHTML=h;
 }
+function retake(){ans=new Array(20).fill(-1);ci=0;cc=-1;go('s2');setTimeout(showI,500)}
+function openL(u){if(u.includes('PAYMENT'))alert('Payment link not configured.');else window.open(u,'_blank')}
 
-/* ── START ──────────────────────────────────────────── */
-function startAssessment() {
-  window._assessmentStarted = true;
-  window.addEventListener('beforeunload', function(e) {
-    if (window._assessmentStarted && !window._assessmentComplete) {
-      e.preventDefault();
-      e.returnValue = '';
-    }
-  });
-  participantName = (document.getElementById('participantName').value.trim()) || 'Participant';
-  currentQ = 1;
-  track('quiz_start');
-  initTurnstile();
-  renderQuestion(1);
-  showSlide('slide-question');
-  setProgress(0);
-  setCounter('1 of ' + TOTAL);
+function dlCard(){
+  const cv=document.getElementById('xc'),cx=cv.getContext('2d'),w=1080,h=1920,p=96;
+  cx.fillStyle='#FFF';cx.fillRect(0,0,w,h);cx.fillStyle='#1D1D1F';cx.fillRect(0,0,w,4);
+  cx.font='600 18px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#8C7A2E';cx.textAlign='center';cx.fillText('HOUSE OF MASTERY',w/2,80);
+  cx.fillStyle='#E8E8ED';cx.fillRect(p+80,110,w-p*2-160,1);
+  cx.font='700 42px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#1D1D1F';cx.fillText('Your Personal Power Map',w/2,200);
+  cx.font='500 20px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#6E6E73';cx.fillText(u.fn+(u.ln?' '+u.ln:''),w/2,245);
+  const dId=DI[res.dd],pr=PR[dId],cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+  const pd=[['Where you go',CN[res.dc]],['Where it starts',DN[res.dd]],['Return speed',cap(res.rL)]];
+  let y=340;cx.textAlign='left';
+  pd.forEach(([l,v])=>{cx.font='400 18px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#86868B';cx.fillText(l,p+40,y);cx.font='600 22px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#1D1D1F';cx.textAlign='right';cx.fillText(v,w-p-40,y);cx.textAlign='left';y+=56;cx.fillStyle='#E8E8ED';cx.fillRect(p+40,y-18,w-p*2-80,1)});
+  y+=48;const bx=p+24,bw=w-p*2-48,bh=220;cx.beginPath();cx.roundRect(bx,y,bw,bh,12);cx.fillStyle='#1D1D1F';cx.fill();
+  cx.font='600 15px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#86868B';cx.textAlign='center';cx.fillText('YOUR ONE PRACTICE',w/2,y+42);
+  cx.font='600 28px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#FFF';cx.fillText(pr.n,w/2,y+88);
+  cx.font='500 20px "Plus Jakarta Sans",sans-serif';cx.fillStyle='rgba(255,255,255,0.7)';wt(cx,pr.q,w/2,y+130,bw-80,28);
+  y+=bh+56;cx.font='400 20px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#1D1D1F';
+  wt(cx,`When I'm not watching, my power leaks toward ${CN[res.dc].toLowerCase()}. It starts in what I ${DN[res.dd].toLowerCase()}. I'm learning to catch it and come back through ${pr.n.toLowerCase()}.`,w/2,y,w-p*2-60,30);
+  cx.fillStyle='#E8E8ED';cx.fillRect(p+80,h-110,w-p*2-160,1);
+  cx.font='500 15px "Plus Jakarta Sans",sans-serif';cx.fillStyle='#8C7A2E';cx.fillText('houseofmastery.co/4c',w/2,h-70);
+  cx.fillStyle='#1D1D1F';cx.fillRect(0,h-4,w,4);
+  const a=document.createElement('a');a.download=`4C-Profile-${u.fn}.png`;a.href=cv.toDataURL('image/png');a.click();
 }
+function wt(c,t,x,y,mw,lh){const ws=t.split(' ');let l='';for(let i=0;i<ws.length;i++){const ts=l+ws[i]+' ';if(c.measureText(ts).width>mw&&i>0){c.fillText(l.trim(),x,y);l=ws[i]+' ';y+=lh}else l=ts}c.fillText(l.trim(),x,y)}
 
-function retakeAssessment() {
-  answers = {};
-  currentQ = 1;
-  _ghlLeadSent = false;
-  _resultsUnlocked = false;
-  window._assessmentComplete = false;
-  // Re-lock the gated content so the gate is enforced on the next run.
-  var locked = document.getElementById('lockedContent');
-  if (locked) { locked.classList.remove('unlocked'); }
-  var gateTitle = document.getElementById('gateTitle');
-  if (gateTitle) gateTitle.textContent = 'Unlock your full results';
-  var gateBody = document.getElementById('gateBody');
-  if (gateBody) gateBody.textContent = 'You have seen the scores. Enter your email to unlock your cost statement and your three strategies, and we will send a copy to your inbox to keep.';
-  // Clear stale lead-capture UI from the previous run.
-  var emailInput = document.getElementById('emailInput');
-  if (emailInput) emailInput.value = '';
-  var consent = document.getElementById('consentCheck');
-  if (consent) consent.checked = false;
-  var statusEl = document.getElementById('emailStatus');
-  if (statusEl) { statusEl.textContent = ''; statusEl.className = 'email-status'; statusEl.style.display = 'none'; }
-  var sendBtn = document.getElementById('btnSendEmail');
-  if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'Unlock My Results'; }
-  showSlide('slide-welcome');
-  setProgress(0);
-  setCounter('');
+// Lead capture: POST to the same-origin Cloudflare Function (/api/ghl), which
+// forwards to HighLevel. `contact.name`/`contact.email` are what the Function
+// validates; every other field rides along and is forwarded to the CRM.
+// Fire-and-forget — the results are already on screen and never blocked on this.
+function submit(){
+  const dId=DI[res.dd],pr=PR[dId];
+  const name=(u.fn+(u.ln?' '+u.ln:'')).trim();
+  fetch('/api/ghl',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      contact:{ name:name, email:u.em||null, phone:u.ph||null },
+      event:'4c_task_assessment_completed',
+      segmentation:{ country:u.co, city:u.ct, gender:u.ge, ageRange:u.ag, profession:u.pf, source:u.sr, readiness:u.rd, consentWhatsApp:u.cwa, consentEmail:u.cem },
+      assessment:{
+        answers:ans.join(','),
+        dominantC:CN[res.dc], secondaryC:CN[res.sc], vulnerableDomain:DN[res.dd],
+        hotZone:CN[res.hc]+' x '+DN[res.hd], catchPoint:res.cp,
+        returnCapacity:res.rL, returnScore:res.rS, practice:pr.n,
+        complainScore:res.cS[0], criticizeScore:res.cS[1], compareScore:res.cS[2], competeScore:res.cS[3],
+        thinkScore:res.dS[0], feelScore:res.dS[1], chooseScore:res.dS[2], doScore:res.dS[3]
+      },
+      meta:{ timestamp:new Date().toISOString(), assessment:'4c-personal-task' }
+    })
+  }).catch(()=>{});
 }
-
-/* ── QUESTION RENDERING ─────────────────────────────── */
-function renderQuestion(n) {
-  var q = QUESTIONS[n - 1];
-  document.getElementById('qDomain').textContent = q.domain;
-  document.getElementById('qText').textContent = q.text;
-  document.getElementById('qError').style.display = 'none';
-
-  var stack = document.getElementById('optionsStack');
-  stack.innerHTML = '';
-  OPTIONS.forEach(function(opt, idx) {
-    var btn = document.createElement('button');
-    btn.className = 'opt-btn' + (answers[n] === opt.score ? ' selected' : '');
-    btn.innerHTML = '<span class="opt-key">' + OPT_KEYS[idx] + '</span>' + opt.label;
-    (function(score){ btn.onclick = function(){ selectOption(n, score); }; })(opt.score);
-    stack.appendChild(btn);
-  });
-
-  document.getElementById('qBackBtn').style.display = n > 1 ? 'inline-flex' : 'none';
-  document.getElementById('qNextBtn').textContent = n === TOTAL ? 'See My Results' : 'Next \u2192';
-
-  var pct = Math.round(((n - 1) / TOTAL) * 90);
-  setProgress(pct);
-  setCounter(n + ' of ' + TOTAL);
-
-  // Move focus to the new question so screen-reader / keyboard users follow along.
-  var qText = document.getElementById('qText');
-  if (qText && typeof qText.focus === 'function') {
-    try { qText.focus({ preventScroll: false }); } catch (e) { qText.focus(); }
-  }
-}
-
-function selectOption(n, score) {
-  answers[n] = score;
-  var btns = document.querySelectorAll('#optionsStack .opt-btn');
-  btns.forEach(function(btn, idx) {
-    btn.classList.toggle('selected', OPTIONS[idx].score === score);
-  });
-  document.getElementById('qError').style.display = 'none';
-
-  // Auto-advance after short delay
-  setTimeout(function() {
-    if (answers[n]) {
-      if (currentQ === TOTAL) {
-        buildResults();
-        showSlide('slide-results');
-        setProgress(100);
-        setCounter('');
-      } else {
-        currentQ++;
-        renderQuestion(currentQ);
-      }
-    }
-  }, 320);
-}
-
-function nextQuestion() {
-  if (!answers[currentQ]) {
-    document.getElementById('qError').style.display = 'block';
-    return;
-  }
-  if (currentQ === TOTAL) {
-    buildResults();
-    showSlide('slide-results');
-    setProgress(100);
-    setCounter('');
-    return;
-  }
-  currentQ++;
-  renderQuestion(currentQ);
-}
-
-function prevQuestion() {
-  if (currentQ > 1) {
-    currentQ--;
-    renderQuestion(currentQ);
-  }
-}
-
-/* ── SCORING ────────────────────────────────────────── */
-function getReflexScore(r) {
-  return REFLEX_DATA[r].questions.reduce(function(s,q){ return s + (answers[q]||0); }, 0);
-}
-function getCostScore() {
-  return [5,11,17,23,25,26,27,28,29,30].reduce(function(s,q){ return s + (answers[q]||0); }, 0);
-}
-function getRhythmScore() {
-  return [6,12,18,24].reduce(function(s,q){ return s + (answers[q]||0); }, 0);
-}
-function getLevel(score, max) {
-  var pct = score / (max || 16);
-  return pct <= 0.44 ? 'quiet' : pct <= 0.69 ? 'active' : 'loud';
-}
-function getLevelLabel(level) {
-  return level === 'quiet' ? 'Quiet' : level === 'active' ? 'Active' : 'Loud';
-}
-
-/* ── BUILD RESULTS ──────────────────────────────────── */
-function buildResults() {
-  // Guard against double-invocation (auto-advance + Next/Enter on the last
-  // question) so quiz_complete and the lead capture fire only once.
-  if (window._assessmentComplete) return;
-  window._assessmentComplete = true;
-  var name = participantName;
-  var scores = {};
-  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
-  var costScore = getCostScore();
-  var rhythmScore = getRhythmScore();
-  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
-  var primaryLevel = getLevel(scores[primary], 16);
-
-  var headlines = {
-    loud:   'Here is what is running you.',
-    active: 'Here is what is active in you.',
-    quiet:  'Here is your pattern profile.'
-  };
-  document.getElementById('resultsHeadline').textContent = headlines[primaryLevel];
-  document.getElementById('resultsSub').innerHTML = 'Result for <strong>' + escapeHTML(name) + '</strong>';
-
-  // Teaser naming the primary reflex above the gate (without giving away the
-  // cost statement or strategies, which unlock after email).
-  var pd0 = REFLEX_DATA[primary];
-  document.getElementById('resultsTeaser').innerHTML =
-    'Your loudest pattern right now is <strong>' + escapeHTML(pd0.name) + '</strong> (' +
-    getLevelLabel(primaryLevel) + ' &middot; ' + scores[primary] + '/16). ' +
-    'Unlock your full results below to see exactly what it is costing you and the three moves that interrupt it.';
-
-  track('quiz_complete', { primary_reflex: primary, primary_level: getLevelLabel(primaryLevel) });
-
-  // Score table
-  var table = document.getElementById('scoreTable');
-  table.innerHTML = '';
-  REFLEX_ORDER.forEach(function(r) {
-    var s = scores[r], lvl = getLevel(s, 16), pct = Math.round((s/16)*100);
-    table.innerHTML += '<div class="score-row">' +
-      '<div class="score-row-name">' + r.charAt(0).toUpperCase() + r.slice(1) + '</div>' +
-      '<div class="score-bar-track"><div class="score-bar-fill ' + lvl + '" style="width:' + pct + '%"></div></div>' +
-      '<div class="score-row-val ' + lvl + '">' + s + '/16 &middot; ' + getLevelLabel(lvl) + '</div>' +
-      '</div>';
-  });
-  var cLvl = getLevel(costScore, 40);
-  var cLabel = cLvl === 'quiet' ? 'Low cost' : cLvl === 'active' ? 'Moderate cost' : 'High cost';
-  var cPct = Math.round((costScore/40)*100);
-  table.innerHTML += '<div class="score-row" style="border-top:2px solid var(--rule);margin-top:4px;">' +
-    '<div class="score-row-name">Cost of Pattern</div>' +
-    '<div class="score-bar-track"><div class="score-bar-fill ' + cLvl + '" style="width:' + cPct + '%"></div></div>' +
-    '<div class="score-row-val ' + cLvl + '">' + costScore + '/40 &middot; ' + cLabel + '</div>' +
-    '</div>';
-  // Start-Stop Pattern — score + one actionable sentence (no bar chart)
-  var ssText = rhythmScore <= 7
-    ? 'Your rhythm is solid. Use it to help someone else.'
-    : rhythmScore <= 11
-    ? 'You start strong but lose steam. You need a week-two check-in, not more motivation.'
-    : 'You restart more than you finish. You need a return protocol, not another plan.';
-  document.getElementById('startStopBlock').innerHTML =
-    '<div class="startstop-row">' +
-    '<div class="startstop-label">Start-Stop Pattern</div>' +
-    '<div class="startstop-content">' +
-    '<span class="startstop-score">' + rhythmScore + '/16</span>' +
-    '<span class="startstop-text">' + ssText + '</span>' +
-    '</div></div>';
-
-  // Reflex cards
-  var cards = document.getElementById('reflexCards');
-  cards.innerHTML = '';
-  REFLEX_ORDER.slice().sort(function(a,b){ return scores[b]-scores[a]; }).forEach(function(r) {
-    var d = REFLEX_DATA[r], s = scores[r], lvl = getLevel(s, 16);
-    if (lvl === 'quiet') {
-      cards.innerHTML += '<div class="reflex-card quiet">' +
-        '<div class="reflex-card-head"><div class="r-dot quiet"></div><h3>' + d.name + '</h3><span class="r-tag quiet">Quiet</span></div>' +
-        '<div class="reflex-card-body"><p class="quiet-note">Score: ' + s + '/16. This reflex is not running you right now. Keep an eye on it; reflexes shift under pressure.</p></div>' +
-        '</div>';
-    } else {
-      var stHtml = '<div class="strategies">';
-      d.strategies.forEach(function(st, i) {
-        stHtml += '<div class="strategy-row">' +
-          '<div class="s-num">' + (i+1) + '</div>' +
-          '<div><div class="s-title">' + st.title + '</div><div class="s-body">' + st.body + '</div></div>' +
-          '</div>';
-      });
-      stHtml += '</div>';
-      cards.innerHTML += '<div class="reflex-card ' + lvl + '">' +
-        '<div class="reflex-card-head"><div class="r-dot ' + lvl + '"></div><h3>' + d.name + '</h3><span class="r-tag ' + lvl + '">' + getLevelLabel(lvl) + ' &middot; ' + s + '/16</span></div>' +
-        '<div class="reflex-card-body">' +
-        '<span class="card-label">What it looks like</span>' +
-        '<p class="card-text">' + d.whatItIs + '</p>' +
-        '<p class="card-text">' + d.whatItActuallyIs + '</p>' +
-        '<div class="underneath-block"><p>' + d.underneath + '</p></div>' +
-        '<div class="breaks-block">' +
-          '<span class="breaks-label">What this reflex breaks first</span>' +
-          '<div class="breaks-component">' + d.breaks.component + '</div>' +
-          '<p class="breaks-desc">' + d.breaks.desc + '</p>' +
-        '</div>' +
-        '<span class="card-label">Your top 3 strategies</span>' +
-        stHtml +
-        '</div></div>';
-    }
-  });
-
-  // Now What
-  var nwEl = document.getElementById('nowWhatBlock');
-  var qaHtml = '';
-  NOW_WHAT.items.forEach(function(item) {
-    qaHtml += '<div class="qa-item"><div class="qa-q">' + item.q + '</div><div class="qa-a">' + item.a + '</div></div>';
-  });
-  nwEl.innerHTML = '<div class="now-what-block">' +
-    '<span class="nw-eyebrow">Now What?</span>' +
-    '<h3 class="nw-h3">Five questions every person asks after they see the pattern.</h3>' +
-    '<p class="nw-intro">' + NOW_WHAT.intro + '</p>' + qaHtml +
-    '<div class="nw-bridge">' +
-      '<p>These are the headline answers. The full architecture is <strong>The Daily Return</strong>, your daily operating system inside KOORA. Three Movements. Ninety seconds at sunrise. Ninety seconds at sunset. And the 24-Hour Return that catches you when you fall.</p>' +
-    '</div>' +
-    '</div>';
-
-  // Capture the completed quiz to the CRM immediately — no email required.
-  // Email entry later enriches the same lead.
-  captureLead(null, 'assessment_completed');
-}
-
-
-/* ── HIGHLEVEL / GHL SUBMISSION ─────────────────────── */
-// Build the shared lead payload. `email` is optional — the completed quiz is
-// captured without it, and a later email submit enriches the same lead.
-function buildLeadPayload(email, eventType, extra) {
-  var scores = {};
-  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
-  var costScore = getCostScore();
-  var rhythmScore = getRhythmScore();
-  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
-  var pd = REFLEX_DATA[primary];
-  var pl = getLevel(scores[primary], 16);
-
-  var trafficSummary = REFLEX_ORDER.map(function(r) {
-    var lvl = getLevel(scores[r], 16);
-    return r.charAt(0).toUpperCase() + r.slice(1) + ': ' + scores[r] + '/16 (' + getLevelLabel(lvl) + ')';
-  }).join('\n') +
-    '\nCost of Pattern: ' + costScore + '/40' +
-    '\nStart-Stop Pattern: ' + rhythmScore + '/16';
-
-  var contact = { name: participantName };
-  if (email) contact.email = email;
-
-  return {
-    assessment_source: 'koora_4c_reflex_screen',
-    assessment_name: 'KOORA 4C Reflex Screen',
-    event_type: eventType || 'assessment_completed',
-    contact: contact,
-    tags: ['assessment-koora-4c', 'source-cloudflare-pages', 'ghl-webhook'],
-    result: {
-      primary_reflex_key: primary,
-      primary_reflex: pd.name,
-      primary_level: getLevelLabel(pl),
-      primary_score: scores[primary],
-      cost_score: costScore,
-      rhythm_score: rhythmScore,
-      traffic_summary: trafficSummary
-    },
-    scores: scores,
-    answers: answers,
-    result_details: {
-      what_it_is: pd.whatItIs,
-      what_it_actually_is: pd.whatItActuallyIs,
-      cost_statement: pd.cost,
-      strategies: pd.strategies,
-      layered_strategy: pd.layered
-    },
-    attribution: ATTRIBUTION,
-    consent: extra && extra.consent ? true : undefined,
-    turnstile_token: extra && extra.turnstile_token ? extra.turnstile_token : undefined,
-    urls: {
-      summit_url: 'https://www.houseofmastery.co/4ckoora'
-    },
-    source_url: window.location.href,
-    submitted_at: new Date().toISOString()
-  };
-}
-
-// POST to the Pages Function. Resolves to true only on a confirmed forward,
-// so callers can react to silent failures (misconfigured webhook, etc.).
-function submitToGHL(payload) {
-  return fetch('/api/ghl', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-    keepalive: true
-  }).then(function(res) {
-    return res.json().catch(function(){ return {}; }).then(function(data) {
-      var ok = res.ok && data && data.ok !== false && data.forwarded !== false;
-      if (!ok) console.warn('GHL submission not forwarded', res.status, data);
-      return ok;
-    });
-  }).catch(function(error) {
-    console.warn('GHL submission failed', error);
-    return false;
-  });
-}
-
-// Capture the lead (with or without email). Dedupes the email-less completion
-// event so a retake/refresh does not create duplicate "completed" records.
-function captureLead(email, eventType, extra) {
-  if (!email && _ghlLeadSent) return Promise.resolve(true);
-  if (!email) _ghlLeadSent = true;
-  return submitToGHL(buildLeadPayload(email, eventType, extra));
-}
-
-/* ── EMAIL GATE / UNLOCK ────────────────────────────── */
-var _resultsUnlocked = false;
-// Reveal the gated content (cost statement, strategies, downloads) and replace
-// the gate's prompt with a confirmation + next step.
-function unlockResults(email) {
-  if (_resultsUnlocked) return;
-  _resultsUnlocked = true;
-  var locked = document.getElementById('lockedContent');
-  locked.classList.add('unlocked');
-  document.getElementById('gateTitle').textContent = 'Your results are unlocked';
-  document.getElementById('gateBody').innerHTML =
-    'Scroll down for your cost statement and your three strategies. ' +
-    (email ? 'A copy is on its way to <strong>' + escapeHTML(email) + '</strong>. ' : '') +
-    'When you are ready to interrupt the pattern, ' +
-    '<a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener">your next step is KOORA</a>.';
-  // Move focus into the newly revealed content so screen-reader / keyboard
-  // users are taken to it rather than left at the gate.
-  if (locked && typeof locked.focus === 'function') {
-    try { locked.focus({ preventScroll: false }); } catch (e) { locked.focus(); }
-  }
-  track('results_unlocked');
-}
-
-function sendEmail() {
-  var name = participantName;
-  var email = document.getElementById('emailInput').value.trim();
-  var statusEl = document.getElementById('emailStatus');
-  var sendBtn = document.getElementById('btnSendEmail');
-  var consent = document.getElementById('consentCheck');
-  // RFC-pragmatic check: non-empty local part, @, domain with a dot.
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    statusEl.textContent = 'Please enter a valid email address.';
-    statusEl.className = 'email-status err';
-    statusEl.style.display = 'block';
-    return;
-  }
-  if (consent && !consent.checked) {
-    statusEl.textContent = 'Please tick the box to agree to receive your results before continuing.';
-    statusEl.className = 'email-status err';
-    statusEl.style.display = 'block';
-    return;
-  }
-  var scores = {};
-  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
-  var costScore = getCostScore();
-  var rhythmScore = getRhythmScore();
-  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
-  var pd = REFLEX_DATA[primary];
-  var pl = getLevel(scores[primary], 16);
-
-  var trafficSummary = REFLEX_ORDER.map(function(r) {
-    var lvl = getLevel(scores[r], 16);
-    return r.charAt(0).toUpperCase() + r.slice(1) + ': ' + scores[r] + '/16 (' + getLevelLabel(lvl) + ')';
-  }).join('\n') +
-    '\nCost of Pattern: ' + costScore + '/40' +
-    '\nStart-Stop Pattern: ' + rhythmScore + '/16';
-
-  var stratHtml = pd.strategies.map(function(st, i) {
-    return (i+1) + '. ' + st.title + '\n' + st.body;
-  }).join('\n\n');
-
-  sendBtn.disabled = true;
-  var origBtnText = sendBtn.textContent;
-  statusEl.textContent = 'Verifying...';
-  statusEl.className = 'email-status';
-  statusEl.style.display = 'block';
-
-  // Resolve a Turnstile token (empty string when Turnstile is disabled), then
-  // capture the lead, unlock the results, and send the email.
-  getTurnstileToken().then(function(turnstileToken) {
-    // Enrich the CRM lead with the email + consent + Turnstile token.
-    captureLead(email, 'email_submitted', { consent: !!(consent && consent.checked), turnstile_token: turnstileToken })
-      .then(function(ok) { if (!ok) console.warn('Lead email enrichment was not forwarded to the CRM.'); });
-
-    track('lead_captured', { method: 'email' });
-
-    // Unlock immediately — the user has met the gate regardless of email delivery.
-    unlockResults(email);
-
-    if (!initEmailJS()) {
-      statusEl.textContent = 'Your results are unlocked below. Email delivery is temporarily unavailable. Use the Download PDF button to keep a copy.';
-      statusEl.className = 'email-status ok';
-      sendBtn.textContent = 'Unlocked ✓';
-      return;
-    }
-    statusEl.textContent = 'Sending...';
-    sendBtn.textContent = 'Sending...';
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-    to_name:         name,
-    to_email:        email,
-    primary_reflex:  pd.name,
-    primary_level:   getLevelLabel(pl) + ' (' + scores[primary] + '/16)',
-    archetype_desc:  pd.whatItIs + '\n\n' + pd.whatItActuallyIs,
-    cost_statement:  pd.cost,
-    traffic_summary: trafficSummary,
-    strategies_html: stratHtml,
-    layered_html:    pd.layered,
-    summit_url:      'https://www.houseofmastery.co/4ckoora'
-    }).then(function() {
-      statusEl.innerHTML = 'Your results are unlocked below and on their way to <strong>' + escapeHTML(email) + '</strong>. ' +
-        'When you are ready to interrupt the pattern, ' +
-        '<a href="https://www.houseofmastery.co/4ckoora" target="_blank" rel="noopener">your next step is KOORA</a>.';
-      statusEl.className = 'email-status ok';
-      sendBtn.textContent = 'Sent ✓';
-    }, function() {
-      // Results are already unlocked; only the email copy failed.
-      statusEl.textContent = 'Your results are unlocked below. We could not email a copy just now. Please use the Download PDF button to keep one.';
-      statusEl.className = 'email-status ok';
-      sendBtn.textContent = 'Unlocked ✓';
-    });
-  });
-}
-
-/* ── PDF ────────────────────────────────────────────── */
-function downloadPDF() {
-  var btn = document.getElementById('btnDownloadPDF');
-  var orig = btn ? btn.textContent : '';
-  if (btn) { btn.disabled = true; btn.textContent = 'Preparing PDF...'; }
-  loadJsPDF().then(function() {
-    renderPDF();
-    if (btn) { btn.disabled = false; btn.textContent = orig; }
-  }).catch(function() {
-    if (btn) { btn.disabled = false; btn.textContent = orig; }
-    alert('PDF download is temporarily unavailable. Please try the email option instead, or check your connection.');
-  });
-}
-
-function renderPDF() {
-  var name = participantName;
-  var scores = {};
-  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
-  var costScore = getCostScore();
-  var rhythmScore = getRhythmScore();
-  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
-  var { jsPDF } = window.jspdf;
-  var doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-  var W=210, M=22, y=0;
-  var lc = { quiet:[46,125,50], active:[154,91,0], loud:[178,34,34] };
-
-  // Header
-  doc.setFillColor(22,53,88); doc.rect(0,0,W,28,'F');
-  doc.setFillColor(158,115,64); doc.rect(0,0,W,2.5,'F');
-  doc.setTextColor(158,115,64); doc.setFontSize(8); doc.setFont('helvetica','bold');
-  doc.text('HOUSE OF MASTERY  \u00B7  THE EMOTIONAL SOVEREIGNTY SCREEN', M, 13);
-  doc.setTextColor(255,255,255); doc.setFontSize(8); doc.setFont('helvetica','normal');
-  doc.text('Confidential  \u00B7  ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}), M, 22);
-  y = 44;
-
-  doc.setTextColor(16,40,68); doc.setFontSize(22); doc.setFont('helvetica','bold');
-  doc.text('Result for ' + name, M, y); y += 10;
-  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
-  doc.text('The Emotional Sovereignty Screen  \u00B7  House of Mastery', M, y); y += 14;
-
-  // Scores
-  doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(22,53,88);
-  doc.text('Pattern Profile', M, y); y += 7;
-  doc.setDrawColor(215,226,239); doc.setLineWidth(0.3); doc.line(M, y, W-M, y); y += 6;
-
-  REFLEX_ORDER.forEach(function(r) {
-    var s = scores[r], lvl = getLevel(s,16), pct = s/16;
-    var c = lc[lvl];
-    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(16,40,68);
-    doc.text(r.charAt(0).toUpperCase()+r.slice(1), M, y+3);
-    doc.setFillColor(235,235,235); doc.rect(80, y-2, 90, 5, 'F');
-    doc.setFillColor(c[0],c[1],c[2]); doc.rect(80, y-2, 90*pct, 5, 'F');
-    doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(c[0],c[1],c[2]);
-    doc.text(s+'/16  '+getLevelLabel(lvl), 174, y+3);
-    y += 10;
-  });
-
-  // Cost row
-  var cLvl = getLevel(costScore,40), cPct = costScore/40;
-  var cc = lc[cLvl];
-  doc.setDrawColor(215,226,239); doc.line(M, y, W-M, y); y += 4;
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(16,40,68);
-  doc.text('Cost of Pattern', M, y+3);
-  doc.setFillColor(235,235,235); doc.rect(80, y-2, 90, 5, 'F');
-  doc.setFillColor(cc[0],cc[1],cc[2]); doc.rect(80, y-2, 90*cPct, 5, 'F');
-  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(cc[0],cc[1],cc[2]);
-  doc.text(costScore+'/40', 174, y+3); y += 10;
-
-  // Rhythm row
-  var rLvl = getLevel(rhythmScore,16), rPct = rhythmScore/16;
-  var rc = lc[rLvl];
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(16,40,68);
-  doc.text('Starting & Rhythm', M, y+3);
-  doc.setFillColor(235,235,235); doc.rect(80, y-2, 90, 5, 'F');
-  doc.setFillColor(rc[0],rc[1],rc[2]); doc.rect(80, y-2, 90*rPct, 5, 'F');
-  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(rc[0],rc[1],rc[2]);
-  doc.text(rhythmScore+'/16', 174, y+3); y += 16;
-
-  // Primary reflex
-  var pd = REFLEX_DATA[primary];
-  var pl = getLevel(scores[primary],16);
-  var pc = lc[pl];
-  doc.setFillColor(pc[0],pc[1],pc[2]); doc.rect(M, y, 3, 28, 'F');
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(pc[0],pc[1],pc[2]);
-  doc.text('PRIMARY REFLEX', M+6, y+6);
-  doc.setFontSize(14); doc.setFont('helvetica','bold'); doc.setTextColor(22,53,88);
-  doc.text(pd.name, M+6, y+14);
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
-  doc.text(getLevelLabel(pl) + '  \u00B7  ' + scores[primary] + '/16', M+6, y+22);
-  y += 36;
-
-  // Cost statement
-  doc.setFillColor(246,238,221); doc.rect(M, y, W-2*M, 22, 'F');
-  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(158,115,64);
-  doc.text('THE COST OF THIS PATTERN', M+4, y+7);
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(16,40,68);
-  var costLines = doc.splitTextToSize(pd.cost, W-2*M-8);
-  doc.text(costLines, M+4, y+14);
-  y += 22 + (costLines.length > 1 ? (costLines.length-1)*5 : 0) + 8;
-
-  // Strategies
-  doc.setFontSize(11); doc.setFont('helvetica','bold'); doc.setTextColor(22,53,88);
-  doc.text('Three Strategies to Start Today', M, y); y += 7;
-  doc.setDrawColor(215,226,239); doc.line(M, y, W-M, y); y += 6;
-
-  pd.strategies.forEach(function(st, i) {
-    if (y > 260) { doc.addPage(); y = 22; }
-    doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(158,115,64);
-    doc.text((i+1)+'.', M, y+3);
-    doc.setTextColor(16,40,68);
-    doc.text(st.title, M+8, y+3);
-    y += 8;
-    doc.setFont('helvetica','normal'); doc.setTextColor(60,60,60);
-    var bodyLines = doc.splitTextToSize(st.body, W-2*M-8);
-    doc.text(bodyLines, M+8, y);
-    y += bodyLines.length * 5 + 6;
-  });
-
-  // Layered
-  if (y > 240) { doc.addPage(); y = 22; }
-  y += 4;
-  doc.setFontSize(10); doc.setFont('helvetica','bold'); doc.setTextColor(22,53,88);
-  doc.text('Layered Strategies', M, y); y += 7;
-  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(60,60,60);
-  var layLines = doc.splitTextToSize(pd.layered, W-2*M);
-  doc.text(layLines, M, y); y += layLines.length * 5 + 14;
-
-  // KOORA footer block
-  if (y > 230) { doc.addPage(); y = 22; }
-  doc.setFillColor(22,53,88); doc.rect(M, y, W-2*M, 28, 'F');
-  doc.setFontSize(9); doc.setFont('helvetica','bold'); doc.setTextColor(158,115,64);
-  doc.text('KOORA: The Finisher Protocol', M+6, y+9);
-  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(255,255,255);
-  doc.text('Become a Finisher. Finish what you started. A 180-day path.', M+6, y+16);
-  doc.text('www.houseofmastery.co/4ckoora', M+6, y+23);
-
-  doc.save('Emotional-Sovereignty-' + name.replace(/\s+/g,'-') + '.pdf');
-}
-
-/* ── WHATSAPP IMAGE ─────────────────────────────────── */
-function downloadWhatsApp() {
-  var name = participantName;
-  var scores = {};
-  REFLEX_ORDER.forEach(function(r){ scores[r] = getReflexScore(r); });
-  var primary = REFLEX_ORDER.reduce(function(a,b){ return scores[a] >= scores[b] ? a : b; });
-  var primaryLevel = getLevel(scores[primary], 16);
-  var lvlColors = { quiet:'#2E7D32', active:'#9A5B00', loud:'#B22222' };
-  var lvlBg     = { quiet:'#E8F1E6', active:'#F6EEDD', loud:'#F7E7E5' };
-
-  var canvas = document.createElement('canvas');
-  canvas.width = 1080; canvas.height = 1080;
-  var ctx = canvas.getContext('2d');
-
-  ctx.fillStyle = '#EDF2F9';
-  ctx.fillRect(0, 0, 1080, 1080);
-  ctx.fillStyle = '#9E7340';
-  ctx.fillRect(0, 0, 1080, 7);
-  ctx.fillStyle = '#163558';
-  ctx.fillRect(0, 7, 1080, 130);
-
-  ctx.fillStyle = '#9E7340';
-  ctx.font = '700 20px sans-serif';
-  ctx.fillText('HOUSE OF MASTERY  \u00B7  EMOTIONAL SOVEREIGNTY SCREEN', 60, 62);
-  ctx.fillStyle = 'rgba(255,255,255,0.65)';
-  ctx.font = '500 19px sans-serif';
-  ctx.fillText('Result for ' + name, 60, 100);
-
-  ctx.fillStyle = lvlBg[primaryLevel];
-  ctx.beginPath();
-  if (ctx.roundRect) { ctx.roundRect(60, 175, 960, 160, 10); } else { ctx.rect(60, 175, 960, 160); }
-  ctx.fill();
-  ctx.fillStyle = lvlColors[primaryLevel];
-  ctx.font = '700 17px sans-serif';
-  ctx.fillText('PRIMARY REFLEX', 88, 215);
-  ctx.fillStyle = '#102844';
-  ctx.font = '700 34px sans-serif';
-  ctx.fillText(REFLEX_DATA[primary].name, 88, 262);
-  ctx.fillStyle = lvlColors[primaryLevel];
-  ctx.font = '700 20px sans-serif';
-  ctx.fillText(getLevelLabel(primaryLevel) + '  \u00B7  ' + scores[primary] + '/16', 88, 300);
-
-  var barY = 400;
-  ctx.fillStyle = '#102844';
-  ctx.font = '700 17px sans-serif';
-  ctx.fillText('YOUR PATTERN PROFILE', 60, barY - 14);
-  ctx.strokeStyle = '#D7E2EF'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(60, barY - 6); ctx.lineTo(1020, barY - 6); ctx.stroke();
-
-  REFLEX_ORDER.forEach(function(r, i) {
-    var s = scores[r], lvl = getLevel(s, 16), pct = s/16;
-    var by = barY + i * 88;
-    ctx.fillStyle = '#102844';
-    ctx.font = '600 19px sans-serif';
-    ctx.fillText(r.charAt(0).toUpperCase() + r.slice(1), 60, by + 28);
-    ctx.fillStyle = '#EBEBEB';
-    ctx.beginPath();
-    if (ctx.roundRect) { ctx.roundRect(240, by+12, 660, 12, 6); } else { ctx.rect(240, by+12, 660, 12); }
-    ctx.fill();
-    ctx.fillStyle = lvlColors[lvl];
-    ctx.beginPath();
-    if (ctx.roundRect) { ctx.roundRect(240, by+12, 660*pct, 12, 6); } else { ctx.rect(240, by+12, 660*pct, 12); }
-    ctx.fill();
-    ctx.fillStyle = lvlColors[lvl];
-    ctx.font = '700 17px sans-serif';
-    ctx.fillText(s + '/16  ' + getLevelLabel(lvl), 920, by + 28);
-  });
-
-  ctx.fillStyle = '#163558';
-  ctx.fillRect(0, 980, 1080, 100);
-  ctx.fillStyle = '#9E7340';
-  ctx.font = '600 17px sans-serif';
-  ctx.fillText('KOORA: The Finisher Protocol  \u00B7  www.houseofmastery.co/4ckoora', 60, 1038);
-
-  var link = document.createElement('a');
-  link.download = 'Emotional-Sovereignty-' + name.replace(/\s+/g,'-') + '.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-}
-
-/* ── KEYBOARD SHORTCUTS ─────────────────────────────── */
-document.addEventListener('keydown', function(e) {
-  var slide = document.querySelector('.slide.active');
-  if (!slide || slide.id !== 'slide-question') return;
-  var keyMap = { 'a':1, 'b':2, 'c':3, 'd':4 };
-  var k = e.key.toLowerCase();
-  if (keyMap[k]) {
-    selectOption(currentQ, keyMap[k]);
-  }
-  if (e.key === 'Enter') {
-    nextQuestion();
-  }
-});
 </script>
 </body>
 </html>

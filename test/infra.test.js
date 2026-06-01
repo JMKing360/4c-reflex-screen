@@ -55,19 +55,16 @@ test('Report-Only CSP allowlist covers every external origin the app uses', () =
   const ro = h.match(/Content-Security-Policy-Report-Only:\s*(.+)$/m);
   assert.ok(ro, 'Report-Only CSP missing');
   const csp = ro[1];
-  // Each origin must appear in the policy — keep this in lockstep with the
-  // actual external dependencies in index.html / ghl.js.
+  // The 4C Personal Task Assessment loads no external scripts — only Google
+  // Fonts. Keep this in lockstep with the actual dependencies in index.html.
   for (const origin of [
-    'https://cdn.jsdelivr.net',          // EmailJS SDK
-    'https://cdnjs.cloudflare.com',      // jsPDF
-    'https://challenges.cloudflare.com', // Turnstile
-    'https://www.googletagmanager.com',  // GA4
-    'https://api.emailjs.com',           // EmailJS send
     'https://fonts.googleapis.com',      // Google Fonts CSS
     'https://fonts.gstatic.com',         // Google Fonts files
   ]) {
     assert.ok(csp.includes(origin), `Report-Only CSP missing ${origin}`);
   }
+  // Connect is locked to same-origin (only /api/ghl + /api/csp-report).
+  assert.match(csp, /connect-src 'self'/, 'connect-src should be self-only');
 });
 
 test('every https origin the app references is allowed by the CSP', () => {
@@ -100,13 +97,13 @@ test('manifest.webmanifest is valid JSON with the required fields', () => {
   assert.strictEqual(m.start_url, '/');
   assert.strictEqual(m.display, 'standalone');
   assert.ok(Array.isArray(m.icons) && m.icons.length > 0, 'icons missing');
-  // Theme/background must match the canonical KOORA palette.
-  assert.strictEqual(m.theme_color, '#163558', 'theme_color must be canonical navy');
-  assert.strictEqual(m.background_color, '#EDF2F9', 'background_color must be canonical paper');
+  // Theme/background must match the 4C app's shipped look (white surface, ink).
+  assert.strictEqual(m.theme_color, '#1D1D1F', 'theme_color must be the app ink');
+  assert.strictEqual(m.background_color, '#FFFFFF', 'background_color must be white');
 });
 
 test('index.html wires up the manifest and theme-color', () => {
   const html = read('index.html');
   assert.match(html, /<link\s+rel="manifest"\s+href="\/manifest\.webmanifest">/, 'manifest link missing');
-  assert.match(html, /<meta\s+name="theme-color"\s+content="#163558">/, 'theme-color meta missing/wrong');
+  assert.match(html, /<meta\s+name="theme-color"\s+content="#1D1D1F">/, 'theme-color meta missing/wrong');
 });

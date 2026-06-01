@@ -1,33 +1,28 @@
 # Cloudflare Pages security headers for 4c.houseofmastery.co
+# (The 4C Personal Task Assessment.)
 #
 # Rollout strategy (the durable path for a live conversion funnel):
 #   * The directives that CANNOT break the app are ENFORCED immediately below
 #     via Content-Security-Policy (object-src, base-uri, form-action,
-#     frame-ancestors) plus the transport/isolation headers. These give real
-#     clickjacking + injection protection with zero risk to conversions.
-#   * The full resource allowlist (script/style/font/img/connect/frame) ships
-#     as Content-Security-Policy-Report-Only so we validate it against real
-#     traffic before enforcing — a wrong allowlist on a live funnel would
-#     silently kill EmailJS, Turnstile, jsPDF, GA4, or fonts.
+#     frame-ancestors) plus the transport/isolation headers. Zero risk to
+#     conversions.
+#   * The full resource allowlist ships as Content-Security-Policy-Report-Only
+#     so we validate it against real traffic before enforcing. This app loads
+#     no external scripts at all — only Google Fonts — so the allowlist is
+#     deliberately tiny.
 #   * Violations are reported to /api/csp-report (functions/api/csp-report.js)
 #     via report-to + the legacy report-uri fallback. Tail them with
-#     `wrangler pages deployment tail` (or the Cloudflare dashboard logs)
-#     during the validation window.
+#     `wrangler pages deployment tail` during the validation window.
 #
 # PROMOTE TO ENFORCING once the /api/csp-report stream is clean over real
 # traffic: fold the Report-Only allowlist into Content-Security-Policy (merge
 # the two policy strings) and delete the Report-Only header.
 #
 # Allowlist provenance (every origin is referenced in index.html / ghl.js):
-#   cdn.jsdelivr.net          EmailJS browser SDK (static <script>)
-#   cdnjs.cloudflare.com      jsPDF (lazy-loaded in downloadPDF)
-#   challenges.cloudflare.com Turnstile widget (script + iframe)
-#   www.googletagmanager.com  GA4 gtag.js
-#   *.google-analytics.com    GA4 collect endpoints (incl. regional)
-#   api.emailjs.com           EmailJS send (fetch)
-#   fonts.googleapis.com      Google Fonts stylesheet
-#   fonts.gstatic.com         Google Fonts files
-#   'self'                    /api/ghl Pages Function (CRM capture)
+#   fonts.googleapis.com  Google Fonts stylesheet (Plus Jakarta Sans)
+#   fonts.gstatic.com     Google Fonts files
+#   'self'                /api/ghl (CRM capture) + /api/csp-report
+#   data:                 Canvas profile-card export (toDataURL)
 
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
@@ -37,7 +32,7 @@
   Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()
   Reporting-Endpoints: csp-endpoint="/api/csp-report"
   Content-Security-Policy: object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://*.houseofmastery.co
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://challenges.cloudflare.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.googletagmanager.com https://*.google-analytics.com; connect-src 'self' https://api.emailjs.com https://www.googletagmanager.com https://*.google-analytics.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://*.houseofmastery.co; upgrade-insecure-requests; report-to csp-endpoint; report-uri /api/csp-report
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self' https://*.houseofmastery.co; upgrade-insecure-requests; report-to csp-endpoint; report-uri /api/csp-report
 
 /manifest.webmanifest
   Content-Type: application/manifest+json; charset=utf-8

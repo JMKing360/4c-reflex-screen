@@ -1,5 +1,21 @@
 # Claude Code Instructions
 
+## Current app (read first)
+
+`main` / `4c.houseofmastery.co` serves **The 4C Personal Task Assessment** —
+a 20-item, two-step-intake assessment (4C × 4-domain model, 2,048 personalized
+profiles, Canvas profile-card export). It captures leads to HighLevel via the
+same-origin Cloudflare Function `POST /api/ghl` (no Google Apps Script, no
+captcha). It loads **no external scripts** — only Google Fonts (Plus Jakarta
+Sans). White/ink/blue palette; the brief's alternate navy/gold/Cormorant look
+is intentionally not applied (owner chose ship-as-is).
+
+Two earlier, different assessments are preserved on branches for separate sites,
+not on `main`:
+- `archive/emotional-sovereignty-screen` — the 30-question reflex screen + full
+  infra (EmailJS/HighLevel/Turnstile/GA4/jsPDF) that previously lived here.
+- `archive/4c-reflex-screen-koora` — the 20-statement "4C Reflex Screen · KOORA".
+
 <!-- MANUS-CLOUDFLARE-AUTOMATION:START -->
 
 ## Cloudflare Automation Context
@@ -31,12 +47,12 @@ rollout follows the durable path for a revenue page:
 - **Enforced now** (cannot break conversions): HSTS, `nosniff`, `Referrer-Policy`,
   `Permissions-Policy`, COOP, and the CSP directives `object-src 'none'`,
   `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'self' https://*.houseofmastery.co`.
-- **Report-Only** (validating before enforcing): the full resource allowlist
-  (`script/style/font/img/connect/frame-src`). Every allowed origin maps to a
-  real dependency in `index.html` / `functions/api/ghl.js` (EmailJS, jsPDF,
-  Turnstile, GA4, Google Fonts). `test/infra.test.js` keeps the allowlist in
-  lockstep with the code and will fail CI if a new external origin is added
-  without being allowed.
+- **Report-Only** (validating before enforcing): the full resource allowlist.
+  The 4C app loads no external scripts, so this is tiny — Google Fonts
+  (`fonts.googleapis.com` / `fonts.gstatic.com`) plus `connect-src 'self'` for
+  `/api/ghl` and `/api/csp-report`, and `img-src data:` for the Canvas export.
+  `test/infra.test.js` keeps the allowlist in lockstep with the code and will
+  fail CI if a new external origin is added without being allowed.
 - **To promote to enforcing:** once Report-Only shows no legitimate violations
   in production, merge the Report-Only allowlist into `Content-Security-Policy`
   and delete the Report-Only header.
