@@ -1,11 +1,11 @@
 // End-to-end smoke test for the 4C Personal Task Assessment: drive the full
-// flow (arrival → intake → 30 items across 6 chapters → processing → reveal)
-// and assert the personalized result renders and the lead is captured.
-// Intercepts /api/ghl so no real CRM call is made. (The secondary Apps Script
-// Sheet call stays off behind the PASTE_ guard, so there is nothing else to stub.)
+// flow (arrival → name → 30 items → processing → email/phone gate → reveal)
+// and assert the personalized result renders and the lead is captured. The
+// email + phone gate at the end is what unlocks (and submits) the results.
+// Intercepts /api/ghl and the Apps Script sink so no real lead is sent.
 const { test, expect } = require('@playwright/test');
 
-test('arrival → intake → 30 items → personalized reveal → lead captured', async ({ page }) => {
+test('arrival → name → 30 items → gate → reveal → lead captured', async ({ page }) => {
   test.setTimeout(90000); // 30 items + chapter openers + 3.5s processing + staggered reveal
   // Capture the lead payload the app POSTs to the Pages Function.
   let captured = null;
@@ -27,18 +27,11 @@ test('arrival → intake → 30 items → personalized reveal → lead captured'
   await expect(page.locator('#s0')).toBeVisible();
   await page.click('#s0 button');
 
-  // Intake step 1: name + email + WhatsApp gate the Continue button.
-  await expect(page.locator('#st1')).toBeVisible();
-  await page.fill('#fn', 'Alex');
-  await page.fill('#ln', 'Doe');
-  await page.fill('#em', 'alex@example.com');
-  await page.fill('#ph', '+254700000000');
+  // Start: full name only gates the Begin button.
+  await expect(page.locator('#s1')).toBeVisible();
+  await page.fill('#fn', 'Alex Doe');
   await expect(page.locator('#bs2')).toBeEnabled();
   await page.click('#bs2');
-
-  // Intake step 2 is optional → start the assessment.
-  await expect(page.locator('#st2')).toBeVisible();
-  await page.click('text=Start the assessment');
 
   // Journey: 6 chapter openers + 30 items (incl. 2 non-scored closing items).
   // Each chapter starts with an opener; every item then shows its options.
@@ -60,7 +53,14 @@ test('arrival → intake → 30 items → personalized reveal → lead captured'
     await page.waitForTimeout(650);
   }
 
-  // Processing holds ~3.5s, then the reveal appears.
+  // Processing holds ~3.5s, then the email/phone gate appears (the unlock).
+  await expect(page.locator('#sg')).toBeVisible({ timeout: 10000 });
+  await page.fill('#em', 'alex@example.com');
+  await page.fill('#ph', '+254700000000');
+  await expect(page.locator('#bReveal')).toBeEnabled();
+  await page.click('#bReveal');
+
+  // Results are released only after the gate.
   await expect(page.locator('#s4')).toBeVisible({ timeout: 10000 });
   await expect(page.locator('#rN')).toHaveText(/Alex/);
   // The personalized result layers render (where your power goes, practice, etc.).
