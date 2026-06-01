@@ -75,7 +75,10 @@ test('every https origin the app references is allowed by the CSP', () => {
   // Catch the reverse drift: a new external dependency added to index.html that
   // nobody added to the CSP. Origins served by our own first-party function or
   // used only as user-facing navigation (the brand site) are exempt.
-  const html = read('index.html');
+  // JSON-LD contains schema/entity identifiers and social profile URLs. Those are
+  // structured data references, not network-loaded browser resources, so exclude
+  // them from the CSP origin drift scan.
+  const html = read('index.html').replace(/<script[^>]+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi, '');
   const csp = read('_headers');
   const EXEMPT = new Set([
     'https://4c.houseofmastery.co',   // canonical / og (self)
@@ -101,13 +104,13 @@ test('manifest.webmanifest is valid JSON with the required fields', () => {
   assert.strictEqual(m.start_url, '/');
   assert.strictEqual(m.display, 'standalone');
   assert.ok(Array.isArray(m.icons) && m.icons.length > 0, 'icons missing');
-  // Theme/background must match the 4C app's shipped look (white surface, ink).
-  assert.strictEqual(m.theme_color, '#1D1D1F', 'theme_color must be the app ink');
-  assert.strictEqual(m.background_color, '#FFFFFF', 'background_color must be white');
+  // Theme/background must match the canonical House of Mastery palette.
+  assert.strictEqual(m.theme_color, '#163558', 'theme_color must be canonical navy');
+  assert.strictEqual(m.background_color, '#EDF2F9', 'background_color must be canonical paper');
 });
 
 test('index.html wires up the manifest and theme-color', () => {
   const html = read('index.html');
   assert.match(html, /<link\s+rel="manifest"\s+href="\/manifest\.webmanifest">/, 'manifest link missing');
-  assert.match(html, /<meta\s+name="theme-color"\s+content="#1D1D1F">/, 'theme-color meta missing/wrong');
+  assert.match(html, /<meta\s+name="theme-color"\s+content="#163558"\/?\s*>/, 'theme-color meta missing/wrong');
 });
