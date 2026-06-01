@@ -28,19 +28,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
+  /* Type · motion · radius */
   --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --warmth:#8C7A2E;
-  --accent:#0066CC;--accent-hover:#0055AA;--accent-soft:#EBF4FF;
+  --ease:cubic-bezier(0.25,0.1,0.25,1);
+  --r:12px;
+  /* Surfaces & ink ramp */
   --bg:#FFFFFF;--surface:#F5F5F7;
   --ink:#1D1D1F;--secondary:#6E6E73;--tertiary:#86868B;
   --line:#D2D2D7;--line-light:#E8E8ED;
-  --r:12px;
+  /* Accents */
+  --warmth:#8C7A2E;
+  --accent:#0066CC;--accent-hover:#0055AA;--accent-soft:#EBF4FF;
+  /* Reflex palette: chapter openers only */
   --complain:#BF3B22;--complain-s:#FEF0ED;
   --criticize:#9E7410;--criticize-s:#FDF6E3;
   --compare:#1D6BAD;--compare-s:#EDF5FC;
   --compete:#6D3CC4;--compete-s:#F1EDFC;
   --return-c:#0D7355;--return-s:#E7F7F1;
-  --ease:cubic-bezier(0.25,0.1,0.25,1);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
@@ -49,7 +53,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .w{max-width:540px;margin:0 auto;padding:0 28px}
 
 /* ─── TYPE SCALE ─── */
-/* 12 / 15 / 18 / 24 / 40 — five sizes, no overlap */
+/* 12 / 15 / 18 / 24 / 40 : five sizes, no overlap */
 
 /* ─── SCREENS ─── */
 .s{display:none;opacity:0;min-height:100vh;min-height:100dvh;flex-direction:column}
@@ -137,41 +141,42 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .p-dot:nth-child(2){animation-delay:250ms}.p-dot:nth-child(3){animation-delay:500ms}
 
 /* ─── REVEAL ─── */
-.reveal{padding:64px 28px 120px}
-.r-header{text-align:center;margin-bottom:64px}
+.reveal{padding:72px 28px 128px}
+.r-header{text-align:center;margin-bottom:56px}
 .r-brand{font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--warmth);margin-bottom:24px}
-.r-title{font-size:24px;font-weight:700;letter-spacing:-0.3px;color:var(--ink);margin-bottom:8px}
+.r-title{font-size:24px;font-weight:700;letter-spacing:-0.3px;color:var(--ink);margin-bottom:10px}
 .r-name{font-size:15px;font-weight:500;color:var(--secondary)}
-.rl{opacity:0;transform:translateY(32px);margin-bottom:40px}
+.rl{opacity:0;transform:translateY(32px);margin-bottom:48px}
 .rl.vis{opacity:1;transform:translateY(0);transition:all 600ms var(--ease)}
 
-.lbl{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--warmth);margin-bottom:20px}
+.lbl{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--warmth);margin-bottom:18px}
 
 /* Prose card */
-.prose-card{background:var(--surface);border-radius:var(--r);padding:32px 24px}
+.prose-card{padding:0}
 .prose-text{font-size:18px;font-weight:400;line-height:1.75;color:var(--ink)}
 
 /* Profile summary */
-.profile{background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);padding:28px 24px}
-.pr{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line-light)}
+.profile{padding:0}
+.pr{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line-light)}
 .pr:last-child{border-bottom:none}
+.pr:first-child{padding-top:0}
 .pr-l{font-size:15px;color:var(--secondary)}
 .pr-v{font-size:15px;font-weight:600;color:var(--ink);text-align:right}
 
-/* Practice */
-.prac{background:var(--ink);border-radius:var(--r);padding:40px 24px;text-align:center}
+/* Practice: the single dark anchor */
+.prac{background:var(--ink);border-radius:var(--r);padding:44px 28px;text-align:center}
 .prac .lbl{color:var(--tertiary)}
 .prac-name{font-size:24px;font-weight:600;color:#fff;margin-bottom:20px;letter-spacing:-0.2px}
 .prac-q{font-size:18px;font-weight:500;color:rgba(255,255,255,0.8);line-height:1.55;margin-bottom:24px}
 .prac-e{font-size:15px;color:rgba(255,255,255,0.45);line-height:1.65}
 
-/* Growth */
-.growth{background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);padding:32px 24px}
-.growth-text{font-size:18px;line-height:1.65;color:var(--ink)}
+/* Growth: hairline pull-quote, no fill */
+.growth{padding:2px 0 2px 20px;border-left:2px solid var(--warmth)}
+.growth-text{font-size:18px;line-height:1.7;color:var(--ink)}
 .growth-text em{color:var(--warmth);font-style:normal;font-weight:600}
 
-/* CTA */
-.cta-card{background:var(--surface);border-radius:var(--r);padding:40px 24px;text-align:center}
+/* CTA: fine border, no fill */
+.cta-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:44px 28px;text-align:center}
 .cta-title{font-size:24px;font-weight:700;color:var(--ink);margin-bottom:12px;letter-spacing:-0.3px}
 .cta-body{font-size:15px;color:var(--secondary);line-height:1.65;margin-bottom:12px}
 .cta-price{font-size:40px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-1px}
@@ -182,11 +187,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .cta-date{font-size:15px;font-weight:500;color:var(--tertiary);margin-top:16px}
 
 /* Bridge */
-.bridge{background:var(--surface);border-radius:var(--r);padding:36px 24px;text-align:center}
+.bridge{padding:0;text-align:center}
 .bridge-text{font-size:15px;line-height:1.7;color:var(--secondary);margin-bottom:28px}
 .bridge-close{font-size:18px;font-weight:600;color:var(--ink);line-height:1.6}
 
-.actions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:24px}
+.actions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:32px}
 #xc{display:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 @media(min-width:600px){.w{padding:0 48px}.arr-title{font-size:48px}.opener-text,.q-text{font-size:26px}}
@@ -197,10 +202,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 
   <div class="s arr on" id="s0">
     <div class="arr-hero">
-      <div class="arr-brand">House of Mastery</div>
-      <h1 class="arr-title">The 4C Personal Task Assessment</h1>
-      <p class="arr-sub">A map of where your power goes when you are not watching.</p>
-      <p class="arr-meta">30 questions. 7 minutes. One clear insight.</p>
+      <div class="arr-brand">The 4C Assessment</div>
+      <h1 class="arr-title">You don’t lose your power. You leak it.</h1>
+      <p class="arr-sub" style="margin-bottom:22px">Complaining, criticizing, comparing, competing. Four quiet reflexes that pull your energy out of your own hands, usually before you notice. Almost everyone leans on one more than the rest. Few can name which.</p>
+      <p class="arr-sub">This is where you find yours. Answer honestly about your past 30 days. Not who you mean to be, but who you’ve actually been. You’ll leave with your pattern, where it starts, and one practice to come back.</p>
+      <p class="arr-meta">30 questions · 7 minutes · one clear pattern</p>
       <button class="b" onclick="go('s1')" style="opacity:0;animation:rise 500ms var(--ease) 800ms forwards">Begin</button>
     </div>
     <footer class="home-footer">
@@ -228,11 +234,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 
   <div class="s intake" id="sg">
     <h2 class="i-title">Your 4C profile is ready</h2>
-    <p class="i-sub">Enter your email and phone to unlock your results — we’ll also send your profile and growth resources.</p>
+    <p class="i-sub">Enter your email and phone to unlock your results. We’ll also send your profile and growth resources.</p>
     <div class="fg"><label class="fl">Email</label><input class="fi" id="em" type="email" placeholder="you@example.com" autocomplete="email"></div>
     <div class="row2"><div class="fg"><label class="fl">Country</label><select class="fi fi-sel" id="co"><option value="">Select</option><option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select></div><div class="fg"><label class="fl">Phone (WhatsApp)</label><input class="fi" id="ph" type="tel" placeholder="+254 7XX XXX XXX" autocomplete="tel"></div></div>
     <div class="divider"></div>
-    <p class="i-sub" style="margin-bottom:20px">Optional — helps us tailor what we send you.</p>
+    <p class="i-sub" style="margin-bottom:20px">Optional. Helps us tailor what we send you.</p>
     <div class="row2"><div class="fg"><label class="fl">City</label><input class="fi" id="ct" type="text" placeholder="e.g. Nairobi"></div><div class="fg"><label class="fl">Gender</label><select class="fi fi-sel" id="ge"><option value="">Select</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div></div>
     <div class="row2"><div class="fg"><label class="fl">Age range</label><select class="fi fi-sel" id="ag"><option value="">Select</option><option>18-25</option><option>26-35</option><option>36-45</option><option>46-55</option><option>56+</option></select></div><div class="fg"><label class="fl">Professional field</label><select class="fi fi-sel" id="pf"><option value="">Select</option><option>Healthcare / Medicine</option><option>Business / Finance</option><option>Technology / Engineering</option><option>Education / Academia</option><option>Law / Policy</option><option>Creative / Media</option><option>Government / Public Service</option><option>Ministry / Non-profit</option><option>Entrepreneurship</option><option>Student</option><option>Other</option></select></div></div>
     <div class="fg"><label class="fl">How did you find this?</label><select class="fi fi-sel" id="sr"><option value="">Select</option><option>WhatsApp share</option><option>Instagram</option><option>LinkedIn</option><option>YouTube</option><option>Friend or colleague</option><option>Dr. Job Mogire event</option><option>House of Mastery member</option><option>Google search</option><option>Other</option></select></div>
@@ -392,7 +398,7 @@ function proc(){document.getElementById('pF').style.width='100%';go('s3');setTim
 //  • cS[c] = 4 matrix + 1 signature item per reflex (0–15)
 //  • dS[d] = the 16 matrix items per domain (0–12); hot zone = highest matrix cell
 //  • rS    = the 8 Return items (0–24)
-//  • wellbeing (wb) + context (ctx) are NOT scored — routing/personalization only
+//  • wellbeing (wb) + context (ctx) are NOT scored (routing/personalization only)
 function compute(){
   const cS=[0,0,0,0],dS=[0,0,0,0];let hi=-1,hv=-1,rS=0,wb=-1,ctx='';
   IT.forEach((it,i)=>{
@@ -418,7 +424,7 @@ function buildR(){
   let h='';
 
   // Layer 0: gentle lead-in when this is weighing heavily (wellbeing = "A lot")
-  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card" style="background:var(--return-s)"><p class="prose-text">Before anything else: you told us this is affecting you a lot right now. Read what follows gently — it’s a mirror, not a verdict.</p></div></div>`;
+  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card" style="background:var(--return-s)"><p class="prose-text">Before anything else: you told us this is affecting you a lot right now. Read what follows gently. It’s a mirror, not a verdict.</p></div></div>`;
 
   // Layer 1: The letter (prose, not dashboard)
   h+=`<div class="rl" data-d="200"><div class="prose-card"><div class="lbl">Where your power goes</div><p class="prose-text">${DR[cId]}</p></div></div>`;
@@ -475,7 +481,7 @@ function dlCard(){
 function wt(c,t,x,y,mw,lh){const ws=t.split(' ');let l='';for(let i=0;i<ws.length;i++){const ts=l+ws[i]+' ';if(c.measureText(ts).width>mw&&i>0){c.fillText(l.trim(),x,y);l=ws[i]+' ';y+=lh}else l=ts}c.fillText(l.trim(),x,y)}
 
 // Google Sheets capture (secondary). Paste your Apps Script Web App /exec URL
-// below — Deploy ▸ New deployment ▸ Web app ▸ Execute as: Me, Access: Anyone
+// below. Deploy ▸ New deployment ▸ Web app ▸ Execute as: Me, Access: Anyone
 // (see apps-script/README.md). While the PASTE_ token remains, this stays OFF
 // and only HighLevel runs. The Sheet capture never blocks the HighLevel capture.
 const GAS_URL='https://script.google.com/macros/s/AKfycbwl0vyjCHb5aMOX1NJx-s13rH4sUSSB2J-ZVwVddelSpB6hfaQyF50xOSmAEnI46BSfyw/exec';
@@ -483,7 +489,7 @@ const GAS_URL='https://script.google.com/macros/s/AKfycbwl0vyjCHb5aMOX1NJx-s13rH
 // Lead capture: POST the same payload to (1) the same-origin Cloudflare Function
 // (/api/ghl → HighLevel) and (2) the Apps Script Sheet. `contact.name`/`.email`
 // are what the Function validates; every other field rides along to both sinks.
-// Fire-and-forget — results are already on screen and never blocked on either.
+// Fire-and-forget. Results are already on screen and never blocked on either.
 function submit(){
   const dId=DI[res.dd],pr=PR[dId];
   const name=(u.fn+(u.ln?' '+u.ln:'')).trim();
@@ -493,7 +499,7 @@ function submit(){
     segmentation:{ country:u.co, city:u.ct, gender:u.ge, ageRange:u.ag, profession:u.pf, source:u.sr, readiness:u.rd, consentWhatsApp:u.cwa, consentEmail:u.cem },
     assessment:{
       // Only the 28 scored answers leave the browser. The two closing items
-      // (wellbeing + context) are kept private — never sent to either sink.
+      // (wellbeing + context) are kept private, never sent to either sink.
       answers:ans.slice(0,28).join(','),
       dominantC:CN[res.dc], secondaryC:CN[res.sc], vulnerableDomain:DN[res.dd],
       hotZone:CN[res.hc]+' x '+DN[res.hd], catchPoint:res.cp,
