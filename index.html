@@ -15,12 +15,12 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="House of Mastery">
 <meta property="og:title" content="The 4C Personal Task Assessment">
-<meta property="og:description" content="20 questions. 5 minutes. One clear insight into your pattern.">
+<meta property="og:description" content="30 questions. 7 minutes. One clear insight into your pattern.">
 <meta property="og:url" content="https://4c.houseofmastery.co/">
 <meta property="og:image" content="https://4c.houseofmastery.co/og-image.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The 4C Personal Task Assessment">
-<meta name="twitter:description" content="20 questions. 5 minutes. One clear insight into your pattern.">
+<meta name="twitter:description" content="30 questions. 7 minutes. One clear insight into your pattern.">
 <meta name="twitter:image" content="https://4c.houseofmastery.co/og-image.svg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -192,7 +192,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
     <div class="arr-brand">House of Mastery</div>
     <h1 class="arr-title">The 4C Personal Task Assessment</h1>
     <p class="arr-sub">A map of where your power goes when you are not watching.</p>
-    <p class="arr-meta">20 questions. 5 minutes. One clear insight.</p>
+    <p class="arr-meta">30 questions. 7 minutes. One clear insight.</p>
     <button class="b" onclick="go('s1')" style="opacity:0;animation:rise 500ms var(--ease) 800ms forwards">Begin</button>
   </div>
 
@@ -246,29 +246,46 @@ const CHS=[
   {l:'Criticizing',c:'var(--criticize)',bg:'var(--criticize-s)',r:'Sometimes you manage someone else instead of yourself. It feels productive. It feels like high standards. It costs you anyway.',btn:'Continue'},
   {l:'Comparing',c:'var(--compare)',bg:'var(--compare-s)',r:'Sometimes you measure yourself against someone else\u2019s life. The scoreboard is invisible. The game never ends.',btn:'Continue'},
   {l:'Competing',c:'var(--compete)',bg:'var(--compete-s)',r:'Sometimes you chase position instead of growth. This one is the hardest to see in yourself.',btn:'Continue'},
-  {l:'Return',c:'var(--return-c)',bg:'var(--return-s)',r:'Now something different. How quickly you notice the leak. And what you do when you catch it.',btn:'Continue'}
+  {l:'Return',c:'var(--return-c)',bg:'var(--return-s)',r:'Now something different. How quickly you notice the leak. And what you do when you catch it.',btn:'Continue'},
+  {l:'One last thing',c:'var(--ink)',bg:'var(--surface)',r:'Two short questions before your results. These shape what you see, stay private, and are not scored.',btn:'Almost there'}
 ];
 const IT=[
-  {ch:0,t:'I replayed what was wrong instead of asking what was mine to do.'},
-  {ch:0,t:'I sat in frustration or resentment without naming it or taking a step forward.'},
-  {ch:0,t:'I delayed acting because the situation felt unfair or the conditions felt wrong.'},
-  {ch:0,t:'I talked about the problem more than about any next step.'},
-  {ch:1,t:'My mind kept scanning what was wrong with another person instead of governing myself.'},
-  {ch:1,t:'I felt irritated or morally superior toward someone.'},
-  {ch:1,t:'I chose to correct or manage someone else\u2019s behavior instead of staying with my own.'},
-  {ch:1,t:'I gave a negative assessment of someone without a genuinely constructive purpose.'},
-  {ch:2,t:'I measured my progress or worth against someone else\u2019s.'},
-  {ch:2,t:'I felt smaller after seeing another person\u2019s results or recognition.'},
-  {ch:2,t:'I adjusted my goals because someone else\u2019s pace made mine feel insufficient.'},
-  {ch:2,t:'I tracked or scrolled through other people\u2019s lives in ways that pulled me out of my own.'},
-  {ch:3,t:'I thought about where I ranked more than about what growth required of me.'},
-  {ch:3,t:'I felt restless when someone near me succeeded, or relieved when they struggled.'},
-  {ch:3,t:'I made a choice mainly to stay ahead or avoid being outdone.'},
-  {ch:3,t:'I performed, one-upped, or positioned myself to win rather than to contribute.'},
-  {ch:4,t:'I noticed fairly quickly when I was leaking power.'},
-  {ch:4,t:'I interrupted the pattern before it became action.'},
-  {ch:4,t:'I redirected my energy back to what was actually mine to handle.'},
-  {ch:4,t:'I used a specific practice to return, instead of just criticizing myself.'}
+  // Complaining (c0): think / feel / choose / do + signature
+  {ch:0,c:0,d:0,t:'I replayed what was wrong instead of asking what was mine to do.'},
+  {ch:0,c:0,d:1,t:'I sat in frustration or resentment without naming it or taking a step forward.'},
+  {ch:0,c:0,d:2,t:'I delayed acting because the situation felt unfair or the conditions felt wrong.'},
+  {ch:0,c:0,d:3,t:'I talked about the problem more than about any next step.'},
+  {ch:0,c:0,sig:true,t:'I described a situation as unfair or impossible more than I described what I could do about it.'},
+  // Criticizing (c1)
+  {ch:1,c:1,d:0,t:'My mind kept scanning what was wrong with another person instead of governing myself.'},
+  {ch:1,c:1,d:1,t:'I felt irritated or morally superior toward someone.'},
+  {ch:1,c:1,d:2,t:'I chose to correct or manage someone else\u2019s behavior instead of staying with my own.'},
+  {ch:1,c:1,d:3,t:'I gave a negative assessment of someone without a genuinely constructive purpose.'},
+  {ch:1,c:1,sig:true,t:'I found the flaw in a person or plan faster than I found anything workable in it.'},
+  // Comparing (c2)
+  {ch:2,c:2,d:0,t:'I measured my progress or worth against someone else\u2019s.'},
+  {ch:2,c:2,d:1,t:'I felt smaller after seeing another person\u2019s results or recognition.'},
+  {ch:2,c:2,d:2,t:'I adjusted my goals because someone else\u2019s pace made mine feel insufficient.'},
+  {ch:2,c:2,d:3,t:'I tracked or scrolled through other people\u2019s lives in ways that pulled me out of my own.'},
+  {ch:2,c:2,sig:true,t:'I checked how I was doing against someone else before I checked how I was doing against my own intention.'},
+  // Competing (c3)
+  {ch:3,c:3,d:0,t:'I thought about where I ranked more than about what growth required of me.'},
+  {ch:3,c:3,d:1,t:'I felt restless when someone near me succeeded, or relieved when they struggled.'},
+  {ch:3,c:3,d:2,t:'I made a choice mainly to stay ahead or avoid being outdone.'},
+  {ch:3,c:3,d:3,t:'I performed, one-upped, or positioned myself to win rather than to contribute.'},
+  {ch:3,c:3,sig:true,t:'Keeping my edge mattered more, in the moment, than getting better.'},
+  // Return (ch4): how fast you notice and come back \u2014 8 items
+  {ch:4,ret:true,t:'I noticed fairly quickly when I was leaking power.'},
+  {ch:4,ret:true,t:'I caught the pattern while it was still just a thought or a feeling, before it became words or action.'},
+  {ch:4,ret:true,t:'I interrupted the pattern before it became action.'},
+  {ch:4,ret:true,t:'When I noticed the leak, I named it in one word instead of spiraling on it.'},
+  {ch:4,ret:true,t:'I redirected my energy back to what was actually mine to handle.'},
+  {ch:4,ret:true,t:'I came back to what was mine to do within a few minutes, not hours.'},
+  {ch:4,ret:true,t:'I used a specific practice to return, instead of just criticizing myself.'},
+  {ch:4,ret:true,t:'I used a breath, a question, or a pause to come back, rather than willpower alone.'},
+  // Closing (ch5): not scored \u2014 wellbeing routing + context personalization
+  {ch:5,kind:'wellbeing',t:'Lately, how much is this pattern affecting your sleep, mood, work, or relationships?',opts:['Not at all','A little','Noticeably','A lot']},
+  {ch:5,kind:'context',t:'Where does this show up most for you right now?',opts:['Work','Family','Money','Faith','Health','Online']}
 ];
 const RS=[{v:0,l:'Not at all'},{v:1,l:'Once or twice'},{v:2,l:'Several times'},{v:3,l:'Repeatedly'}];
 const CN=['Complaining','Criticizing','Comparing','Competing'],CI=['complain','criticize','compare','compete'],DN=['Think','Feel','Choose','Do'],DI=['think','feel','choose','do'];
@@ -321,7 +338,7 @@ const PR={
   do:{n:'The 60-second pause',q:'Pause for 60 seconds before you act.',e:'You\u2019re not resisting the urge. You\u2019re observing it. If after 60 seconds the action still serves you, do it.'}
 };
 
-let ans=new Array(20).fill(-1),ci=0,cc=-1,res={},u={fn:'',ln:'',em:'',ph:'',co:'',ct:'',ge:'',ag:'',pf:'',sr:'',rd:'',cwa:1,cem:1};
+let ans=new Array(30).fill(-1),ci=0,cc=-1,res={},u={fn:'',ln:'',em:'',ph:'',co:'',ct:'',ge:'',ag:'',pf:'',sr:'',rd:'',cwa:1,cem:1};
 
 function go(id){const c=document.querySelector('.s.on');if(c){c.classList.add('off');setTimeout(()=>{c.classList.remove('on','off');document.getElementById(id).classList.add('on');window.scrollTo({top:0,behavior:'instant'})},350)}else document.getElementById(id).classList.add('on')}
 ['fn','em','ph'].forEach(i=>document.getElementById(i).addEventListener('input',()=>{document.getElementById('bs2').disabled=!(document.getElementById('fn').value.trim()&&document.getElementById('em').value.trim()&&document.getElementById('ph').value.trim())}));
@@ -331,9 +348,9 @@ function begin(){u.co=document.getElementById('co').value;u.ct=document.getEleme
 
 function showI(){
   const it=IT[ci],ch=CHS[it.ch];
-  document.getElementById('pF').style.width=(ci/20*100)+'%';
+  document.getElementById('pF').style.width=(ci/30*100)+'%';
   document.getElementById('pCh').textContent=ch.l;
-  document.getElementById('pCt').textContent=(ci+1)+' of 20';
+  document.getElementById('pCt').textContent=(ci+1)+' of 30';
   if(it.ch!==cc){cc=it.ch;
     document.getElementById('jc').innerHTML=`<div class="opener"><div class="opener-badge" style="background:${ch.bg};color:${ch.c}">${ch.l}</div><p class="opener-text">${ch.r}</p><button class="b b-outline" onclick="renderQ()"><span>${ch.btn}</span><svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`;
     return;}
@@ -341,15 +358,36 @@ function showI(){
 }
 function renderQ(){
   const it=IT[ci],s=it.ch<4?'In the last 48 hours':'';
+  const opts=it.opts?it.opts.map((l,i)=>({v:i,l})):RS;
   let h=`<div class="qc" id="qc"><div class="q-stem">${s}</div><p class="q-text">${it.t}</p><div class="opts">`;
-  RS.forEach(r=>{h+=`<button class="opt" onclick="sel(${r.v})"><span class="opt-dot"></span>${r.l}</button>`});
+  opts.forEach(r=>{h+=`<button class="opt" onclick="sel(${r.v})"><span class="opt-dot"></span>${r.l}</button>`});
   h+='</div></div>';document.getElementById('jc').innerHTML=h;
   requestAnimationFrame(()=>document.getElementById('qc').classList.add('vis'));
 }
-function sel(v){ans[ci]=v;const bs=document.querySelectorAll('.opt');bs.forEach((b,i)=>{if(i===v)b.classList.add('sel');b.style.pointerEvents='none'});setTimeout(()=>{const c=document.getElementById('qc');c.classList.remove('vis');c.classList.add('ex');setTimeout(()=>{ci++;ci>=20?proc():showI()},250)},350)}
+function sel(v){ans[ci]=v;const bs=document.querySelectorAll('.opt');bs.forEach((b,i)=>{if(i===v)b.classList.add('sel');b.style.pointerEvents='none'});setTimeout(()=>{const c=document.getElementById('qc');c.classList.remove('vis');c.classList.add('ex');setTimeout(()=>{ci++;ci>=30?proc():showI()},250)},350)}
 function proc(){document.getElementById('pF').style.width='100%';go('s3');setTimeout(()=>{compute();buildR();go('s4');document.querySelectorAll('.rl').forEach(l=>{setTimeout(()=>l.classList.add('vis'),parseInt(l.dataset.d)||0)});submit()},3500)}
 
-function compute(){const cS=[0,0,0,0],dS=[0,0,0,0];for(let c=0;c<4;c++)for(let d=0;d<4;d++)cS[c]+=ans[c*4+d];for(let d=0;d<4;d++)for(let c=0;c<4;c++)dS[d]+=ans[c*4+d];const dc=cS.indexOf(Math.max(...cS)),so=cS.map((s,i)=>({s,i})).sort((a,b)=>b.s-a.s),sc=so[1].i,dd=dS.indexOf(Math.max(...dS));let hi=0,hv=-1;for(let i=0;i<16;i++)if(ans[i]>hv){hv=ans[i];hi=i}const hc=Math.floor(hi/4),hd=hi%4,iS=dS[0]+dS[1],eS=dS[2]+dS[3],cp=iS>=eS?'internal':'external',rS=ans[16]+ans[17]+ans[18]+ans[19];let rL='weak';if(rS>=4)rL='emerging';if(rS>=8)rL='strengthening';if(rS>=11)rL='practiced';res={cS,dS,dc,sc,dd,hc,hd,cp,rS,rL}}
+// Data-driven scoring so item order/count can change without breaking the math:
+//  • cS[c] = 4 matrix + 1 signature item per reflex (0–15)
+//  • dS[d] = the 16 matrix items per domain (0–12); hot zone = highest matrix cell
+//  • rS    = the 8 Return items (0–24)
+//  • wellbeing (wb) + context (ctx) are NOT scored — routing/personalization only
+function compute(){
+  const cS=[0,0,0,0],dS=[0,0,0,0];let hi=-1,hv=-1,rS=0,wb=-1,ctx='';
+  IT.forEach((it,i)=>{
+    const v=ans[i];
+    if(it.kind==='wellbeing'){wb=v;return}
+    if(it.kind==='context'){ctx=(it.opts&&it.opts[v])||'';return}
+    if(it.ret){rS+=v;return}
+    if(typeof it.c==='number')cS[it.c]+=v;
+    if(typeof it.d==='number'){dS[it.d]+=v;if(v>hv){hv=v;hi=i}}
+  });
+  const dc=cS.indexOf(Math.max(...cS)),so=cS.map((s,i)=>({s,i})).sort((a,b)=>b.s-a.s),sc=so[1].i,dd=dS.indexOf(Math.max(...dS));
+  if(hi<0)hi=IT.findIndex(it=>typeof it.d==='number'); // guard: fall back to the first matrix cell
+  const hot=IT[hi],hc=hot.c,hd=hot.d,iS=dS[0]+dS[1],eS=dS[2]+dS[3],cp=iS>=eS?'internal':'external';
+  let rL='weak';if(rS>=8)rL='emerging';if(rS>=14)rL='strengthening';if(rS>=20)rL='practiced';
+  res={cS,dS,dc,sc,dd,hc,hd,cp,rS,rL,wb,ctx}
+}
 
 function buildR(){
   document.getElementById('rN').textContent=u.fn+(u.ln?' '+u.ln:'');
@@ -357,6 +395,9 @@ function buildR(){
   const now=new Date();let nm=new Date(now.getFullYear(),now.getMonth()+1,1);while(nm.getDay()!==1)nm.setDate(nm.getDate()+1);const nds=nm.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   const pR=(l,v)=>`<div class="pr"><span class="pr-l">${l}</span><span class="pr-v">${v}</span></div>`;
   let h='';
+
+  // Layer 0: gentle lead-in when this is weighing heavily (wellbeing = "A lot")
+  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card" style="background:var(--return-s)"><p class="prose-text">Before anything else: you told us this is affecting you a lot right now. Read what follows gently — it’s a mirror, not a verdict.</p></div></div>`;
 
   // Layer 1: The letter (prose, not dashboard)
   h+=`<div class="rl" data-d="200"><div class="prose-card"><div class="lbl">Where your power goes</div><p class="prose-text">${DR[cId]}</p></div></div>`;
@@ -368,7 +409,7 @@ function buildR(){
   h+=`<div class="rl" data-d="1200"><div class="prose-card"><div class="lbl">How quickly you come back</div><p class="prose-text">${CP[res.cp]} ${RT[res.rL]}</p></div></div>`;
 
   // Layer 4: Profile summary (compact)
-  h+=`<div class="rl" data-d="1700"><div class="profile">${pR('Where you go',CN[res.dc])}${pR('Where it starts',DN[res.dd])}${pR('Return speed',cap(res.rL)+' ('+res.rS+'/12)')}</div></div>`;
+  h+=`<div class="rl" data-d="1700"><div class="profile">${pR('Where you go',CN[res.dc])}${pR('Where it starts',DN[res.dd])}${pR('Return speed',cap(res.rL)+' ('+res.rS+'/24)')}${res.ctx?pR('Watch it first in',res.ctx):''}</div></div>`;
 
   // Layer 5: Practice
   h+=`<div class="rl" data-d="2200"><div class="prac"><div class="lbl">Your one practice</div><div class="prac-name">${pr.n}</div><div class="prac-q">${pr.q}</div><div class="prac-e">${pr.e}</div></div></div>`;
@@ -376,15 +417,16 @@ function buildR(){
   // Layer 6: Growth sentence
   h+=`<div class="rl" data-d="2700"><div class="growth"><div class="lbl">Your growth sentence</div><p class="growth-text">When I\u2019m not watching, my power leaks toward <em>${CN[res.dc].toLowerCase()}</em>. It starts in what I <em>${DN[res.dd].toLowerCase()}</em>. I\u2019m learning to catch it and come back through <em>${pr.n.toLowerCase()}</em>.</p></div></div>`;
 
-  // Layer 7: CTA
-  h+=`<div class="rl" data-d="3200"><div class="cta-card"><div class="lbl">Go deeper</div><div class="cta-title">The 10-Day 4C Challenge</div><p class="cta-body">You just saw where your power goes. The question is whether seeing it changes anything. Ten days. One pattern. One practice.</p><div class="cta-price">KSh 2,000</div><div class="cta-note">One-time. 10 days.</div><ul class="cta-list"><li>Daily guided observation via WhatsApp</li><li>Structured daily pulse check</li><li>Day 10 re-assessment to measure what shifted</li><li>Your return practice, coached for 10 days</li><li>Closed cohort of committed participants</li></ul><button class="b b-accent" onclick="openL('PAYMENT_LINK')">Join the next cohort</button><p class="cta-date">Next cohort starts ${nds}</p></div></div>`;
+  // Layer 7: CTA \u2014 a gentler next step when this is weighing heavily, otherwise the offer
+  if(res.wb>=3)h+=`<div class="rl" data-d="3200"><div class="cta-card"><div class="lbl">A gentler next step</div><div class="cta-title">Be kind to yourself here</div><p class="cta-body">You said this pattern is affecting you a lot right now. Noticing it is a real first step \u2014 and it isn\u2019t the whole job. If it\u2019s weighing on your sleep, mood, work, or relationships, consider talking with someone you trust or a licensed professional. There\u2019s no pressure to do anything more today.</p></div></div>`;
+  else h+=`<div class="rl" data-d="3200"><div class="cta-card"><div class="lbl">Go deeper</div><div class="cta-title">The 10-Day 4C Challenge</div><p class="cta-body">You just saw where your power goes. The question is whether seeing it changes anything. Ten days. One pattern. One practice.</p><div class="cta-price">KSh 2,000</div><div class="cta-note">One-time. 10 days.</div><ul class="cta-list"><li>Daily guided observation via WhatsApp</li><li>Structured daily pulse check</li><li>Day 10 re-assessment to measure what shifted</li><li>Your return practice, coached for 10 days</li><li>Closed cohort of committed participants</li></ul><button class="b b-accent" onclick="openL('PAYMENT_LINK')">Join the next cohort</button><p class="cta-date">Next cohort starts ${nds}</p></div></div>`;
 
   // Layer 8: Bridge + actions
-  h+=`<div class="rl" data-d="3700"><div class="bridge"><p class="bridge-text">If the same pattern keeps running despite your best effort, the cause may be deeper than behavior. That\u2019s a different kind of work, and it has its own time.</p><p class="bridge-close">Progress is noticing sooner.</p></div><div class="actions"><button class="b" onclick="dlCard()">Save my profile</button><button class="b-text" onclick="retake()">Take again</button></div></div>`;
+  h+=`<div class="rl" data-d="3700"><div class="bridge"><p class="bridge-text">If the same pattern keeps running despite your best effort, the cause may be deeper than behavior. That\u2019s a different kind of work, and it has its own time.</p><p class="bridge-close">Progress is noticing sooner.</p><p class="bridge-text" style="font-size:12px;color:var(--tertiary);margin-top:20px">This is a self-reflection tool, not a medical or psychological diagnosis.</p></div><div class="actions"><button class="b" onclick="dlCard()">Save my profile</button><button class="b-text" onclick="retake()">Take again</button></div></div>`;
 
   el.innerHTML=h;
 }
-function retake(){ans=new Array(20).fill(-1);ci=0;cc=-1;go('s2');setTimeout(showI,500)}
+function retake(){ans=new Array(30).fill(-1);ci=0;cc=-1;go('s2');setTimeout(showI,500)}
 function openL(u){if(u.includes('PAYMENT'))alert('Payment link not configured.');else window.open(u,'_blank')}
 
 function dlCard(){
@@ -429,7 +471,9 @@ function submit(){
     event:'4c_task_assessment_completed',
     segmentation:{ country:u.co, city:u.ct, gender:u.ge, ageRange:u.ag, profession:u.pf, source:u.sr, readiness:u.rd, consentWhatsApp:u.cwa, consentEmail:u.cem },
     assessment:{
-      answers:ans.join(','),
+      // Only the 28 scored answers leave the browser. The two closing items
+      // (wellbeing + context) are kept private — never sent to either sink.
+      answers:ans.slice(0,28).join(','),
       dominantC:CN[res.dc], secondaryC:CN[res.sc], vulnerableDomain:DN[res.dd],
       hotZone:CN[res.hc]+' x '+DN[res.hd], catchPoint:res.cp,
       returnCapacity:res.rL, returnScore:res.rS, practice:pr.n,
