@@ -63,8 +63,12 @@ test('Report-Only CSP allowlist covers every external origin the app uses', () =
   ]) {
     assert.ok(csp.includes(origin), `Report-Only CSP missing ${origin}`);
   }
-  // Connect is locked to same-origin (only /api/ghl + /api/csp-report).
-  assert.match(csp, /connect-src 'self'/, 'connect-src should be self-only');
+  // Connect allows same-origin (/api/ghl + /api/csp-report) plus the Apps Script
+  // endpoint used for the secondary Google Sheets capture — both the POST origin
+  // and its 302 redirect target. Keep these in lockstep with GAS_URL in index.html.
+  assert.match(csp, /connect-src 'self'/, 'connect-src should keep self');
+  assert.ok(csp.includes('https://script.google.com'), 'connect-src missing script.google.com (Apps Script capture)');
+  assert.ok(csp.includes('https://script.googleusercontent.com'), 'connect-src missing script.googleusercontent.com (Apps Script redirect target)');
 });
 
 test('every https origin the app references is allowed by the CSP', () => {

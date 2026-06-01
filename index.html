@@ -411,31 +411,40 @@ function dlCard(){
 }
 function wt(c,t,x,y,mw,lh){const ws=t.split(' ');let l='';for(let i=0;i<ws.length;i++){const ts=l+ws[i]+' ';if(c.measureText(ts).width>mw&&i>0){c.fillText(l.trim(),x,y);l=ws[i]+' ';y+=lh}else l=ts}c.fillText(l.trim(),x,y)}
 
-// Lead capture: POST to the same-origin Cloudflare Function (/api/ghl), which
-// forwards to HighLevel. `contact.name`/`contact.email` are what the Function
-// validates; every other field rides along and is forwarded to the CRM.
-// Fire-and-forget — the results are already on screen and never blocked on this.
+// Google Sheets capture (secondary). Paste your Apps Script Web App /exec URL
+// below — Deploy ▸ New deployment ▸ Web app ▸ Execute as: Me, Access: Anyone
+// (see apps-script/README.md). While the PASTE_ token remains, this stays OFF
+// and only HighLevel runs. The Sheet capture never blocks the HighLevel capture.
+const GAS_URL='https://script.google.com/macros/s/PASTE_YOUR_DEPLOYMENT_ID/exec';
+
+// Lead capture: POST the same payload to (1) the same-origin Cloudflare Function
+// (/api/ghl → HighLevel) and (2) the Apps Script Sheet. `contact.name`/`.email`
+// are what the Function validates; every other field rides along to both sinks.
+// Fire-and-forget — results are already on screen and never blocked on either.
 function submit(){
   const dId=DI[res.dd],pr=PR[dId];
   const name=(u.fn+(u.ln?' '+u.ln:'')).trim();
-  fetch('/api/ghl',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      contact:{ name:name, email:u.em||null, phone:u.ph||null },
-      event:'4c_task_assessment_completed',
-      segmentation:{ country:u.co, city:u.ct, gender:u.ge, ageRange:u.ag, profession:u.pf, source:u.sr, readiness:u.rd, consentWhatsApp:u.cwa, consentEmail:u.cem },
-      assessment:{
-        answers:ans.join(','),
-        dominantC:CN[res.dc], secondaryC:CN[res.sc], vulnerableDomain:DN[res.dd],
-        hotZone:CN[res.hc]+' x '+DN[res.hd], catchPoint:res.cp,
-        returnCapacity:res.rL, returnScore:res.rS, practice:pr.n,
-        complainScore:res.cS[0], criticizeScore:res.cS[1], compareScore:res.cS[2], competeScore:res.cS[3],
-        thinkScore:res.dS[0], feelScore:res.dS[1], chooseScore:res.dS[2], doScore:res.dS[3]
-      },
-      meta:{ timestamp:new Date().toISOString(), assessment:'4c-personal-task' }
-    })
-  }).catch(()=>{});
+  const body=JSON.stringify({
+    contact:{ name:name, email:u.em||null, phone:u.ph||null },
+    event:'4c_task_assessment_completed',
+    segmentation:{ country:u.co, city:u.ct, gender:u.ge, ageRange:u.ag, profession:u.pf, source:u.sr, readiness:u.rd, consentWhatsApp:u.cwa, consentEmail:u.cem },
+    assessment:{
+      answers:ans.join(','),
+      dominantC:CN[res.dc], secondaryC:CN[res.sc], vulnerableDomain:DN[res.dd],
+      hotZone:CN[res.hc]+' x '+DN[res.hd], catchPoint:res.cp,
+      returnCapacity:res.rL, returnScore:res.rS, practice:pr.n,
+      complainScore:res.cS[0], criticizeScore:res.cS[1], compareScore:res.cS[2], competeScore:res.cS[3],
+      thinkScore:res.dS[0], feelScore:res.dS[1], chooseScore:res.dS[2], doScore:res.dS[3]
+    },
+    meta:{ timestamp:new Date().toISOString(), assessment:'4c-personal-task' }
+  });
+  // Primary: HighLevel via same-origin Function.
+  fetch('/api/ghl',{ method:'POST', headers:{'Content-Type':'application/json'}, body:body }).catch(()=>{});
+  // Secondary: Google Sheet via Apps Script. text/plain keeps it a CORS-simple
+  // request; no-cors because we don't need to read the reply. OFF until configured.
+  if(!GAS_URL.includes('PASTE_')){
+    fetch(GAS_URL,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:body }).catch(()=>{});
+  }
 }
 </script>
 </body>
