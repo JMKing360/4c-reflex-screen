@@ -49,7 +49,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .w{max-width:540px;margin:0 auto;padding:0 28px}
 
 /* ─── TYPE SCALE ─── */
-/* 12 / 15 / 18 / 24 / 40 — five sizes, no overlap */
+/* 12 / 15 / 18 / 24 / 40 : five sizes, no overlap */
 
 /* ─── SCREENS ─── */
 .s{display:none;opacity:0;min-height:100vh;min-height:100dvh;flex-direction:column}
@@ -199,8 +199,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
     <div class="arr-hero">
       <div class="arr-brand">The 4C Assessment</div>
       <h1 class="arr-title">You don’t lose your power. You leak it.</h1>
-      <p class="arr-sub" style="margin-bottom:22px">Complaining, criticizing, comparing, competing — four quiet reflexes that pull your energy out of your own hands, usually before you notice. Almost everyone leans on one more than the rest; few can name which.</p>
-      <p class="arr-sub">This is where you find yours. Answer honestly about your past 30 days — not who you mean to be, but who you’ve actually been — and you’ll leave with your pattern, where it starts, and one practice to come back.</p>
+      <p class="arr-sub" style="margin-bottom:22px">Complaining, criticizing, comparing, competing. Four quiet reflexes that pull your energy out of your own hands, usually before you notice. Almost everyone leans on one more than the rest. Few can name which.</p>
+      <p class="arr-sub">This is where you find yours. Answer honestly about your past 30 days. Not who you mean to be, but who you’ve actually been. You’ll leave with your pattern, where it starts, and one practice to come back.</p>
       <p class="arr-meta">30 questions · 7 minutes · one clear pattern</p>
       <button class="b" onclick="go('s1')" style="opacity:0;animation:rise 500ms var(--ease) 800ms forwards">Begin</button>
     </div>
@@ -229,11 +229,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 
   <div class="s intake" id="sg">
     <h2 class="i-title">Your 4C profile is ready</h2>
-    <p class="i-sub">Enter your email and phone to unlock your results — we’ll also send your profile and growth resources.</p>
+    <p class="i-sub">Enter your email and phone to unlock your results. We’ll also send your profile and growth resources.</p>
     <div class="fg"><label class="fl">Email</label><input class="fi" id="em" type="email" placeholder="you@example.com" autocomplete="email"></div>
     <div class="row2"><div class="fg"><label class="fl">Country</label><select class="fi fi-sel" id="co"><option value="">Select</option><option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select></div><div class="fg"><label class="fl">Phone (WhatsApp)</label><input class="fi" id="ph" type="tel" placeholder="+254 7XX XXX XXX" autocomplete="tel"></div></div>
     <div class="divider"></div>
-    <p class="i-sub" style="margin-bottom:20px">Optional — helps us tailor what we send you.</p>
+    <p class="i-sub" style="margin-bottom:20px">Optional. Helps us tailor what we send you.</p>
     <div class="row2"><div class="fg"><label class="fl">City</label><input class="fi" id="ct" type="text" placeholder="e.g. Nairobi"></div><div class="fg"><label class="fl">Gender</label><select class="fi fi-sel" id="ge"><option value="">Select</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div></div>
     <div class="row2"><div class="fg"><label class="fl">Age range</label><select class="fi fi-sel" id="ag"><option value="">Select</option><option>18-25</option><option>26-35</option><option>36-45</option><option>46-55</option><option>56+</option></select></div><div class="fg"><label class="fl">Professional field</label><select class="fi fi-sel" id="pf"><option value="">Select</option><option>Healthcare / Medicine</option><option>Business / Finance</option><option>Technology / Engineering</option><option>Education / Academia</option><option>Law / Policy</option><option>Creative / Media</option><option>Government / Public Service</option><option>Ministry / Non-profit</option><option>Entrepreneurship</option><option>Student</option><option>Other</option></select></div></div>
     <div class="fg"><label class="fl">How did you find this?</label><select class="fi fi-sel" id="sr"><option value="">Select</option><option>WhatsApp share</option><option>Instagram</option><option>LinkedIn</option><option>YouTube</option><option>Friend or colleague</option><option>Dr. Job Mogire event</option><option>House of Mastery member</option><option>Google search</option><option>Other</option></select></div>
@@ -393,7 +393,7 @@ function proc(){document.getElementById('pF').style.width='100%';go('s3');setTim
 //  • cS[c] = 4 matrix + 1 signature item per reflex (0–15)
 //  • dS[d] = the 16 matrix items per domain (0–12); hot zone = highest matrix cell
 //  • rS    = the 8 Return items (0–24)
-//  • wellbeing (wb) + context (ctx) are NOT scored — routing/personalization only
+//  • wellbeing (wb) + context (ctx) are NOT scored (routing/personalization only)
 function compute(){
   const cS=[0,0,0,0],dS=[0,0,0,0];let hi=-1,hv=-1,rS=0,wb=-1,ctx='';
   IT.forEach((it,i)=>{
@@ -419,7 +419,7 @@ function buildR(){
   let h='';
 
   // Layer 0: gentle lead-in when this is weighing heavily (wellbeing = "A lot")
-  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card" style="background:var(--return-s)"><p class="prose-text">Before anything else: you told us this is affecting you a lot right now. Read what follows gently — it’s a mirror, not a verdict.</p></div></div>`;
+  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card" style="background:var(--return-s)"><p class="prose-text">Before anything else: you told us this is affecting you a lot right now. Read what follows gently. It’s a mirror, not a verdict.</p></div></div>`;
 
   // Layer 1: The letter (prose, not dashboard)
   h+=`<div class="rl" data-d="200"><div class="prose-card"><div class="lbl">Where your power goes</div><p class="prose-text">${DR[cId]}</p></div></div>`;
@@ -476,7 +476,7 @@ function dlCard(){
 function wt(c,t,x,y,mw,lh){const ws=t.split(' ');let l='';for(let i=0;i<ws.length;i++){const ts=l+ws[i]+' ';if(c.measureText(ts).width>mw&&i>0){c.fillText(l.trim(),x,y);l=ws[i]+' ';y+=lh}else l=ts}c.fillText(l.trim(),x,y)}
 
 // Google Sheets capture (secondary). Paste your Apps Script Web App /exec URL
-// below — Deploy ▸ New deployment ▸ Web app ▸ Execute as: Me, Access: Anyone
+// below. Deploy ▸ New deployment ▸ Web app ▸ Execute as: Me, Access: Anyone
 // (see apps-script/README.md). While the PASTE_ token remains, this stays OFF
 // and only HighLevel runs. The Sheet capture never blocks the HighLevel capture.
 const GAS_URL='https://script.google.com/macros/s/AKfycbwl0vyjCHb5aMOX1NJx-s13rH4sUSSB2J-ZVwVddelSpB6hfaQyF50xOSmAEnI46BSfyw/exec';
@@ -484,7 +484,7 @@ const GAS_URL='https://script.google.com/macros/s/AKfycbwl0vyjCHb5aMOX1NJx-s13rH
 // Lead capture: POST the same payload to (1) the same-origin Cloudflare Function
 // (/api/ghl → HighLevel) and (2) the Apps Script Sheet. `contact.name`/`.email`
 // are what the Function validates; every other field rides along to both sinks.
-// Fire-and-forget — results are already on screen and never blocked on either.
+// Fire-and-forget. Results are already on screen and never blocked on either.
 function submit(){
   const dId=DI[res.dd],pr=PR[dId];
   const name=(u.fn+(u.ln?' '+u.ln:'')).trim();
@@ -494,7 +494,7 @@ function submit(){
     segmentation:{ country:u.co, city:u.ct, gender:u.ge, ageRange:u.ag, profession:u.pf, source:u.sr, readiness:u.rd, consentWhatsApp:u.cwa, consentEmail:u.cem },
     assessment:{
       // Only the 28 scored answers leave the browser. The two closing items
-      // (wellbeing + context) are kept private — never sent to either sink.
+      // (wellbeing + context) are kept private, never sent to either sink.
       answers:ans.slice(0,28).join(','),
       dominantC:CN[res.dc], secondaryC:CN[res.sc], vulnerableDomain:DN[res.dd],
       hotZone:CN[res.hc]+' x '+DN[res.hd], catchPoint:res.cp,
