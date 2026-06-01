@@ -4,6 +4,7 @@
     "prefer-native-element": "off",
     "no-implicit-button-type": "off",
     "no-inline-style": "off",
-    "script-type": "off"
+    "script-type": "off",
+    "void-style": "off"
   }
 }

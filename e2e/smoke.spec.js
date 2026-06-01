@@ -14,7 +14,7 @@ test('arrival → name → 30 items → gate → reveal → lead captured', asyn
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, forwarded: true }) });
   });
   // Stub the secondary Apps Script (Google Sheets) sink so CI never writes a
-  // synthetic lead to the real spreadsheet — and capture it to prove dual-send.
+  // synthetic lead to the real spreadsheet, and capture it to prove fallback wiring.
   let gasCaptured = null;
   await page.route('**script.google.com/**', async (route) => {
     try { gasCaptured = JSON.parse(route.request().postData() || '{}'); } catch (_) { gasCaptured = {}; }
@@ -84,10 +84,10 @@ test('arrival → name → 30 items → gate → reveal → lead captured', asyn
   expect(captured.assessment).toBeTruthy();
   expect(typeof captured.assessment.dominantC).toBe('string');
 
-  // Dual capture: the same lead also reached the Apps Script (Sheets) sink.
-  await expect.poll(() => (gasCaptured && gasCaptured.contact ? gasCaptured.contact.name : null), { timeout: 5000 })
-    .toBe('Alex Doe');
-  // The two non-scored closing answers stay private — only the 28 scored
-  // answers are transmitted to either sink.
+  // Apps Script is a fallback only: when /api/ghl returns ok, the Sheet post is
+  // skipped, so gasCaptured stays null. (It fires only if /api/ghl fails.)
+  expect(gasCaptured).toBeNull();
+  // The two non-scored closing answers stay private; only the 28 scored
+  // answers are transmitted.
   expect(captured.assessment.answers.split(',')).toHaveLength(28);
 });
