@@ -28,19 +28,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
+  /* Type · motion · radius */
   --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --warmth:#8C7A2E;
-  --accent:#0066CC;--accent-hover:#0055AA;--accent-soft:#EBF4FF;
+  --ease:cubic-bezier(0.25,0.1,0.25,1);
+  --r:12px;
+  /* Surfaces & ink ramp */
   --bg:#FFFFFF;--surface:#F5F5F7;
   --ink:#1D1D1F;--secondary:#6E6E73;--tertiary:#86868B;
   --line:#D2D2D7;--line-light:#E8E8ED;
-  --r:12px;
+  /* Accents */
+  --warmth:#8C7A2E;
+  --accent:#0066CC;--accent-hover:#0055AA;--accent-soft:#EBF4FF;
+  /* Reflex palette — chapter openers only */
   --complain:#BF3B22;--complain-s:#FEF0ED;
   --criticize:#9E7410;--criticize-s:#FDF6E3;
   --compare:#1D6BAD;--compare-s:#EDF5FC;
   --compete:#6D3CC4;--compete-s:#F1EDFC;
   --return-c:#0D7355;--return-s:#E7F7F1;
-  --ease:cubic-bezier(0.25,0.1,0.25,1);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
@@ -137,41 +141,42 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .p-dot:nth-child(2){animation-delay:250ms}.p-dot:nth-child(3){animation-delay:500ms}
 
 /* ─── REVEAL ─── */
-.reveal{padding:64px 28px 120px}
-.r-header{text-align:center;margin-bottom:64px}
+.reveal{padding:72px 28px 128px}
+.r-header{text-align:center;margin-bottom:56px}
 .r-brand{font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--warmth);margin-bottom:24px}
-.r-title{font-size:24px;font-weight:700;letter-spacing:-0.3px;color:var(--ink);margin-bottom:8px}
+.r-title{font-size:24px;font-weight:700;letter-spacing:-0.3px;color:var(--ink);margin-bottom:10px}
 .r-name{font-size:15px;font-weight:500;color:var(--secondary)}
-.rl{opacity:0;transform:translateY(32px);margin-bottom:40px}
+.rl{opacity:0;transform:translateY(32px);margin-bottom:48px}
 .rl.vis{opacity:1;transform:translateY(0);transition:all 600ms var(--ease)}
 
-.lbl{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--warmth);margin-bottom:20px}
+.lbl{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--warmth);margin-bottom:18px}
 
 /* Prose card */
-.prose-card{background:var(--surface);border-radius:var(--r);padding:32px 24px}
+.prose-card{padding:0}
 .prose-text{font-size:18px;font-weight:400;line-height:1.75;color:var(--ink)}
 
 /* Profile summary */
-.profile{background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);padding:28px 24px}
-.pr{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line-light)}
+.profile{padding:0}
+.pr{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line-light)}
 .pr:last-child{border-bottom:none}
+.pr:first-child{padding-top:0}
 .pr-l{font-size:15px;color:var(--secondary)}
 .pr-v{font-size:15px;font-weight:600;color:var(--ink);text-align:right}
 
-/* Practice */
-.prac{background:var(--ink);border-radius:var(--r);padding:40px 24px;text-align:center}
+/* Practice — the single dark anchor */
+.prac{background:var(--ink);border-radius:var(--r);padding:44px 28px;text-align:center}
 .prac .lbl{color:var(--tertiary)}
 .prac-name{font-size:24px;font-weight:600;color:#fff;margin-bottom:20px;letter-spacing:-0.2px}
 .prac-q{font-size:18px;font-weight:500;color:rgba(255,255,255,0.8);line-height:1.55;margin-bottom:24px}
 .prac-e{font-size:15px;color:rgba(255,255,255,0.45);line-height:1.65}
 
-/* Growth */
-.growth{background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);padding:32px 24px}
-.growth-text{font-size:18px;line-height:1.65;color:var(--ink)}
+/* Growth — hairline pull-quote, no fill */
+.growth{padding:2px 0 2px 20px;border-left:2px solid var(--warmth)}
+.growth-text{font-size:18px;line-height:1.7;color:var(--ink)}
 .growth-text em{color:var(--warmth);font-style:normal;font-weight:600}
 
-/* CTA */
-.cta-card{background:var(--surface);border-radius:var(--r);padding:40px 24px;text-align:center}
+/* CTA — fine border, no fill */
+.cta-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:44px 28px;text-align:center}
 .cta-title{font-size:24px;font-weight:700;color:var(--ink);margin-bottom:12px;letter-spacing:-0.3px}
 .cta-body{font-size:15px;color:var(--secondary);line-height:1.65;margin-bottom:12px}
 .cta-price{font-size:40px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-1px}
@@ -182,11 +187,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink)}
 .cta-date{font-size:15px;font-weight:500;color:var(--tertiary);margin-top:16px}
 
 /* Bridge */
-.bridge{background:var(--surface);border-radius:var(--r);padding:36px 24px;text-align:center}
+.bridge{padding:0;text-align:center}
 .bridge-text{font-size:15px;line-height:1.7;color:var(--secondary);margin-bottom:28px}
 .bridge-close{font-size:18px;font-weight:600;color:var(--ink);line-height:1.6}
 
-.actions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:24px}
+.actions{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:32px}
 #xc{display:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 @media(min-width:600px){.w{padding:0 48px}.arr-title{font-size:48px}.opener-text,.q-text{font-size:26px}}
