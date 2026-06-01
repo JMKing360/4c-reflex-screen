@@ -383,6 +383,7 @@ function compute(){
     if(typeof it.d==='number'){dS[it.d]+=v;if(v>hv){hv=v;hi=i}}
   });
   const dc=cS.indexOf(Math.max(...cS)),so=cS.map((s,i)=>({s,i})).sort((a,b)=>b.s-a.s),sc=so[1].i,dd=dS.indexOf(Math.max(...dS));
+  if(hi<0)hi=IT.findIndex(it=>typeof it.d==='number'); // guard: fall back to the first matrix cell
   const hot=IT[hi],hc=hot.c,hd=hot.d,iS=dS[0]+dS[1],eS=dS[2]+dS[3],cp=iS>=eS?'internal':'external';
   let rL='weak';if(rS>=8)rL='emerging';if(rS>=14)rL='strengthening';if(rS>=20)rL='practiced';
   res={cS,dS,dc,sc,dd,hc,hd,cp,rS,rL,wb,ctx}
