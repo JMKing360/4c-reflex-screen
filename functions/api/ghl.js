@@ -59,25 +59,6 @@ function validate(payload) {
   return null;
 }
 
-async function verifyTurnstile(token, secret, request) {
-  try {
-    const form = new FormData();
-    form.append('secret', secret);
-    form.append('response', token);
-    const ip = request.headers.get('CF-Connecting-IP');
-    if (ip) form.append('remoteip', ip);
-    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-      method: 'POST',
-      body: form
-    });
-    const data = await res.json().catch(() => ({ success: false }));
-    return data.success === true;
-  } catch (e) {
-    console.error('Turnstile verification error', e);
-    return false;
-  }
-}
-
 export async function onRequestPost({ request, env }) {
   const headers = corsHeaders(env, request);
 
@@ -104,22 +85,9 @@ export async function onRequestPost({ request, env }) {
     return jsonResponse({ ok: false, error: validationError }, 400, headers);
   }
 
-  // Verify the Cloudflare Turnstile token when a secret is configured. When no
-  // secret is set the check is skipped (Turnstile disabled), so the endpoint
-  // keeps working until you turn it on.
-  // WARNING: only set TURNSTILE_SECRET once the client TURNSTILE_SITE_KEY is
-  // also set (index.html). Enabling the secret alone makes the client send no
-  // token and every submission fails the check below.
-  if (env.TURNSTILE_SECRET) {
-    const token = payload.turnstile_token;
-    if (!token) {
-      return jsonResponse({ ok: false, error: 'Captcha verification required.' }, 400, headers);
-    }
-    const verify = await verifyTurnstile(token, env.TURNSTILE_SECRET, request);
-    if (!verify) {
-      return jsonResponse({ ok: false, error: 'Captcha verification failed.' }, 403, headers);
-    }
-  }
+  // Note: the 4C Personal Task Assessment ships without a captcha, so this
+  // endpoint no longer gates on Cloudflare Turnstile. (Re-add a verification
+  // step here if a captcha is introduced on the client.)
 
   const webhookUrl = env.GHL_WEBHOOK_URL || env.HIGHLEVEL_WEBHOOK_URL;
 

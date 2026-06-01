@@ -1,7 +1,7 @@
 {
-  "name": "The Emotional Sovereignty Screen — House of Mastery",
-  "short_name": "Sovereignty Screen",
-  "description": "A 30-question screen that shows you which of the four reflexes is running you, what it is costing you, and the three moves that interrupt it.",
+  "name": "The 4C Personal Task Assessment — House of Mastery",
+  "short_name": "4C Assessment",
+  "description": "A map of where your power goes when you are not watching. 20 questions, 5 minutes, one clear insight.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
@@ -9,8 +9,8 @@
   "orientation": "portrait",
   "lang": "en",
   "dir": "ltr",
-  "background_color": "#EDF2F9",
-  "theme_color": "#163558",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1D1D1F",
   "icons": [
     {
       "src": "/favicon.svg",

@@ -1,8 +1,8 @@
-// Buildless regression tests for the quiz scoring, HTML-escaping, UTM capture,
-// and the Pages Function payload validation. Run with: npm test
+// Buildless regression tests for the 4C Personal Task Assessment scoring engine
+// (compute()) and the Pages Function payload validation. Run with: npm test
 //
-// These extract the relevant logic out of the source files (no bundler) so the
-// 1700-line single-file app stays protected against silent regressions.
+// These extract the relevant logic out of the single-file app (no bundler) so
+// the scoring stays protected against silent regressions.
 
 const test = require('node:test');
 const assert = require('node:assert');
@@ -11,24 +11,30 @@ const path = require('node:path');
 
 const ROOT = path.join(__dirname, '..');
 
-/* ── Load scoring/escape/UTM logic from the inline <script> ─────────── */
+/* ── Load compute() + constants from the inline <script> ────────────── */
 function loadInlineLogic() {
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-  // Match the main inline script (the long one before </body>). Tolerant of
-  // whitespace/comments between </script> and </body>.
   const m = html.match(/<script>([\s\S]+)<\/script>[\s\S]*<\/body>/);
   if (!m) throw new Error('inline script not found in index.html');
+  // A chainable dummy DOM element so the script's top-level wiring
+  // (input listeners) runs without a browser.
   const stubs = `
-    var window = { addEventListener: function(){},
-      location: { search: '?utm_source=fb&utm_medium=cpc&utm_campaign=spring', href: 'https://4c.houseofmastery.co/' } };
-    var document = { getElementById: function(){ return { style:{}, setAttribute:function(){}, focus:function(){} }; },
-      addEventListener: function(){}, querySelector: function(){ return null; },
-      querySelectorAll: function(){ return []; }, createElement: function(){ return {}; } };
+    var __el = { style:{}, value:'', checked:false, textContent:'', innerHTML:'',
+      dataset:{}, setAttribute:function(){}, focus:function(){},
+      addEventListener:function(){}, classList:{add:function(){},remove:function(){},contains:function(){return false;}},
+      getContext:function(){ return {}; } };
+    var window = { addEventListener:function(){}, scrollTo:function(){},
+      location:{ search:'', href:'https://4c.houseofmastery.co/' } };
+    var document = { getElementById:function(){ return __el; }, addEventListener:function(){},
+      querySelector:function(){ return __el; }, querySelectorAll:function(){ return []; },
+      createElement:function(){ return __el; } };
+    var requestAnimationFrame = function(){};
+    var setTimeout = function(){};
   `;
   const wrapped = stubs + m[1] +
-    '\nmodule.exports = { getReflexScore, getCostScore, getRhythmScore, getLevel, escapeHTML, ATTRIBUTION,' +
-    ' setAnswers: function(a){ answers = a; } };';
-  const tmp = path.join(require('node:os').tmpdir(), 'inline_logic_' + process.pid + '.js');
+    '\nmodule.exports = { compute, CN, DN, CI, DI, PR,' +
+    ' setAns:function(a){ ans = a; }, getRes:function(){ return res; } };';
+  const tmp = path.join(require('node:os').tmpdir(), 'inline_4c_' + process.pid + '.js');
   fs.writeFileSync(tmp, wrapped);
   const mod = require(tmp);
   fs.unlinkSync(tmp);
@@ -48,47 +54,72 @@ function loadValidate() {
 const L = loadInlineLogic();
 const validate = loadValidate();
 
-const all = (v) => { const o = {}; for (let i = 1; i <= 30; i++) o[i] = v; return o; };
+// Build a 20-item answer array (16 matrix items c*4+d, then 4 Return items).
+const zeros = () => new Array(20).fill(0);
 
-test('reflex score: all-4 answers max out a 4-question reflex', () => {
-  L.setAnswers(all(4));
-  assert.strictEqual(L.getReflexScore('complaining'), 16);
+test('compute: dominant C is the highest-summing reflex', () => {
+  const a = zeros();
+  a[0] = a[1] = a[2] = a[3] = 3; // all four Complaining items maxed
+  L.setAns(a); L.compute();
+  const r = L.getRes();
+  assert.strictEqual(r.dc, 0, 'dominant C index');
+  assert.strictEqual(L.CN[r.dc], 'Complaining');
+  assert.strictEqual(r.sc, 1, 'secondary C is the next-highest (tie → first)');
 });
 
-test('reflex score: all-1 answers floor a reflex', () => {
-  L.setAnswers(all(1));
-  assert.strictEqual(L.getReflexScore('complaining'), 4);
+test('compute: vulnerable domain + hot zone derive from the matrix', () => {
+  const a = zeros();
+  a[0] = a[1] = a[2] = a[3] = 3; // Complaining across all four domains
+  L.setAns(a); L.compute();
+  const r = L.getRes();
+  // Each domain gets one '3' from the Complaining row → tie → Think (index 0).
+  assert.strictEqual(r.dd, 0);
+  assert.strictEqual(L.DN[r.dd], 'Think');
+  // Highest single matrix answer is index 0 → Complaining x Think.
+  assert.strictEqual(r.hc, 0);
+  assert.strictEqual(r.hd, 0);
 });
 
-test('cost score spans 10 questions (10..40)', () => {
-  L.setAnswers(all(1)); assert.strictEqual(L.getCostScore(), 10);
-  L.setAnswers(all(4)); assert.strictEqual(L.getCostScore(), 40);
+test('compute: catch point is internal when think+feel >= choose+do', () => {
+  const internal = zeros();
+  internal[0] = internal[1] = 3; // think+feel weighted
+  L.setAns(internal); L.compute();
+  assert.strictEqual(L.getRes().cp, 'internal');
+
+  const external = zeros();
+  // Weight choose+do (domains 2,3) across reflexes.
+  for (let c = 0; c < 4; c++) { external[c * 4 + 2] = 3; external[c * 4 + 3] = 3; }
+  L.setAns(external); L.compute();
+  assert.strictEqual(L.getRes().cp, 'external');
 });
 
-test('rhythm score spans 4 questions (4..16)', () => {
-  L.setAnswers(all(1)); assert.strictEqual(L.getRhythmScore(), 4);
-  L.setAnswers(all(4)); assert.strictEqual(L.getRhythmScore(), 16);
+test('compute: return score sums the 4 Return items and maps to a band', () => {
+  const bands = [
+    [[0, 0, 0, 1], 1, 'weak'],
+    [[1, 1, 1, 1], 4, 'emerging'],
+    [[2, 2, 2, 2], 8, 'strengthening'],
+    [[3, 3, 3, 2], 11, 'practiced'],
+  ];
+  for (const [ret, expScore, expBand] of bands) {
+    const a = zeros();
+    a[16] = ret[0]; a[17] = ret[1]; a[18] = ret[2]; a[19] = ret[3];
+    L.setAns(a); L.compute();
+    const r = L.getRes();
+    assert.strictEqual(r.rS, expScore, `return score for ${ret}`);
+    assert.strictEqual(r.rL, expBand, `return band for ${ret}`);
+  }
 });
 
-test('level thresholds: quiet <=0.44, active <=0.69, loud above', () => {
-  assert.strictEqual(L.getLevel(4, 16), 'quiet');   // 0.25
-  assert.strictEqual(L.getLevel(7, 16), 'quiet');   // 0.4375
-  assert.strictEqual(L.getLevel(10, 16), 'active'); // 0.625
-  assert.strictEqual(L.getLevel(11, 16), 'active'); // 0.6875
-  assert.strictEqual(L.getLevel(12, 16), 'loud');   // 0.75
+test('compute: practice is keyed to the vulnerable domain', () => {
+  const a = zeros();
+  a[0] = a[1] = a[2] = a[3] = 3; // dd → Think
+  L.setAns(a); L.compute();
+  const r = L.getRes();
+  assert.ok(L.PR[L.DI[r.dd]], 'a practice exists for the vulnerable domain');
+  assert.strictEqual(L.PR[L.DI[r.dd]].n, L.PR.think.n);
 });
 
-test('escapeHTML neutralises script-injection characters', () => {
-  assert.strictEqual(L.escapeHTML('<img src=x onerror=alert(1)>'), '&lt;img src=x onerror=alert(1)&gt;');
-  assert.strictEqual(L.escapeHTML('"\'' + '&'), '&quot;&#39;&amp;');
-});
-
-test('ATTRIBUTION captures UTM params from the query string', () => {
-  assert.strictEqual(L.ATTRIBUTION.utm_source, 'fb');
-  assert.strictEqual(L.ATTRIBUTION.utm_medium, 'cpc');
-  assert.strictEqual(L.ATTRIBUTION.utm_campaign, 'spring');
-});
-
+/* ── /api/ghl payload validation (unchanged contract) ───────────────── */
 test('validate: accepts a name-only (email-less) completion', () => {
   assert.strictEqual(validate({ contact: { name: 'Sam' } }), null);
 });
