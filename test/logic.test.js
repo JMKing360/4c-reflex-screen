@@ -160,13 +160,20 @@ test('compute: practice is keyed to the vulnerable domain', () => {
   assert.strictEqual(L.PR[L.DI[r.dd]].n, L.PR.think.n);
 });
 
-/* ── /api/ghl payload validation (unchanged contract) ───────────────── */
-test('validate: accepts a name-only (email-less) completion', () => {
-  assert.strictEqual(validate({ contact: { name: 'Sam' } }), null);
+/* ── /api/ghl payload validation for PDF/report delivery ────────────── */
+test('validate: accepts a complete PDF report delivery payload', () => {
+  assert.strictEqual(validate({
+    contact: { name: 'Sam', email: 'a@b.co', phone: '+254700000000' },
+    segmentation: { ageRange: '35-44', gender: 'Male', source: 'Instagram' }
+  }), null);
 });
 
-test('validate: accepts a valid email', () => {
-  assert.strictEqual(validate({ contact: { name: 'Sam', email: 'a@b.co' } }), null);
+test('validate: requires the participant details needed for PDF delivery', () => {
+  assert.match(validate({ contact: { name: 'Sam' }, segmentation: {} }), /email is required/);
+  assert.match(validate({ contact: { name: 'Sam', email: 'a@b.co' }, segmentation: {} }), /phone/);
+  assert.match(validate({ contact: { name: 'Sam', email: 'a@b.co', phone: '+254700000000' }, segmentation: { gender: 'Male', source: 'Instagram' } }), /ageRange/);
+  assert.match(validate({ contact: { name: 'Sam', email: 'a@b.co', phone: '+254700000000' }, segmentation: { ageRange: '35-44', source: 'Instagram' } }), /gender/);
+  assert.match(validate({ contact: { name: 'Sam', email: 'a@b.co', phone: '+254700000000' }, segmentation: { ageRange: '35-44', gender: 'Male' } }), /source/);
 });
 
 test('validate: rejects missing/empty/oversized name, bad email, non-objects', () => {

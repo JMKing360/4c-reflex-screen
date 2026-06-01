@@ -51,12 +51,13 @@ function validate(payload) {
   if (typeof contact !== 'object' || contact === null) return 'Missing contact.';
   if (typeof contact.name !== 'string' || contact.name.trim() === '') return 'Missing contact.name.';
   if (contact.name.length > 200) return 'contact.name is too long.';
-  // Email is optional (the completed-quiz event has none), but when present it
-  // must be syntactically valid.
-  if (contact.email != null) {
-    if (typeof contact.email !== 'string' || !EMAIL_RE.test(contact.email)) return 'contact.email is invalid.';
-    if (contact.email.length > 320) return 'contact.email is too long.';
-  }
+  const segmentation = payload.segmentation || {};
+  if (typeof contact.email !== 'string' || !EMAIL_RE.test(contact.email)) return 'contact.email is required for PDF report delivery and must be valid.';
+  if (contact.email.length > 320) return 'contact.email is too long.';
+  if (typeof contact.phone !== 'string' || contact.phone.trim() === '') return 'Missing contact.phone.';
+  if (typeof segmentation.ageRange !== 'string' || segmentation.ageRange.trim() === '') return 'Missing segmentation.ageRange.';
+  if (typeof segmentation.gender !== 'string' || segmentation.gender.trim() === '') return 'Missing segmentation.gender.';
+  if (typeof segmentation.source !== 'string' || segmentation.source.trim() === '') return 'Missing segmentation.source.';
   return null;
 }
 

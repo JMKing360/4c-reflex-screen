@@ -1,7 +1,7 @@
 // End-to-end smoke test for the 4C Personal Task Assessment: drive the full
-// flow (arrival → name → 30 items → processing → email/phone gate → reveal)
+// flow (arrival → name → 30 items → processing → PDF-detail gate → reveal)
 // and assert the personalized result renders and the lead is captured. The
-// email + phone gate at the end is what unlocks (and submits) the results.
+// full PDF-detail gate at the end is what unlocks (and submits) the results.
 // Intercepts /api/ghl and the Apps Script sink so no real lead is sent.
 const { test, expect } = require('@playwright/test');
 
@@ -53,10 +53,13 @@ test('arrival → name → 30 items → gate → reveal → lead captured', asyn
     await page.waitForTimeout(650);
   }
 
-  // Processing holds ~3.5s, then the email/phone gate appears (the unlock).
+  // Processing holds ~3.5s, then the PDF-detail gate appears (the unlock).
   await expect(page.locator('#sg')).toBeVisible({ timeout: 10000 });
   await page.fill('#em', 'alex@example.com');
   await page.fill('#ph', '+254700000000');
+  await page.selectOption('#ge', { label: 'Male' });
+  await page.selectOption('#ag', { label: '36-45' });
+  await page.selectOption('#sr', { label: 'Instagram' });
   await expect(page.locator('#bReveal')).toBeEnabled();
   await page.click('#bReveal');
 
@@ -67,11 +70,17 @@ test('arrival → name → 30 items → gate → reveal → lead captured', asyn
   await expect(page.locator('#rL .rl').first()).toBeVisible();
   await expect(page.locator('#rL')).toContainText('Your one practice');
   await expect(page.locator('#rL')).toContainText('growth sentence');
+  await expect(page.locator('#rL')).toContainText('ALCARRA screen');
+  await expect(page.locator('#rL')).toContainText('Your PDF report is in your email');
 
   // The lead was captured with the contact shape the Function validates.
   await expect.poll(() => (captured && captured.contact ? captured.contact.name : null), { timeout: 5000 })
     .toBe('Alex Doe');
   expect(captured.contact.email).toBe('alex@example.com');
+  expect(captured.contact.phone).toBe('+254700000000');
+  expect(captured.segmentation.ageRange).toBe('36-45');
+  expect(captured.segmentation.gender).toBe('Male');
+  expect(captured.segmentation.source).toBe('Instagram');
   expect(captured.assessment).toBeTruthy();
   expect(typeof captured.assessment.dominantC).toBe('string');
 

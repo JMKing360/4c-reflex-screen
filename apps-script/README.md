@@ -3,15 +3,14 @@
 The live 4C assessment sends every completed lead to **two** places:
 
 1. **HighLevel** — via the same-origin Cloudflare Function `POST /api/ghl` (primary; unchanged).
-2. **Google Sheet** — via the Apps Script Web App in [`Code.gs`](./Code.gs) (secondary; best-effort).
+2. **Google Sheet + PDF/email report** — via the Apps Script Web App in [`Code.gs`](./Code.gs) (secondary; best-effort from the browser, primary when called through `/api/ghl`).
 
-Both get the **same JSON payload**. The Sheet capture is fire-and-forget and can
-never block or break the HighLevel capture.
+Both get the **same JSON payload**. The participant-facing page now unlocks results only after full name, valid email, phone, age range, gender, and source are provided. The on-screen results do **not** expose a PDF download link; the Apps Script creates the fuller PDF report and sends a clean, simple email containing the PDF link. Result emails BCC `mail@mogire.com` by default unless `BCC_EMAIL` is explicitly changed in Script Properties.
 
 ## One-time setup (≈3 minutes)
 
 1. Open your Apps Script project and **replace the contents of `Code.gs`** with
-   this folder's [`Code.gs`](./Code.gs). Save.
+   this folder's [`Code.gs`](./Code.gs). Save. This version includes the expanded PDF report, ALCARRA section, clean email body, and default BCC copy to `mail@mogire.com`.
 2. *(Optional)* To log into an existing spreadsheet, paste its id into
    `SHEET_ID` at the top. Otherwise the script creates one on first run and
    writes its URL to the execution log.
@@ -38,5 +37,6 @@ That's it — the next completed assessment appends a row.
 - **Re-deploying after code edits:** use **Deploy ▸ Manage deployments ▸ Edit ▸
   New version** to keep the *same* `/exec` URL. A brand-new deployment mints a
   new URL that you'd have to paste again.
+- The current report workflow requires the Apps Script project to have the `RESEND_API_KEY` Script Property set. Optional Script Properties are `FROM_EMAIL`, `BCC_EMAIL`, `SHEET_ID`, and `REPORT_FOLDER_ID`. If `BCC_EMAIL` is not set, the code uses `mail@mogire.com`.
 - Column order is fixed by `HEADERS` in `Code.gs`; the header row is written
   automatically on the first submission.

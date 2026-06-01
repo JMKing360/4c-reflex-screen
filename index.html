@@ -195,6 +195,21 @@ body{font-family:var(--font);background:linear-gradient(180deg,#FFFFFF 0%,var(--
 .bridge-close{font-size:18px;font-weight:600;color:var(--ink);line-height:1.6}
 
 .actions{display:flex;flex-direction:column;gap:12px;align-items:flex-start;margin-top:32px}
+.alc{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:34px 24px;box-shadow:0 14px 38px rgba(16,40,68,.07)}
+.alc-intro{font-size:15px;font-weight:500;line-height:1.72;color:var(--secondary);margin-bottom:24px}
+.alc-list{display:flex;flex-direction:column;gap:16px}
+.alc-item{border-top:1px solid var(--line-light);padding-top:16px}
+.alc-head{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-bottom:10px}
+.alc-name{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.alc-score{font-size:13px;font-weight:800;color:var(--gold-ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.alc-bar{height:6px;background:var(--line-light);border-radius:999px;overflow:hidden;margin-bottom:12px}
+.alc-fill{height:100%;background:linear-gradient(90deg,var(--warmth),var(--navy));border-radius:999px}
+.alc-copy{font-size:14px;font-weight:500;line-height:1.68;color:var(--secondary)}
+.alc-copy strong{color:var(--ink);font-weight:800}
+.pdf-note{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px 24px;text-align:left}
+.pdf-note-title{font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px}
+.pdf-note-text{font-size:15px;font-weight:500;line-height:1.7;color:var(--secondary)}
+.req-note{font-size:13px;font-weight:700;line-height:1.5;color:var(--gold-ink);margin-top:-20px;margin-bottom:28px}
 #xc{display:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 @media(min-width:600px){.w{padding:0 48px}.arr-title{font-size:68px}.opener-text,.q-text{font-size:28px}}
@@ -579,14 +594,14 @@ body{font-family:var(--font);background:linear-gradient(180deg,#FFFFFF 0%,var(--
 
   <div class="s intake" id="sg">
     <h2 class="i-title">Your 4C profile is ready</h2>
-    <p class="i-sub">Enter your email and phone to unlock your results. We’ll also send your profile and growth resources.</p>
-    <div class="fg"><label class="fl">Email</label><input class="fi" id="em" type="email" inputmode="email" placeholder="you@example.com" autocomplete="email"></div>
-    <div class="row2"><div class="fg"><label class="fl">Country</label><select class="fi fi-sel" id="co"><option value="">Select</option><option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select></div><div class="fg"><label class="fl">Phone (WhatsApp)</label><input class="fi" id="ph" type="tel" inputmode="tel" placeholder="+254 7XX XXX XXX" autocomplete="tel"></div></div>
+    <p class="i-sub">Enter the details below to unlock your results. Your full PDF report will be sent to your email.</p>
+    <div class="fg"><label class="fl">Email</label><input class="fi" id="em" required type="email" inputmode="email" placeholder="you@example.com" autocomplete="email"></div>
+    <div class="row2"><div class="fg"><label class="fl">Country</label><select class="fi fi-sel" id="co"><option value="">Select</option><option>Kenya</option><option>Uganda</option><option>Tanzania</option><option>Rwanda</option><option>Nigeria</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select></div><div class="fg"><label class="fl">Phone (WhatsApp)</label><input class="fi" id="ph" required type="tel" inputmode="tel" placeholder="+254 7XX XXX XXX" autocomplete="tel"></div></div>
     <div class="divider"></div>
-    <p class="i-sub" style="margin-bottom:20px">Optional. Helps us tailor what we send you.</p>
-    <div class="row2"><div class="fg"><label class="fl">City</label><input class="fi" id="ct" type="text" placeholder="e.g. Nairobi"></div><div class="fg"><label class="fl">Gender</label><select class="fi fi-sel" id="ge"><option value="">Select</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div></div>
-    <div class="row2"><div class="fg"><label class="fl">Age range</label><select class="fi fi-sel" id="ag"><option value="">Select</option><option>18-25</option><option>26-35</option><option>36-45</option><option>46-55</option><option>56+</option></select></div><div class="fg"><label class="fl">Professional field</label><select class="fi fi-sel" id="pf"><option value="">Select</option><option>Healthcare / Medicine</option><option>Business / Finance</option><option>Technology / Engineering</option><option>Education / Academia</option><option>Law / Policy</option><option>Creative / Media</option><option>Government / Public Service</option><option>Ministry / Non-profit</option><option>Entrepreneurship</option><option>Student</option><option>Other</option></select></div></div>
-    <div class="fg"><label class="fl">How did you find this?</label><select class="fi fi-sel" id="sr"><option value="">Select</option><option>WhatsApp share</option><option>Instagram</option><option>LinkedIn</option><option>YouTube</option><option>Friend or colleague</option><option>Dr. Job Mogire event</option><option>House of Mastery member</option><option>Google search</option><option>Other</option></select></div>
+    <p class="req-note">Required for your PDF report: phone, age range, gender, and how you heard about the program.</p>
+    <div class="row2"><div class="fg"><label class="fl">City</label><input class="fi" id="ct" type="text" placeholder="e.g. Nairobi"></div><div class="fg"><label class="fl">Gender</label><select class="fi fi-sel" id="ge" required><option value="">Select</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div></div>
+    <div class="row2"><div class="fg"><label class="fl">Age range</label><select class="fi fi-sel" id="ag" required><option value="">Select</option><option>18-25</option><option>26-35</option><option>36-45</option><option>46-55</option><option>56+</option></select></div><div class="fg"><label class="fl">Professional field</label><select class="fi fi-sel" id="pf"><option value="">Select</option><option>Healthcare / Medicine</option><option>Business / Finance</option><option>Technology / Engineering</option><option>Education / Academia</option><option>Law / Policy</option><option>Creative / Media</option><option>Government / Public Service</option><option>Ministry / Non-profit</option><option>Entrepreneurship</option><option>Student</option><option>Other</option></select></div></div>
+    <div class="fg"><label class="fl">How did you hear about this program?</label><select class="fi fi-sel" id="sr" required><option value="">Select</option><option>WhatsApp share</option><option>Instagram</option><option>LinkedIn</option><option>YouTube</option><option>Friend or colleague</option><option>Dr. Job Mogire event</option><option>House of Mastery member</option><option>Google search</option><option>Other</option></select></div>
     <div class="fg"><label class="fl">Which statement feels most true right now?</label><div class="ro"><button class="rb" onclick="sR(this,'Awareness')">I know something needs to change but I don't know where to start</button><button class="rb" onclick="sR(this,'Ready for structure')">I've been working on myself but I keep hitting the same wall</button><button class="rb" onclick="sR(this,'Prodigal Winner')">I'm successful by most measures but something feels off</button><button class="rb" onclick="sR(this,'Referral')">Someone I trust recommended this and I'm curious</button></div></div>
     <div class="consent"><input type="checkbox" id="cwa" checked><label for="cwa">Send my results and growth resources via WhatsApp</label></div>
     <div class="consent"><input type="checkbox" id="cem" checked><label for="cem">Send insights and program updates via email</label></div>
@@ -698,20 +713,53 @@ const PR={
   do:{n:'The 60-second pause',q:'Pause for 60 seconds before you act.',e:'You\u2019re not resisting the urge. You\u2019re observing it. If after 60 seconds the action still serves you, do it.'}
 };
 
+const ALC=[
+  {k:'Awareness',p:'I am willing to see myself as I really am.',pr:'Name the truth I have been avoiding before I explain it away.',ev:'The thing I least wanted to admit is written down, undefended.'},
+  {k:'Learning',p:'I am willing to begin again.',pr:'Restart the same day at the smallest viable step. No waiting for Monday.',ev:'The record shows a same-day return after a slip, not a multi-day gap.'},
+  {k:'Change',p:'I am willing to change how I see myself.',pr:'Catch the old self-label, say it out loud, then name what I am holding now.',ev:'I can name the label I put down this week and the one I carry now.'},
+  {k:'Action',p:'I am willing to start before I feel ready.',pr:'When information gathering becomes delay, take the first irreversible step within the hour.',ev:'Something exists tonight that did not exist this morning.'},
+  {k:'Resilience',p:'I am willing to persist through difficulty.',pr:'On the hard day, do the minimum non-negotiable version instead of skipping.',ev:'Difficult days show a smaller entry, not a missing one.'},
+  {k:'Reflection',p:'I am willing to look back without defending.',pr:'In review, write what I got wrong and stop before the because.',ev:'The review holds plain admissions with no defense attached.'},
+  {k:'Accountability',p:'I will not lead myself by myself.',pr:'Keep one person with standing to question me, and bring them what I want to hide.',ev:'Someone else knows my current commitment and my last failure.'}
+];
+function pct(v,max){return Math.max(0,Math.min(100,Math.round(v/max*100)))}
+function inv(v,max){return Math.max(0,Math.min(100,Math.round((max-v)/max*100)))}
+function avg(a){return Math.round(a.reduce((x,y)=>x+y,0)/a.length)}
+function alcarraScores(){
+  const ret=ans.slice(20,28), leak=ans.slice(0,20), c=res.cS||[0,0,0,0], d=res.dS||[0,0,0,0];
+  const leakTotal=leak.reduce((x,y)=>x+(y<0?0:y),0);
+  const severity=inv(leakTotal,60), returnPct=pct(res.rS||0,24);
+  const scores=[
+    avg([pct((ret[0]||0)+(ret[1]||0)+(ret[3]||0),9),severity]),
+    avg([pct((ret[4]||0)+(ret[5]||0)+(ret[6]||0),9),returnPct]),
+    avg([pct((ret[1]||0)+(ret[2]||0)+(ret[4]||0),9),inv(c[2]+c[1],30)]),
+    avg([pct((ret[2]||0)+(ret[5]||0),6),inv(d[3],12)]),
+    avg([pct((ret[4]||0)+(ret[5]||0)+(ret[7]||0),9),returnPct]),
+    avg([pct((ret[0]||0)+(ret[3]||0)+(ret[6]||0),9),inv(c[0]+c[1],30)]),
+    avg([pct((ret[4]||0)+(ret[6]||0),6),inv(c[1]+c[3],30)])
+  ];
+  return ALC.map((a,i)=>({...a,score:scores[i],level:scores[i]>=75?'strong':scores[i]>=55?'forming':scores[i]>=35?'needs practice':'start here'}));
+}
+
+
 let ans=new Array(30).fill(-1),ci=0,cc=-1,res={},u={fn:'',ln:'',em:'',ph:'',co:'',ct:'',ge:'',ag:'',pf:'',sr:'',rd:'',cwa:1,cem:1};
 
 function go(id){const c=document.querySelector('.s.on');if(c){c.classList.add('off');setTimeout(()=>{c.classList.remove('on','off');document.getElementById(id).classList.add('on');window.scrollTo({top:0,behavior:'instant'})},350)}else document.getElementById(id).classList.add('on')}
-// Start: just the full name gates the Begin button.
-document.getElementById('fn').addEventListener('input',()=>{document.getElementById('bs2').disabled=!document.getElementById('fn').value.trim()});
-// End gate: email + phone gate the Reveal button (the unlock for results).
-['em','ph'].forEach(i=>document.getElementById(i).addEventListener('input',()=>{document.getElementById('bReveal').disabled=!(document.getElementById('em').value.trim()&&document.getElementById('ph').value.trim())}));
-function startAssessment(){u.fn=document.getElementById('fn').value.trim();ci=0;cc=-1;go('s2');setTimeout(showI,500)}
+// Start: require a true full name before the assessment begins.
+function fullNameReady(){return document.getElementById('fn').value.trim().split(/\s+/).filter(Boolean).length>=2}
+document.getElementById('fn').addEventListener('input',()=>{document.getElementById('bs2').disabled=!fullNameReady()});
+// End gate: required details gate the Reveal button and PDF email delivery.
+const REQ_IDS=['em','ph','ge','ag','sr'];
+function gateReady(){const email=document.getElementById('em');return email.checkValidity()&&REQ_IDS.filter(i=>i!=='em').every(i=>document.getElementById(i).value.trim())}
+REQ_IDS.forEach(i=>document.getElementById(i).addEventListener('input',()=>{document.getElementById('bReveal').disabled=!gateReady()}));
+REQ_IDS.forEach(i=>document.getElementById(i).addEventListener('change',()=>{document.getElementById('bReveal').disabled=!gateReady()}));
+function startAssessment(){if(!fullNameReady())return;u.fn=document.getElementById('fn').value.trim();ci=0;cc=-1;go('s2');setTimeout(showI,500)}
 function sR(b,v){document.querySelectorAll('.rb').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');u.rd=v}
 // Gate → release: capture email/phone (+ optional detail), then reveal + submit the lead.
 function release(){
   u.em=document.getElementById('em').value.trim();u.ph=document.getElementById('ph').value.trim();
-  if(!(u.em&&u.ph))return;
   u.co=document.getElementById('co').value;u.ct=document.getElementById('ct').value.trim();u.ge=document.getElementById('ge').value;u.ag=document.getElementById('ag').value;u.pf=document.getElementById('pf').value;u.sr=document.getElementById('sr').value;u.cwa=document.getElementById('cwa').checked?1:0;u.cem=document.getElementById('cem').checked?1:0;
+  if(!fullNameReady()||!gateReady())return;
   buildR();go('s4');
   document.querySelectorAll('.rl').forEach(l=>{setTimeout(()=>l.classList.add('vis'),parseInt(l.dataset.d)||0)});
   submit();
@@ -759,7 +807,7 @@ function compute(){
   if(hi<0)hi=IT.findIndex(it=>typeof it.d==='number'); // guard: fall back to the first matrix cell
   const hot=IT[hi],hc=hot.c,hd=hot.d,iS=dS[0]+dS[1],eS=dS[2]+dS[3],cp=iS>=eS?'internal':'external';
   let rL='weak';if(rS>=8)rL='emerging';if(rS>=14)rL='strengthening';if(rS>=20)rL='practiced';
-  res={cS,dS,dc,sc,dd,hc,hd,cp,rS,rL,wb,ctx}
+  res={cS,dS,dc,sc,dd,hc,hd,cp,rS,rL,wb,ctx};res.alc=alcarraScores()
 }
 
 function buildR(){
@@ -790,12 +838,16 @@ function buildR(){
   // Layer 6: Growth sentence
   h+=`<div class="rl" data-d="2700"><div class="growth"><div class="lbl">Your growth sentence</div><p class="growth-text">When I\u2019m not watching, my power leaks toward <em>${CN[res.dc].toLowerCase()}</em>. It starts in what I <em>${DN[res.dd].toLowerCase()}</em>. I\u2019m learning to catch it and come back through <em>${pr.n.toLowerCase()}</em>.</p></div></div>`;
 
-  // Layer 7: CTA \u2014 a gentler next step when this is weighing heavily, otherwise the offer
-  if(res.wb>=3)h+=`<div class="rl" data-d="3200"><div class="cta-card"><div class="lbl">A gentler next step</div><div class="cta-title">Be kind to yourself here</div><p class="cta-body">You said this pattern is affecting you a lot right now. Noticing it is a real first step \u2014 and it isn\u2019t the whole job. If it\u2019s weighing on your sleep, mood, work, or relationships, consider talking with someone you trust or a licensed professional. There\u2019s no pressure to do anything more today.</p></div></div>`;
-  else h+=`<div class="rl" data-d="3200"><div class="cta-card"><div class="lbl">Go deeper</div><div class="cta-title">The 10-Day 4C Challenge</div><p class="cta-body">You just saw where your power goes. The question is whether seeing it changes anything. Ten days. One pattern. One practice.</p><div class="cta-price">KSh 2,000</div><div class="cta-note">One-time. 10 days.</div><ul class="cta-list"><li>Daily guided observation via WhatsApp</li><li>Structured daily pulse check</li><li>Day 10 re-assessment to measure what shifted</li><li>Your return practice, coached for 10 days</li><li>Closed cohort of committed participants</li></ul><button class="b b-accent" onclick="openL('PAYMENT_LINK')">Join the next cohort</button><p class="cta-date">Next cohort starts ${nds}</p></div></div>`;
+  // Layer 7: ALCARRA screen, inferred from the same 4C answer pattern.
+  const alcRows=(res.alc||[]).map(a=>`<div class="alc-item"><div class="alc-head"><div class="alc-name">${a.k}</div><div class="alc-score">${a.score}/100 · ${a.level}</div></div><div class="alc-bar"><div class="alc-fill" style="width:${a.score}%"></div></div><p class="alc-copy"><strong>Promise:</strong> ${a.p} <strong>Practice:</strong> ${a.pr} <strong>Evidence:</strong> ${a.ev}</p></div>`).join('');
+  h+=`<div class="rl" data-d="3200"><div class="alc"><div class="lbl">ALCARRA screen</div><p class="alc-intro">This second screen shows the commitments that help you return. The scores are not a label. They are inferred from your 4C pattern and your return answers, then translated into seven commitments you can practice.</p><div class="alc-list">${alcRows}</div></div></div>`;
 
-  // Layer 8: Bridge + actions
-  h+=`<div class="rl" data-d="3700"><div class="bridge"><p class="bridge-text">If the same pattern keeps running despite your best effort, the cause may be deeper than behavior. That\u2019s a different kind of work, and it has its own time.</p><p class="bridge-close">Progress is noticing sooner.</p><p class="bridge-text" style="font-size:12px;color:var(--tertiary);margin-top:20px">This is a self-reflection tool, not a medical or psychological diagnosis.</p></div><div class="actions"><button class="b" onclick="dlCard()">Save my profile</button><button class="b-text" onclick="retake()">Take again</button></div></div>`;
+  // Layer 8: CTA — a gentler next step when this is weighing heavily, otherwise the offer
+  if(res.wb>=3)h+=`<div class="rl" data-d="3900"><div class="cta-card"><div class="lbl">A gentler next step</div><div class="cta-title">Be kind to yourself here</div><p class="cta-body">You said this pattern is affecting you a lot right now. Noticing it is a real first step. It is not the whole job. If it is weighing on your sleep, mood, work, or relationships, consider talking with someone you trust or a licensed professional. There is no pressure to do anything more today.</p></div></div>`;
+  else h+=`<div class="rl" data-d="3900"><div class="cta-card"><div class="lbl">Go deeper</div><div class="cta-title">The 10-Day 4C Challenge</div><p class="cta-body">You just saw where your power goes. The question is whether seeing it changes anything. Ten days. One pattern. One practice.</p><div class="cta-price">KSh 2,000</div><div class="cta-note">One-time. 10 days.</div><ul class="cta-list"><li>Daily guided observation via WhatsApp</li><li>Structured daily pulse check</li><li>Day 10 re-assessment to measure what shifted</li><li>Your return practice, coached for 10 days</li><li>Closed cohort of committed participants</li></ul><button class="b b-accent" onclick="openL('PAYMENT_LINK')">Join the next cohort</button><p class="cta-date">Next cohort starts ${nds}</p></div></div>`;
+
+  // Layer 9: Bridge + email-only PDF note. The PDF link is not exposed on the results page.
+  h+=`<div class="rl" data-d="4600"><div class="bridge"><p class="bridge-text">If the same pattern keeps running despite your best effort, the cause may be deeper than behavior. That is a different kind of work, and it has its own time.</p><p class="bridge-close">Progress is noticing sooner.</p><p class="bridge-text" style="font-size:12px;color:var(--tertiary);margin-top:20px">This is a self-reflection tool, not a medical or psychological diagnosis.</p></div><div class="pdf-note"><div class="pdf-note-title">Your PDF report is in your email.</div><p class="pdf-note-text">We have sent the download link to ${u.em}. The full report is delivered by email only, using the details you provided.</p></div><div class="actions"><button class="b-text" onclick="retake()">Take again</button></div></div>`;
 
   el.innerHTML=h;
 }
@@ -826,17 +878,14 @@ function dlCard(){
 }
 function wt(c,t,x,y,mw,lh){const ws=t.split(' ');let l='';for(let i=0;i<ws.length;i++){const ts=l+ws[i]+' ';if(c.measureText(ts).width>mw&&i>0){c.fillText(l.trim(),x,y);l=ws[i]+' ';y+=lh}else l=ts}c.fillText(l.trim(),x,y)}
 
-// Google Sheets capture (secondary). Paste your Apps Script Web App /exec URL
-// below. Deploy ▸ New deployment ▸ Web app ▸ Execute as: Me, Access: Anyone
-// (see apps-script/README.md). While the PASTE_ token remains, this stays OFF
-// and only HighLevel runs. The Sheet capture never blocks the HighLevel capture.
+// Apps Script PDF/report sink. The same-origin Function is the primary path.
+// The direct Apps Script URL is retained only as a browser fallback if /api/ghl fails,
+// so a participant does not create duplicate Sheet rows or duplicate emails.
 const GAS_URL='https://script.google.com/macros/s/AKfycbwl0vyjCHb5aMOX1NJx-s13rH4sUSSB2J-ZVwVddelSpB6hfaQyF50xOSmAEnI46BSfyw/exec';
 
-// Lead capture: POST the same payload to (1) the same-origin Cloudflare Function
-// (/api/ghl → HighLevel) and (2) the Apps Script Sheet. `contact.name`/`.email`
-// are what the Function validates; every other field rides along to both sinks.
-// Fire-and-forget. Results are already on screen and never blocked on either.
-function submit(){
+// Lead capture: the results page is already visible, so this runs in the background.
+// PDF report generation and email delivery happen downstream after required details are present.
+async function submit(){
   const dId=DI[res.dd],pr=PR[dId];
   const name=(u.fn+(u.ln?' '+u.ln:'')).trim();
   const body=JSON.stringify({
@@ -851,14 +900,16 @@ function submit(){
       hotZone:CN[res.hc]+' x '+DN[res.hd], catchPoint:res.cp,
       returnCapacity:res.rL, returnScore:res.rS, practice:pr.n,
       complainScore:res.cS[0], criticizeScore:res.cS[1], compareScore:res.cS[2], competeScore:res.cS[3],
-      thinkScore:res.dS[0], feelScore:res.dS[1], chooseScore:res.dS[2], doScore:res.dS[3]
+      thinkScore:res.dS[0], feelScore:res.dS[1], chooseScore:res.dS[2], doScore:res.dS[3],
+      alcarraScores:(res.alc||[]).map(a=>a.k+':'+a.score+':'+a.level).join('|')
     },
     meta:{ timestamp:new Date().toISOString(), assessment:'4c-personal-task' }
   });
-  // Primary: HighLevel via same-origin Function.
-  fetch('/api/ghl',{ method:'POST', headers:{'Content-Type':'application/json'}, body:body }).catch(()=>{});
-  // Secondary: Google Sheet via Apps Script. text/plain keeps it a CORS-simple
-  // request; no-cors because we don't need to read the reply. OFF until configured.
+  try{
+    const r=await fetch('/api/ghl',{ method:'POST', headers:{'Content-Type':'application/json'}, body:body });
+    if(r.ok)return;
+  }catch(e){}
+  // Fallback only: direct Apps Script post if same-origin forwarding is unavailable.
   if(!GAS_URL.includes('PASTE_')){
     fetch(GAS_URL,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:body }).catch(()=>{});
   }
