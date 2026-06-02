@@ -54,10 +54,10 @@ function loadValidate() {
 const L = loadInlineLogic();
 const validate = loadValidate();
 
-// The 30-item instrument is metadata-driven (see IT in index.html): 16 matrix
-// items {c,d}, 4 signature items {c,sig}, 8 Return items {ret}, and 2 non-scored
-// closing items {kind:'wellbeing'|'context'}. Locate items by metadata, not by a
-// fixed position, so the tests track the model rather than the array order.
+// The 31-item instrument is metadata-driven (see IT in index.html): 16 matrix
+// items {c,d}, 4 signature items {c,sig}, 8 Return items {ret}, and 3 non-scored
+// closing items {kind:'wellbeing'|'context'|'contact'}. Locate items by metadata,
+// not by a fixed position, so the tests track the model rather than the array order.
 const IT = L.IT;
 const zeros = () => new Array(IT.length).fill(0);
 const mIdx = (c, d) => IT.findIndex((it) => it.c === c && it.d === d);          // matrix cell
@@ -65,12 +65,12 @@ const sigIdx = (c) => IT.findIndex((it) => it.c === c && it.sig);               
 const retIdxs = () => IT.map((it, i) => (it.ret ? i : -1)).filter((i) => i >= 0); // 8 Return items
 const kindIdx = (k) => IT.findIndex((it) => it.kind === k);                     // non-scored item
 
-test('IT has the expected 30-item shape (16 matrix + 4 signature + 8 return + 2 closing)', () => {
-  assert.strictEqual(IT.length, 30, 'total items');
+test('IT has the expected 31-item shape (16 matrix + 4 signature + 8 return + 3 closing)', () => {
+  assert.strictEqual(IT.length, 31, 'total items');
   assert.strictEqual(IT.filter((it) => typeof it.d === 'number').length, 16, 'matrix items');
   assert.strictEqual(IT.filter((it) => it.sig).length, 4, 'signature items');
   assert.strictEqual(retIdxs().length, 8, 'return items');
-  assert.ok(kindIdx('wellbeing') >= 0 && kindIdx('context') >= 0, 'closing items present');
+  assert.ok(kindIdx('wellbeing') >= 0 && kindIdx('context') >= 0 && kindIdx('contact') >= 0, 'closing items present');
 });
 
 test('compute: dominant C is the highest-summing reflex (matrix + signature)', () => {
@@ -138,10 +138,11 @@ test('compute: return score sums the 8 Return items and maps to a band (0–24)'
   }
 });
 
-test('compute: the two closing items are not scored (wellbeing routing + context)', () => {
+test('compute: the three closing items are not scored (wellbeing routing + context + contact)', () => {
   const a = zeros();
   a[kindIdx('wellbeing')] = 3; // "A lot"
   a[kindIdx('context')] = 0;   // first option
+  a[kindIdx('contact')] = 0;   // "Much quieter than usual"
   L.setAns(a); L.compute();
   const r = L.getRes();
   assert.strictEqual(r.cS.reduce((x, y) => x + y, 0), 0, 'C scores unaffected by closing items');
@@ -149,6 +150,7 @@ test('compute: the two closing items are not scored (wellbeing routing + context
   assert.strictEqual(r.rS, 0, 'return score unaffected');
   assert.strictEqual(r.wb, 3, 'wellbeing answer captured for routing');
   assert.ok(typeof r.ctx === 'string' && r.ctx.length > 0, 'context captured for personalization');
+  assert.strictEqual(r.contact, 0, 'exposure-calibration answer captured for the result caveat');
 });
 
 test('compute: practice is keyed to the vulnerable domain', () => {

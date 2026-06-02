@@ -1,12 +1,12 @@
 // End-to-end smoke test for the 4C Personal Task Assessment: drive the full
-// flow (arrival → name → 30 items → processing → PDF-detail gate → reveal)
+// flow (arrival → name → 31 items → processing → PDF-detail gate → reveal)
 // and assert the personalized result renders and the lead is captured. The
 // full PDF-detail gate at the end is what unlocks (and submits) the results.
 // Intercepts /api/ghl and the Apps Script sink so no real lead is sent.
 const { test, expect } = require('@playwright/test');
 
-test('arrival → name → 30 items → gate → reveal → lead captured', async ({ page }) => {
-  test.setTimeout(90000); // 30 items + chapter openers + 3.5s processing + staggered reveal
+test('arrival → name → 31 items → gate → reveal → lead captured', async ({ page }) => {
+  test.setTimeout(90000); // 31 items + chapter openers + 3.5s processing + staggered reveal
   // Capture the lead payload the app POSTs to the Pages Function.
   let captured = null;
   await page.route('**/api/ghl', async (route) => {
@@ -33,11 +33,11 @@ test('arrival → name → 30 items → gate → reveal → lead captured', asyn
   await expect(page.locator('#bs2')).toBeEnabled();
   await page.click('#bs2');
 
-  // Journey: 6 chapter openers + 30 items (incl. 2 non-scored closing items).
+  // Journey: 6 chapter openers + 31 items (incl. 3 non-scored closing items).
   // Each chapter starts with an opener; every item then shows its options.
   await expect(page.locator('#s2')).toBeVisible();
   let answered = 0;
-  while (answered < 30) {
+  while (answered < 31) {
     // Each step shows either a chapter opener ("Continue") or the question's
     // four options. Wait for whichever lands, then advance.
     await expect(page.locator('#jc .opener button, #jc .opt').first()).toBeVisible({ timeout: 6000 });

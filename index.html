@@ -583,9 +583,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--secondary)}
     <div class="arr-hero">
       <div class="arr-brand">The 4C Assessment</div>
       <h1 class="arr-title">You don’t lose your power. You leak it.</h1>
-      <p class="arr-sub" style="margin-bottom:22px">Complaining, criticizing, comparing, competing. Four quiet reflexes that pull your energy out of your own hands, usually before you notice. Almost everyone leans on one more than the rest. Few can name which.</p>
-      <p class="arr-sub">This is where you find yours. Answer honestly about your past 30 days. Not who you mean to be, but who you’ve actually been. You’ll leave with your pattern, where it starts, and one practice to come back.</p>
-      <p class="arr-meta">30 questions · 7 minutes · one clear pattern</p>
+      <p class="arr-sub" style="margin-bottom:22px">You mean to show up as your strongest self. Yet some of your power slips away before it reaches the work, the people, the day in front of you.</p>
+      <p class="arr-sub" style="margin-bottom:22px">Complaining, criticizing, comparing, competing. Four quiet reflexes that pull energy out of your own hands, usually before you notice. Almost everyone leans on one. Few can name which.</p>
+      <p class="arr-sub">This is where you find yours. Answer for the past 30 days as they were, not as you meant them to be. You leave with your pattern, where it begins, and one practice to come back.</p>
+      <p class="arr-meta">31 questions · 7 minutes · one clear pattern</p>
       <p class="arr-calm">Take a quiet minute for this. Honesty matters more than speed.</p>
       <button class="b" onclick="go('s1')" style="opacity:0;animation:rise 500ms var(--ease) 820ms forwards">Begin</button>
     </div>
@@ -639,12 +640,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--secondary)}
 
 <script>
 const CHS=[
-  {l:'Complaining',c:'var(--complain)',bg:'var(--complain-s)',r:'Sometimes you argue with what is. The argument happens inside. Nobody hears it. You still lose the energy.',btn:'Continue'},
-  {l:'Criticizing',c:'var(--criticize)',bg:'var(--criticize-s)',r:'Sometimes you manage someone else instead of yourself. It feels productive. It feels like high standards. It costs you anyway.',btn:'Continue'},
-  {l:'Comparing',c:'var(--compare)',bg:'var(--compare-s)',r:'Sometimes you measure yourself against someone else\u2019s life. The scoreboard is invisible. The game never ends.',btn:'Continue'},
-  {l:'Competing',c:'var(--compete)',bg:'var(--compete-s)',r:'Sometimes you chase position instead of growth. This one is the hardest to see in yourself.',btn:'Continue'},
+  {l:'Complaining',c:'var(--complain)',bg:'var(--complain-s)',r:'Sometimes you argue with what is. The argument happens inside. Nobody hears it. You still lose the energy. Count it whether you said it aloud or only thought it.',btn:'Continue'},
+  {l:'Criticizing',c:'var(--criticize)',bg:'var(--criticize-s)',r:'Sometimes you manage someone else instead of yourself. It feels productive. It feels like high standards. It costs you anyway. Count it in your head, not only in your words.',btn:'Continue'},
+  {l:'Comparing',c:'var(--compare)',bg:'var(--compare-s)',r:'Sometimes you measure yourself against someone else\u2019s life. The scoreboard is invisible. The game never ends. Count it even when you said nothing and scrolled on.',btn:'Continue'},
+  {l:'Competing',c:'var(--compete)',bg:'var(--compete-s)',r:'Sometimes you chase position instead of growth. The pull feels like ambition. It is quieter than that, and the hardest of the four to see. Count the quiet wish to stay ahead, not only what you did about it.',btn:'Continue'},
   {l:'Return',c:'var(--return-c)',bg:'var(--return-s)',r:'Now something different. How quickly you notice the leak. And what you do when you catch it.',btn:'Continue'},
-  {l:'One last thing',c:'var(--ink)',bg:'var(--surface)',r:'Two short questions before your results. These shape what you see, stay private, and are not scored.',btn:'Almost there'}
+  {l:'One last thing',c:'var(--ink)',bg:'var(--surface)',r:'Three short questions before your results. These shape what you see, stay private, and are not scored.',btn:'Almost there'}
 ];
 const IT=[
   // Complaining (c0): think / feel / choose / do + signature
@@ -682,7 +683,10 @@ const IT=[
   {ch:4,ret:true,t:'I used a breath, a question, or a pause to come back, rather than willpower alone.'},
   // Closing (ch5): not scored, wellbeing routing + context personalization
   {ch:5,kind:'wellbeing',t:'Lately, how much is this pattern affecting your sleep, mood, work, or relationships?',opts:['Not at all','A little','Noticeably','A lot']},
-  {ch:5,kind:'context',t:'Where does this show up most for you right now?',opts:['Work','Family','Money','Faith','Health','Online']}
+  {ch:5,kind:'context',t:'Where does this show up most for you right now?',opts:['Work','Family','Money','Faith','Health','Online']},
+  // Exposure calibration (not scored): separates a genuinely low pattern from a
+  // quiet month with little chance for the pattern to show. Gates a result caveat.
+  {ch:5,kind:'contact',t:'Compared with your normal life, how much were you around people and pressure this past month?',opts:['Much quieter than usual','About the same','More active than usual']}
 ];
 const RS=[{v:0,l:'Not at all',g:'This genuinely did not happen'},{v:1,l:'Once or twice',g:'Rare. I can recall a specific moment'},{v:2,l:'Several times',g:'A few times across the month'},{v:3,l:'Repeatedly',g:'This was a real pattern for me'}];
 const CN=['Complaining','Criticizing','Comparing','Competing'],CI=['complain','criticize','compare','compete'],DN=['Think','Feel','Choose','Do'],DI=['think','feel','choose','do'];
@@ -764,7 +768,7 @@ function alcarraScores(){
 }
 
 
-let ans=new Array(30).fill(-1),ci=0,cc=-1,res={},u={fn:'',ln:'',em:'',ph:'',co:'',ct:'',ge:'',ag:'',pf:'',sr:'',rd:'',cwa:1,cem:1};
+let ans=new Array(IT.length).fill(-1),ci=0,cc=-1,res={},u={fn:'',ln:'',em:'',ph:'',co:'',ct:'',ge:'',ag:'',pf:'',sr:'',rd:'',cwa:1,cem:1};
 
 function go(id){const c=document.querySelector('.s.on');if(c){c.classList.add('off');setTimeout(()=>{c.classList.remove('on','off');document.getElementById(id).classList.add('on');window.scrollTo({top:0,behavior:'instant'})},350)}else document.getElementById(id).classList.add('on')}
 // Start: require a true full name before the assessment begins.
@@ -790,7 +794,7 @@ function release(){
 function showI(){
   window.scrollTo({top:0,behavior:'instant'});
   const it=IT[ci],ch=CHS[it.ch];
-  document.getElementById('pF').style.width=(ci/30*100)+'%';
+  document.getElementById('pF').style.width=(ci/IT.length*100)+'%';
   if(it.ch!==cc){cc=it.ch;
     document.getElementById('jc').innerHTML=`<div class="opener"><div class="opener-badge" style="background:${ch.bg};color:${ch.c}">${ch.l}</div><p class="opener-text">${ch.r}</p><button class="b b-outline" onclick="renderQ()"><span>${ch.btn}</span><svg viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`;
     return;}
@@ -806,7 +810,7 @@ function renderQ(){
   h+='</div></div>';document.getElementById('jc').innerHTML=h;
   requestAnimationFrame(()=>document.getElementById('qc').classList.add('vis'));
 }
-function sel(v){if(navigator.vibrate)navigator.vibrate(8);ans[ci]=v;const bs=document.querySelectorAll('.opt');bs.forEach((b,i)=>{if(i===v)b.classList.add('sel');b.style.pointerEvents='none'});setTimeout(()=>{const c=document.getElementById('qc');c.classList.remove('vis');c.classList.add('ex');setTimeout(()=>{ci++;ci>=30?proc():showI()},250)},350)}
+function sel(v){if(navigator.vibrate)navigator.vibrate(8);ans[ci]=v;const bs=document.querySelectorAll('.opt');bs.forEach((b,i)=>{if(i===v)b.classList.add('sel');b.style.pointerEvents='none'});setTimeout(()=>{const c=document.getElementById('qc');c.classList.remove('vis');c.classList.add('ex');setTimeout(()=>{ci++;ci>=IT.length?proc():showI()},250)},350)}
 // Last answer → calculate, then show the gate (results are built/sent only after the gate).
 function proc(){document.getElementById('pF').style.width='100%';go('s3');setTimeout(()=>{compute();const f=(u.fn||'').trim().split(/\s+/)[0];document.getElementById('sgTitle').textContent=f?`${f}, your 4C profile is ready`:'Your 4C profile is ready';go('sg')},3500)}
 
@@ -816,11 +820,12 @@ function proc(){document.getElementById('pF').style.width='100%';go('s3');setTim
 //  • rS    = the 8 Return items (0-24)
 //  • wellbeing (wb) + context (ctx) are NOT scored (routing/personalization only)
 function compute(){
-  const cS=[0,0,0,0],dS=[0,0,0,0];let hi=-1,hv=-1,rS=0,wb=-1,ctx='';
+  const cS=[0,0,0,0],dS=[0,0,0,0];let hi=-1,hv=-1,rS=0,wb=-1,ctx='',contact=-1;
   IT.forEach((it,i)=>{
     const v=ans[i];
     if(it.kind==='wellbeing'){wb=v;return}
     if(it.kind==='context'){ctx=(it.opts&&it.opts[v])||'';return}
+    if(it.kind==='contact'){contact=v;return}
     if(it.ret){rS+=v;return}
     if(typeof it.c==='number')cS[it.c]+=v;
     if(typeof it.d==='number'){dS[it.d]+=v;if(v>hv){hv=v;hi=i}}
@@ -829,7 +834,7 @@ function compute(){
   if(hi<0)hi=IT.findIndex(it=>typeof it.d==='number'); // guard: fall back to the first matrix cell
   const hot=IT[hi],hc=hot.c,hd=hot.d,iS=dS[0]+dS[1],eS=dS[2]+dS[3],cp=iS>=eS?'internal':'external';
   let rL='weak';if(rS>=8)rL='emerging';if(rS>=14)rL='strengthening';if(rS>=20)rL='practiced';
-  res={cS,dS,dc,sc,dd,hc,hd,cp,rS,rL,wb,ctx};res.alc=alcarraScores()
+  res={cS,dS,dc,sc,dd,hc,hd,cp,rS,rL,wb,ctx,contact};res.alc=alcarraScores()
 }
 
 function buildR(){
@@ -840,7 +845,11 @@ function buildR(){
   let h='';
 
   // Layer 0: gentle lead-in when this is weighing heavily (wellbeing = "A lot")
-  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card distress"><p class="prose-text">Before anything else: you told us this is affecting you a lot right now. Read what follows gently. It’s a mirror, not a verdict.</p></div></div>`;
+  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card distress"><p class="prose-text">Before anything else: you said this is weighing on you a lot right now. Read what follows gently. It’s a mirror, not a verdict.</p></div></div>`;
+  // Exposure caveat: a much-quieter-than-usual month with no strong pattern can read as
+  // calm when the pattern simply had little chance to show. Framed as precision, not doubt,
+  // and gated on a low result so a clear pattern is never second-guessed.
+  if(res.contact===0&&Math.max(...res.cS)<=6)h+=`<div class="rl" data-d="160"><div class="prose-card"><div class="lbl">Read this in context</div><p class="prose-text">You said this past month was much quieter than usual, and no single pattern stood out. A quiet month can read as calm. If the people and pressures you normally navigate were mostly absent, some patterns may not have had the chance to show. Take this as a snapshot of a quiet season, and consider taking it again in a fuller month for a truer read.</p></div></div>`;
 
   // Layer 1: The letter (prose, not dashboard). Co-dominant when the top two are within 2 points.
   if(Math.abs(res.cS[res.dc]-res.cS[res.sc])<=2)
@@ -877,11 +886,11 @@ function buildR(){
 
   el.innerHTML=h;
 }
-function retake(){ans=new Array(30).fill(-1);ci=0;cc=-1;go('s2');setTimeout(showI,500)}
+function retake(){ans=new Array(IT.length).fill(-1);ci=0;cc=-1;go('s2');setTimeout(showI,500)}
 // Privacy control: wipe everything entered this session (all in-memory; nothing
 // is persisted to the device) and return to the start.
 function clearData(){
-  ans=new Array(30).fill(-1);ci=0;cc=-1;
+  ans=new Array(IT.length).fill(-1);ci=0;cc=-1;
   u={fn:'',ln:'',em:'',ph:'',co:'',ct:'',ge:'',ag:'',pf:'',sr:'',rd:'',cwa:1,cem:1};
   ['fn','em','ph','ct'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
   ['co','ge','ag','pf','sr'].forEach(id=>{const e=document.getElementById(id);if(e)e.selectedIndex=0});
