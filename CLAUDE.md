@@ -6,9 +6,15 @@
 a 20-item, two-step-intake assessment (4C × 4-domain model, 2,048 personalized
 profiles, Canvas profile-card export). It captures leads to HighLevel via the
 same-origin Cloudflare Function `POST /api/ghl` (no Google Apps Script, no
-captcha). It loads **no external scripts** — only Google Fonts (Plus Jakarta
-Sans). White/ink/blue palette; the brief's alternate navy/gold/Cormorant look
-is intentionally not applied (owner chose ship-as-is).
+captcha). It loads **no external scripts** — only Google Fonts (Cormorant
+Garamond + Jost). It is built to the **House of Mastery Brand & Web Design
+System v1.1** (`design-system/house-of-mastery-design-system.md`, with tokens
+in `design-system/house-of-mastery.css` and the one-color logo assets
+`hm-logo-navy.png` / `hm-logo-white.png` / `hm-mark-*.png`): deep-navy / warm
+ivory / brass palette, Cormorant Garamond display + Jost UI, square corners
+(radius 0), flat hairline elevation (no shadows on flat UI), brass used only as
+the single accent (never a fill or body text). The earlier "ship-as-is"
+white/ink/blue palette was superseded when the owner adopted this system.
 
 Two earlier, different assessments are preserved on branches for separate sites,
 not on `main`:

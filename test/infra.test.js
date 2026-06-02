@@ -104,13 +104,14 @@ test('manifest.webmanifest is valid JSON with the required fields', () => {
   assert.strictEqual(m.start_url, '/');
   assert.strictEqual(m.display, 'standalone');
   assert.ok(Array.isArray(m.icons) && m.icons.length > 0, 'icons missing');
-  // Theme/background must match the canonical House of Mastery palette.
-  assert.strictEqual(m.theme_color, '#163558', 'theme_color must be canonical navy');
-  assert.strictEqual(m.background_color, '#EDF2F9', 'background_color must be canonical paper');
+  // Theme/background must match the canonical House of Mastery palette
+  // (Design System v1.1: deep navy + warm ivory).
+  assert.strictEqual(m.theme_color, '#0B1538', 'theme_color must be canonical navy');
+  assert.strictEqual(m.background_color, '#F3EFE6', 'background_color must be canonical ivory');
 });
 
 test('index.html wires up the manifest and theme-color', () => {
   const html = read('index.html');
   assert.match(html, /<link\s+rel="manifest"\s+href="\/manifest\.webmanifest">/, 'manifest link missing');
-  assert.match(html, /<meta\s+name="theme-color"\s+content="#163558"\/?\s*>/, 'theme-color meta missing/wrong');
+  assert.match(html, /<meta\s+name="theme-color"\s+content="#0B1538"\/?\s*>/, 'theme-color meta missing/wrong');
 });
