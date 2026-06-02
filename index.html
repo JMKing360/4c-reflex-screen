@@ -643,7 +643,7 @@ const CHS=[
   {l:'Complaining',c:'var(--complain)',bg:'var(--complain-s)',r:'Sometimes you argue with what is. The argument happens inside. Nobody hears it. You still lose the energy.',btn:'Continue'},
   {l:'Criticizing',c:'var(--criticize)',bg:'var(--criticize-s)',r:'Sometimes you manage someone else instead of yourself. It feels productive. It feels like high standards. It costs you anyway.',btn:'Continue'},
   {l:'Comparing',c:'var(--compare)',bg:'var(--compare-s)',r:'Sometimes you measure yourself against someone else\u2019s life. The scoreboard is invisible. The game never ends.',btn:'Continue'},
-  {l:'Competing',c:'var(--compete)',bg:'var(--compete-s)',r:'Sometimes you chase position instead of growth. This one is the hardest to see in yourself.',btn:'Continue'},
+  {l:'Competing',c:'var(--compete)',bg:'var(--compete-s)',r:'Sometimes you chase position instead of growth. The pull feels like ambition. It is quieter than that, and the hardest of the four to see in yourself.',btn:'Continue'},
   {l:'Return',c:'var(--return-c)',bg:'var(--return-s)',r:'Now something different. How quickly you notice the leak. And what you do when you catch it.',btn:'Continue'},
   {l:'One last thing',c:'var(--ink)',bg:'var(--surface)',r:'Two short questions before your results. These shape what you see, stay private, and are not scored.',btn:'Almost there'}
 ];
@@ -841,7 +841,7 @@ function buildR(){
   let h='';
 
   // Layer 0: gentle lead-in when this is weighing heavily (wellbeing = "A lot")
-  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card distress"><p class="prose-text">Before anything else: you told us this is affecting you a lot right now. Read what follows gently. It’s a mirror, not a verdict.</p></div></div>`;
+  if(res.wb>=3)h+=`<div class="rl" data-d="120"><div class="prose-card distress"><p class="prose-text">Before anything else: you said this is weighing on you a lot right now. Read what follows gently. It’s a mirror, not a verdict.</p></div></div>`;
 
   // Layer 1: The letter (prose, not dashboard). Co-dominant when the top two are within 2 points.
   if(Math.abs(res.cS[res.dc]-res.cS[res.sc])<=2)
